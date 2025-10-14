@@ -17,7 +17,7 @@ export default function DashboardPage() {
   const [showResearch, setShowResearch] = useState(false);
   const [showClientSelection, setShowClientSelection] = useState(false);
   const [pendingOption, setPendingOption] = useState<WorkspaceOption | undefined>(undefined);
-  const [dbUser, setDbUser] = useState<any>(null);
+  const [dbUser, setDbUser] = useState<{id: string; name: string; email: string} | null>(null);
   const clientSelected = Boolean(active.clientId);
 
   useEffect(() => {
