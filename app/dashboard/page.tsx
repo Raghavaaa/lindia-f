@@ -161,7 +161,7 @@ export default function DashboardPage() {
           existingClients={clients}
         />
       )}
-          {showResearch && <ResearchModal userId={session.user?.email} onClose={() => setShowResearch(false)} />}
+          {showResearch && <ResearchModal userId={session.user?.email || undefined} onClose={() => setShowResearch(false)} />}
     </div>
   );
 }
