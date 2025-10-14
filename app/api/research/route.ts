@@ -2,23 +2,52 @@ import { NextRequest } from "next/server";
 import { getSetting, saveResearchQuery } from "@/lib/db";
 
 async function callInLegalBert(query: string) {
-  const url = process.env.INLEGALBERT_API_URL;
-  const key = process.env.INLEGALBERT_API_KEY;
-  if (!url) return { text: "", confidence: 0 };
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(key ? { Authorization: `Bearer ${key}` } : {}),
-    },
-    body: JSON.stringify({ text: query }),
-    cache: "no-store",
-  });
-  if (!res.ok) return { text: "", confidence: 0 };
-  const data = await res.json().catch(() => ({}));
-  const text: string = data.result ?? data.text ?? "";
-  const confidence: number = typeof data.confidence === "number" ? data.confidence : (text ? 0.7 : 0);
-  return { text, confidence };
+  const hfToken = process.env.HF_TOKEN;
+  if (!hfToken) return { text: "", confidence: 0 };
+  
+  try {
+    const res = await fetch("https://api-inference.huggingface.co/models/law-ai/InLegalBERT", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${hfToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inputs: query,
+        options: { wait_for_model: true }
+      }),
+      cache: "no-store",
+    });
+    
+    if (!res.ok) return { text: "", confidence: 0 };
+    const data = await res.json().catch(() => ({}));
+    
+    // Handle different response formats from HF API
+    let text = "";
+    let confidence = 0;
+    
+    if (Array.isArray(data)) {
+      // Standard HF inference response
+      const firstResult = data[0];
+      if (firstResult && firstResult.label) {
+        text = firstResult.label;
+        confidence = firstResult.score || 0.7;
+      }
+    } else if (data.generated_text) {
+      // Text generation response
+      text = data.generated_text;
+      confidence = 0.8;
+    } else if (data.result) {
+      // Custom response format
+      text = data.result;
+      confidence = 0.7;
+    }
+    
+    return { text, confidence };
+  } catch (error) {
+    console.error("InLegalBERT API error:", error);
+    return { text: "", confidence: 0 };
+  }
 }
 
 async function callDeepSeek(query: string) {
