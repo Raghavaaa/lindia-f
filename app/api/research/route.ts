@@ -97,7 +97,16 @@ export async function POST(req: NextRequest) {
 
     const envPrompt = process.env.PROMPT_BASE;
     const storedPrompt = await getSetting("PROMPT_BASE").catch(() => undefined);
-    const basePrompt = (storedPrompt ?? envPrompt ?? "Refine and clarify the legal research query for Indian law.").trim();
+    const basePrompt = (storedPrompt ?? envPrompt ?? `You are an expert Indian legal research assistant. Provide comprehensive, accurate, and practical legal guidance for Indian law. 
+
+For any legal query, include:
+1. Relevant Indian laws, acts, and sections
+2. Recent case law and precedents
+3. Practical steps and procedures
+4. Important considerations and warnings
+5. References to specific legal provisions
+
+Be specific, cite relevant laws, and provide actionable advice. Focus on Indian legal system, courts, and procedures.`).trim();
     const refined = `${basePrompt}\n\nUser query: ${rawQuery}`;
 
     const primary = await callInLegalBert(refined);
