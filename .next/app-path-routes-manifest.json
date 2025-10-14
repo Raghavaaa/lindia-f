@@ -1,0 +1,13 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/research/route": "/api/research",
+  "/api/admin/updatePrompt/route": "/api/admin/updatePrompt",
+  "/favicon.ico/route": "/favicon.ico",
+  "/dashboard/page": "/dashboard",
+  "/login/page": "/login",
+  "/settings/page": "/settings",
+  "/about/page": "/about",
+  "/privacy/page": "/privacy",
+  "/page": "/",
+  "/terms/page": "/terms"
+}
