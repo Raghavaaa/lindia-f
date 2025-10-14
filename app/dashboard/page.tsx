@@ -3,15 +3,18 @@ import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import TopTabs from "@/components/TopTabs";
 import UploadCard from "@/components/UploadCard";
-import { useAppStore, WorkspaceOption } from "@/lib/store";
+import { useAppStore, WorkspaceOption, Client } from "@/lib/store";
 import ClientGate from "@/components/ClientGate";
 import ResearchModal from "@/components/ResearchModal";
+import ClientSelectionModal from "@/components/ClientSelectionModal";
 
 export default function DashboardPage() {
-  const { active, setActive, directories, subdirectories, addDirectory, addSubdirectory, getClientName } = useAppStore();
+  const { active, setActive, directories, subdirectories, addDirectory, addSubdirectory, getClientName, clients, addClient } = useAppStore();
   const [topOption, setTopOption] = useState<WorkspaceOption | undefined>(undefined);
   const [showGate, setShowGate] = useState(false);
   const [showResearch, setShowResearch] = useState(false);
+  const [showClientSelection, setShowClientSelection] = useState(false);
+  const [pendingOption, setPendingOption] = useState<WorkspaceOption | undefined>(undefined);
   const clientSelected = Boolean(active.clientId);
 
   const showWorkspace = clientSelected && Boolean(topOption);
@@ -20,11 +23,27 @@ export default function DashboardPage() {
 
   function handleTopTabChange(key: WorkspaceOption) {
     if (!clientSelected) {
-      setShowGate(true);
+      setPendingOption(key);
+      setShowClientSelection(true);
       return;
     }
     setTopOption(key);
     if (key === "research") setShowResearch(true);
+  }
+
+  function handleClientSelect(client: Client) {
+    setActive({ clientId: client.id });
+    setShowClientSelection(false);
+    if (pendingOption) {
+      setTopOption(pendingOption);
+      if (pendingOption === "research") setShowResearch(true);
+      setPendingOption(undefined);
+    }
+  }
+
+  function handleCreateClient(clientData: Omit<Client, "id">) {
+    const newClient = addClient(clientData);
+    handleClientSelect(newClient);
   }
 
   return (
@@ -121,6 +140,17 @@ export default function DashboardPage() {
         </div>
       </div>
       {showGate && <ClientGate onClose={() => setShowGate(false)} />}
+      {showClientSelection && (
+        <ClientSelectionModal
+          onSelectClient={handleClientSelect}
+          onCreateClient={handleCreateClient}
+          onClose={() => {
+            setShowClientSelection(false);
+            setPendingOption(undefined);
+          }}
+          existingClients={clients}
+        />
+      )}
       {showResearch && <ResearchModal userId={active.clientId} onClose={() => setShowResearch(false)} />}
     </div>
   );

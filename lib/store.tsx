@@ -6,6 +6,9 @@ export type WorkspaceOption = "property" | "research" | "case" | "junior";
 export interface Client {
   id: string;
   name: string;
+  phone: string;
+  email?: string;
+  address?: string;
   referenceId?: string;
 }
 
@@ -38,7 +41,7 @@ interface AppState {
 
 interface AppStore extends AppState {
   setActive: (update: Partial<ActiveSelection>) => void;
-  addClient: (name: string, referenceId?: string) => Client;
+  addClient: (client: Omit<Client, "id">) => Client;
   removeClient: (clientId: string) => void;
   addDirectory: (clientId: string, name: string) => Directory;
   addSubdirectory: (directoryId: string, name: string) => Subdirectory;
@@ -79,8 +82,8 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     setState((prev) => ({ ...prev, active: { ...prev.active, ...update } }));
   }, []);
 
-  const addClient = useCallback((name: string, referenceId?: string): Client => {
-    const client: Client = { id: generateId("cli"), name, referenceId };
+  const addClient = useCallback((clientData: Omit<Client, "id">): Client => {
+    const client: Client = { id: generateId("cli"), ...clientData };
     setState((prev) => ({ ...prev, clients: [...prev.clients, client] }));
     return client;
   }, []);

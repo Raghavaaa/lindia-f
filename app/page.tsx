@@ -11,8 +11,8 @@ export default function Home() {
           Your assistant for property opinions, research, case preparation, and more.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/dashboard" className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium text-white bg-black hover:bg-zinc-800 w-full sm:w-auto">
-            Get started
+          <Link href="/about" className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium text-white bg-black hover:bg-zinc-800 w-full sm:w-auto">
+            Get Started
           </Link>
           <Link href="/login" className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium bg-white dark:bg-zinc-800 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-zinc-100 w-full sm:w-auto">
             Login

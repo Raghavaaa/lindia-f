@@ -18,8 +18,8 @@ export default function Header() {
         </Link>
         <nav className="flex items-center gap-3">
           <Link href="/about" className="text-sm text-zinc-700 dark:text-zinc-300 hover:underline">About</Link>
-          <Link href="/login" className="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-medium bg-white dark:bg-zinc-800 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-zinc-100">Login</Link>
-          <Link href="/settings" className="inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-medium text-white bg-black hover:bg-zinc-800">Settings</Link>
+          <Link href="/login" className="text-sm text-zinc-700 dark:text-zinc-300 hover:underline">Login</Link>
+          <Link href="/settings" className="text-sm text-zinc-700 dark:text-zinc-300 hover:underline">Settings</Link>
         </nav>
       </div>
     </header>
