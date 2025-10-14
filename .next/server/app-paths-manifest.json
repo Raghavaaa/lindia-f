@@ -1,16 +1,17 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/api/admin/updatePrompt/route": "app/api/admin/updatePrompt/route.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/api/research/route": "app/api/research/route.js",
+  "/api/health/route": "app/api/health/route.js",
   "/api/research/saved/route": "app/api/research/saved/route.js",
   "/api/user/profile/route": "app/api/user/profile/route.js",
+  "/api/research/route": "app/api/research/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/login/page": "app/login/page.js",
   "/page": "app/page.js",
+  "/login/page": "app/login/page.js",
   "/settings/page": "app/settings/page.js",
   "/about/page": "app/about/page.js",
-  "/terms/page": "app/terms/page.js",
-  "/privacy/page": "app/privacy/page.js"
+  "/privacy/page": "app/privacy/page.js",
+  "/terms/page": "app/terms/page.js"
 }

@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "next start -p $PORT",
+    "lint": "eslint",
+    "postinstall": "next telemetry disable"
   },
   "dependencies": {
     "@types/next-auth": "^3.13.0",

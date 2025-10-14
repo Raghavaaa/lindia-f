@@ -1,16 +1,17 @@
 {
-  "/_not-found/page": "/_not-found",
   "/api/admin/updatePrompt/route": "/api/admin/updatePrompt",
   "/api/auth/[...nextauth]/route": "/api/auth/[...nextauth]",
-  "/api/research/route": "/api/research",
+  "/api/health/route": "/api/health",
   "/api/research/saved/route": "/api/research/saved",
   "/api/user/profile/route": "/api/user/profile",
+  "/api/research/route": "/api/research",
   "/favicon.ico/route": "/favicon.ico",
+  "/_not-found/page": "/_not-found",
   "/dashboard/page": "/dashboard",
-  "/login/page": "/login",
   "/page": "/",
+  "/login/page": "/login",
   "/settings/page": "/settings",
   "/about/page": "/about",
-  "/terms/page": "/terms",
-  "/privacy/page": "/privacy"
+  "/privacy/page": "/privacy",
+  "/terms/page": "/terms"
 }
