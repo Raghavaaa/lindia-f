@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+.next-static/
+
+# Build outputs
+build/
+dist/
+coverage/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS/Editor
+.DS_Store
+.idea/
+*.swp
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Vercel/Netlify/Turbo
+.vercel/
+.netlify/
+.turbo/
+
+# Cache
+.cache/
+
+# Misc
+*.local
