@@ -1,6 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import TopTabs from "@/components/TopTabs";
 import UploadCard from "@/components/UploadCard";
@@ -17,15 +17,26 @@ export default function DashboardPage() {
   const [showResearch, setShowResearch] = useState(false);
   const [showClientSelection, setShowClientSelection] = useState(false);
   const [pendingOption, setPendingOption] = useState<WorkspaceOption | undefined>(undefined);
+  const [dbUser, setDbUser] = useState<any>(null);
   const clientSelected = Boolean(active.clientId);
+
+  useEffect(() => {
+    // Check for database user in localStorage
+    const user = localStorage.getItem("user");
+    if (user) {
+      setDbUser(JSON.parse(user));
+    }
+  }, []);
 
   if (status === "loading") {
     return <div className="p-8">Loading...</div>;
   }
 
-  if (!session) {
+  if (!session && !dbUser) {
     return <div className="p-8">Please log in to access the dashboard.</div>;
   }
+
+  const currentUser = session?.user || dbUser;
 
   const showWorkspace = clientSelected && Boolean(topOption);
   const selectedDirectory = directories.find((d) => d.id === active.directoryId);
@@ -161,7 +172,7 @@ export default function DashboardPage() {
           existingClients={clients}
         />
       )}
-          {showResearch && <ResearchModal userId={session.user?.email || undefined} onClose={() => setShowResearch(false)} />}
+          {showResearch && <ResearchModal userId={currentUser?.email || undefined} onClose={() => setShowResearch(false)} />}
     </div>
   );
 }

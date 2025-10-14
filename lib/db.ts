@@ -15,6 +15,7 @@ export async function getDb() {
         id TEXT PRIMARY KEY,
         name TEXT,
         email TEXT,
+        password TEXT,
         phone TEXT,
         address TEXT,
         image TEXT,
