@@ -91,6 +91,25 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}));
     const rawQuery: string = String(body.query ?? "").trim();
     const userId: string | undefined = body.userId ? String(body.userId) : undefined;
+    const clientName: string | undefined = body.clientName ? String(body.clientName) : undefined;
+    const save: boolean = Boolean(body.save);
+    const result: string | undefined = body.result ? String(body.result) : undefined;
+
+    // Handle save request
+    if (save && result && clientName) {
+      const id = `rq_${Math.random().toString(36).slice(2, 10)}`;
+      await saveResearchQuery({ 
+        id, 
+        userId: clientName, // Using clientName as userId for organization
+        queryText: rawQuery, 
+        responseText: result 
+      });
+      return new Response(JSON.stringify({ success: true, message: "Research saved successfully" }), { 
+        status: 200, 
+        headers: { "Content-Type": "application/json" } 
+      });
+    }
+
     if (!rawQuery) {
       return new Response(JSON.stringify({ error: "Missing query" }), { status: 400 });
     }

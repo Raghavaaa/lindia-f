@@ -18,6 +18,7 @@ export default function Header() {
         </Link>
         <nav className="flex items-center gap-3">
           <Link href="/about" className="text-sm text-zinc-700 dark:text-zinc-300 hover:underline">About</Link>
+          <Link href="/history" className="text-sm text-zinc-700 dark:text-zinc-300 hover:underline">History</Link>
           <Link href="/login" className="text-sm text-zinc-700 dark:text-zinc-300 hover:underline">Login</Link>
           <Link href="/settings" className="text-sm text-zinc-700 dark:text-zinc-300 hover:underline">Settings</Link>
         </nav>
