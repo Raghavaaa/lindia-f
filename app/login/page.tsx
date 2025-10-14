@@ -24,8 +24,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       console.log("Starting Google login...");
-      const result = await signIn("google", { callbackUrl: "/dashboard" });
-      console.log("SignIn result:", result);
+      await signIn("google");
     } catch (error) {
       console.error("Login error:", error);
     } finally {
