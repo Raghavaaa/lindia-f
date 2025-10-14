@@ -90,6 +90,12 @@
       "namedRegex": "^/settings(?:/)?$"
     },
     {
+      "page": "/simple",
+      "regex": "^/simple(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/simple(?:/)?$"
+    },
+    {
       "page": "/terms",
       "regex": "^/terms(?:/)?$",
       "routeKeys": {},
@@ -100,6 +106,12 @@
       "regex": "^/test\\-dashboard(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/test\\-dashboard(?:/)?$"
+    },
+    {
+      "page": "/test-login",
+      "regex": "^/test\\-login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/test\\-login(?:/)?$"
     }
   ],
   "dataRoutes": [],
