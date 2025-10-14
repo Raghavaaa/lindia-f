@@ -12,13 +12,10 @@ export default function LoginPage() {
   useEffect(() => {
     // Check if user is already logged in
     getSession().then((session) => {
+      console.log("Login page - session check:", session);
       if (session?.user) {
-        // Check if profile is complete
-        if (!session.user.phone) {
-          setShowProfileForm(true);
-        } else {
-          router.push("/dashboard");
-        }
+        console.log("User is logged in, redirecting to dashboard");
+        router.push("/dashboard");
       }
     });
   }, [router]);
@@ -26,7 +23,9 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      await signIn("google", { callbackUrl: "/dashboard" });
+      console.log("Starting Google login...");
+      const result = await signIn("google", { callbackUrl: "/dashboard" });
+      console.log("SignIn result:", result);
     } catch (error) {
       console.error("Login error:", error);
     } finally {
