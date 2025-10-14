@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AppStoreProvider } from "@/lib/store";
-import { SessionProvider } from "next-auth/react";
+import SessionProvider from "@/components/SessionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

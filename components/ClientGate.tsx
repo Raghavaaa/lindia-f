@@ -27,7 +27,11 @@ export default function ClientGate({ onClose }: ClientGateProps) {
   function handleCreate() {
     const name = newName.trim();
     if (!name) return;
-    const created = addClient(name, newRef.trim() || undefined);
+    const created = addClient({
+      name,
+      phone: "",
+      referenceId: newRef.trim() || undefined,
+    });
     setActive({ clientId: created.id });
     onClose?.();
   }

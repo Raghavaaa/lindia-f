@@ -1,8 +1,8 @@
-import { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { getDb } from "@/lib/db";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession();
     if (!session?.user?.id) {
@@ -16,12 +16,9 @@ export async function GET(req: NextRequest) {
       session.user.id
     );
 
-    return new Response(JSON.stringify({ research }), { 
-      status: 200, 
-      headers: { "Content-Type": "application/json" } 
-    });
+    return NextResponse.json({ research });
   } catch (error) {
     console.error("Error fetching saved research:", error);
-    return new Response(JSON.stringify({ error: "Internal error" }), { status: 500 });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }

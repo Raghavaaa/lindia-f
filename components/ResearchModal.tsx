@@ -27,7 +27,7 @@ export default function ResearchModal({ userId, onClose }: Props) {
   useEffect(() => {
     const handleScroll = () => {
       if (resultRef.current && scrollToTopRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = resultRef.current;
+        const { scrollTop } = resultRef.current;
         const showButton = scrollTop > 100;
         scrollToTopRef.current.style.display = showButton ? "block" : "none";
       }

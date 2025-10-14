@@ -10,7 +10,7 @@ export default function SettingsPage() {
   const [prompt, setPrompt] = useState("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
-  const [savedResearch, setSavedResearch] = useState<any[]>([]);
+  const [savedResearch, setSavedResearch] = useState<Array<{id: string; query_text: string; response_text: string; created_at: string}>>([]);
   const [activeTab, setActiveTab] = useState<"logo" | "prompt" | "clients" | "research">("logo");
 
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function SettingsPage() {
         ].map(({ key, label }) => (
           <button
             key={key}
-            onClick={() => setActiveTab(key as any)}
+            onClick={() => setActiveTab(key as "logo" | "prompt" | "clients" | "research")}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               activeTab === key
                 ? "bg-black text-white dark:bg-white dark:text-black"
