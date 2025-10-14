@@ -8,16 +8,6 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  callbacks: {
-    async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      if (new URL(url).origin === baseUrl) return url;
-      return `${baseUrl}/test-dashboard`;
-    },
-  },
-  pages: {
-    signIn: "/login",
-  },
   secret: process.env.NEXTAUTH_SECRET,
 });
 

@@ -1,4 +1,5 @@
 "use client";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import TopTabs from "@/components/TopTabs";
@@ -9,6 +10,7 @@ import ResearchModal from "@/components/ResearchModal";
 import ClientSelectionModal from "@/components/ClientSelectionModal";
 
 export default function DashboardPage() {
+  const { data: session, status } = useSession();
   const { active, setActive, directories, subdirectories, addDirectory, addSubdirectory, getClientName, clients, addClient } = useAppStore();
   const [topOption, setTopOption] = useState<WorkspaceOption | undefined>(undefined);
   const [showGate, setShowGate] = useState(false);
@@ -16,6 +18,14 @@ export default function DashboardPage() {
   const [showClientSelection, setShowClientSelection] = useState(false);
   const [pendingOption, setPendingOption] = useState<WorkspaceOption | undefined>(undefined);
   const clientSelected = Boolean(active.clientId);
+
+  if (status === "loading") {
+    return <div className="p-8">Loading...</div>;
+  }
+
+  if (!session) {
+    return <div className="p-8">Please log in to access the dashboard.</div>;
+  }
 
   const showWorkspace = clientSelected && Boolean(topOption);
   const selectedDirectory = directories.find((d) => d.id === active.directoryId);
@@ -151,7 +161,7 @@ export default function DashboardPage() {
           existingClients={clients}
         />
       )}
-      {showResearch && <ResearchModal userId={active.clientId} onClose={() => setShowResearch(false)} />}
+          {showResearch && <ResearchModal userId={session.user?.email} onClose={() => setShowResearch(false)} />}
     </div>
   );
 }
