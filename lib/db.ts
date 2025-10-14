@@ -1,6 +1,7 @@
 import path from "path";
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
+import { runMigrations } from "./database/migrations";
 
 let dbPromise: Promise<Database<sqlite3.Database, sqlite3.Statement>> | null = null;
 
@@ -9,31 +10,12 @@ export async function getDb() {
     const dbPath = path.join(process.cwd(), "data.sqlite");
     dbPromise = open({ filename: dbPath, driver: sqlite3.Database });
     const db = await dbPromise;
-    await db.exec(`
-      PRAGMA journal_mode = WAL;
-      CREATE TABLE IF NOT EXISTS users (
-        id TEXT PRIMARY KEY,
-        name TEXT,
-        email TEXT,
-        password TEXT,
-        phone TEXT,
-        address TEXT,
-        image TEXT,
-        provider TEXT,
-        created_at TEXT DEFAULT (datetime('now'))
-      );
-      CREATE TABLE IF NOT EXISTS research_queries (
-        id TEXT PRIMARY KEY,
-        user_id TEXT,
-        query_text TEXT,
-        response_text TEXT,
-        created_at TEXT DEFAULT (datetime('now'))
-      );
-      CREATE TABLE IF NOT EXISTS settings (
-        key TEXT PRIMARY KEY,
-        value TEXT
-      );
-    `);
+    
+    // Enable WAL mode for better performance
+    await db.exec('PRAGMA journal_mode = WAL;');
+    
+    // Run migrations
+    await runMigrations(db);
   }
   return dbPromise!;
 }

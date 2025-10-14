@@ -1,5 +1,8 @@
 import { NextRequest } from "next/server";
-import { getSetting, saveResearchQuery } from "@/lib/db";
+import { getSetting } from "@/lib/db";
+import { createResearchQuery } from "@/lib/database/services";
+import { withValidation, createResearchSchema, serverError } from "@/lib/middleware/validation";
+import { withAuth, AuthenticatedRequest } from "@/lib/middleware/auth";
 
 async function callInLegalBert(query: string) {
   const hfToken = process.env.HF_TOKEN;
@@ -86,32 +89,16 @@ async function callDeepSeek(query: string) {
   return text;
 }
 
-export async function POST(req: NextRequest) {
+async function handleResearch(req: AuthenticatedRequest, data: any) {
   try {
-    const body = await req.json().catch(() => ({}));
-    const rawQuery: string = String(body.query ?? "").trim();
-    const userId: string | undefined = body.userId ? String(body.userId) : undefined;
-    const clientName: string | undefined = body.clientName ? String(body.clientName) : undefined;
-    const save: boolean = Boolean(body.save);
-    const result: string | undefined = body.result ? String(body.result) : undefined;
+    const { query, clientId, save, model } = data;
+    const userId = req.user?.id;
 
-    // Handle save request
-    if (save && result && clientName) {
-      const id = `rq_${Math.random().toString(36).slice(2, 10)}`;
-      await saveResearchQuery({ 
-        id, 
-        userId: clientName, // Using clientName as userId for organization
-        queryText: rawQuery, 
-        responseText: result 
-      });
-      return new Response(JSON.stringify({ success: true, message: "Research saved successfully" }), { 
-        status: 200, 
+    if (!userId) {
+      return new Response(JSON.stringify({ success: false, error: "User not authenticated" }), { 
+        status: 401, 
         headers: { "Content-Type": "application/json" } 
       });
-    }
-
-    if (!rawQuery) {
-      return new Response(JSON.stringify({ error: "Missing query" }), { status: 400 });
     }
 
     const envPrompt = process.env.PROMPT_BASE;
@@ -126,24 +113,52 @@ For any legal query, include:
 5. References to specific legal provisions
 
 Be specific, cite relevant laws, and provide actionable advice. Focus on Indian legal system, courts, and procedures.`).trim();
-    const refined = `${basePrompt}\n\nUser query: ${rawQuery}`;
+    const refined = `${basePrompt}\n\nUser query: ${query}`;
 
     const primary = await callInLegalBert(refined);
     let finalText = primary.text?.trim() ?? "";
+    let confidence = primary.confidence;
+    
     if (!finalText || primary.confidence < 0.6) {
       const fallback = await callDeepSeek(refined);
-      if (fallback) finalText = fallback.trim();
+      if (fallback) {
+        finalText = fallback.trim();
+        confidence = 0.8;
+      }
     }
+    
     finalText = finalText.replace(/\n{3,}/g, "\n\n").trim();
 
-    const id = `rq_${Math.random().toString(36).slice(2, 10)}`;
-    await saveResearchQuery({ id, userId, queryText: rawQuery, responseText: finalText });
+    // Save research query
+    const researchQuery = await createResearchQuery({
+      userId,
+      clientId,
+      queryText: query,
+      responseText: finalText,
+      status: 'completed',
+      model: model || 'deepseek',
+      confidence
+    });
 
-    return new Response(JSON.stringify({ result: finalText, id }), { status: 200, headers: { "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ 
+      success: true, 
+      data: { 
+        result: finalText, 
+        id: researchQuery.id,
+        confidence 
+      } 
+    }), { 
+      status: 200, 
+      headers: { "Content-Type": "application/json" } 
+    });
   } catch (error) {
     console.error("/api/research error", error);
-    return new Response(JSON.stringify({ error: "Internal error" }), { status: 500 });
+    return serverError("Research failed");
   }
 }
+
+export const POST = withAuth(
+  withValidation(createResearchSchema)(handleResearch)
+);
 
 
