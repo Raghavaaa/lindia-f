@@ -11,6 +11,7 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
+      console.log("SignIn callback triggered:", { user: user.email, provider: account?.provider });
       if (account?.provider === "google") {
         try {
           await saveUser({
@@ -20,6 +21,7 @@ const handler = NextAuth({
             image: user.image || undefined,
             provider: "google",
           });
+          console.log("User saved successfully:", user.email);
           return true;
         } catch (error) {
           console.error("Error saving user:", error);
@@ -29,9 +31,11 @@ const handler = NextAuth({
       return true;
     },
     async session({ session }) {
+      console.log("Session callback triggered:", { email: session.user?.email });
       if (session.user?.email) {
         try {
           const dbUser = await getUser(session.user.email);
+          console.log("Database user found:", dbUser ? "yes" : "no");
           if (dbUser) {
             session.user.id = dbUser.id;
             session.user.phone = dbUser.phone;
