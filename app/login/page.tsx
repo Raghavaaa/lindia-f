@@ -11,7 +11,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleGoogleLogin = () => {
-    signIn("google", { callbackUrl: "/dashboard" });
+    signIn("google", { callbackUrl: "/" });
   };
 
   const handleDbLogin = async (e: React.FormEvent) => {
@@ -30,10 +30,10 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage("Success! Redirecting to dashboard...");
+        setMessage("Success! Redirecting to research page...");
         // Store user data in localStorage for now
         localStorage.setItem("user", JSON.stringify(data.user));
-        setTimeout(() => router.push("/dashboard"), 1000);
+        setTimeout(() => router.push("/"), 1000);
       } else {
         setMessage(data.error || "Login failed");
       }
