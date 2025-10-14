@@ -1,0 +1,6 @@
+data.sqlite
+.env.local
+node_modules/
+.next/cache/
+*.zip
+.DS_Store
