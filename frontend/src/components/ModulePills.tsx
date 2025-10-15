@@ -33,13 +33,13 @@ export default function ModulePills({ activeModule, onSelect }: Props) {
           onClick={() => onSelect(module.id)}
           tabIndex={0}
           style={{
-            padding: "4px 8px",
-            height: 28,
-            borderRadius: 14,
+            padding: "8px 16px",
+            height: 36,
+            borderRadius: 18,
             border: "1px solid #E6E9EE",
             background: activeModule === module.id ? "#2E7CF6" : "#FFFFFF",
             color: activeModule === module.id ? "#FFFFFF" : "#6B7280",
-            fontSize: 11,
+            fontSize: 13,
             fontWeight: 500,
             cursor: "pointer",
             transition: "all 0.2s ease",

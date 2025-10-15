@@ -173,13 +173,6 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         </div>
       )}
 
-      {/* Module Title */}
-      <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 8, color: "#1F2937" }}>
-        Legal Research
-      </h3>
-      <p style={{ fontSize: 13, color: "#6B7280", marginBottom: 20 }}>
-        Enter your legal research question and get AI-powered analysis
-      </p>
 
       {/* Query Input */}
       <div style={{ marginBottom: 20 }}>
