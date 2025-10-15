@@ -86,13 +86,13 @@ export default function ClientWorkspace({
         {/* Left side - Prompt window */}
         <div style={{ flex: 1, overflowY: "auto" }}>
           {/* Client Selection Dropdown */}
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ marginBottom: 12 }}>
             <label style={{ 
               display: "block", 
-              fontSize: 14, 
+              fontSize: 12, 
               fontWeight: 500, 
               color: "#374151", 
-              marginBottom: 6 
+              marginBottom: 4 
             }}>
               Select Client:
             </label>
@@ -101,11 +101,11 @@ export default function ClientWorkspace({
               onChange={(e) => setSelectedClientId(e.target.value)}
               style={{
                 width: "100%",
-                padding: "8px 12px",
-                borderRadius: 8,
+                padding: "6px 10px",
+                borderRadius: 6,
                 border: "1px solid #D1D5DB",
                 background: "#FFFFFF",
-                fontSize: 14,
+                fontSize: 13,
                 color: "#374151"
               }}
               aria-label="Select client for research"
@@ -125,7 +125,7 @@ export default function ClientWorkspace({
         </div>
 
         {/* Right side - Module pills */}
-        <div style={{ width: 200, flexShrink: 0 }}>
+        <div style={{ width: 280, flexShrink: 0 }}>
           <ModulePills activeModule={activeModule} onSelect={onModuleChange} />
         </div>
       </div>
