@@ -4,8 +4,9 @@ import { v4 as uuidv4 } from "uuid";
 
 type ResearchItem = {
   id: string;
+  title: string;
   query: string;
-  adminPrompt?: string;
+  adminPrompt?: string | null;
   resultText: string;
   ts: number;
 };
@@ -84,10 +85,12 @@ Key Findings:
 
 ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
 
+      const queryText = query.trim();
       const newItem: ResearchItem = {
         id: uuidv4(),
-        query: query.trim(),
-        adminPrompt: showAdmin ? adminPrompt.trim() : undefined,
+        title: queryText.substring(0, 60),
+        query: queryText,
+        adminPrompt: showAdmin ? adminPrompt.trim() : null,
         resultText,
         ts: Date.now()
       };
@@ -203,7 +206,7 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
               margin: 0,
               color: "#1F2937"
             }}>
-              {currentResult.query.length > 60 ? currentResult.query.substring(0, 60) + "..." : currentResult.query}
+              {currentResult.title}
             </h4>
             <div style={{ fontSize: 11, color: "#9CA3AF" }}>
               {new Date(currentResult.ts).toLocaleString()}
@@ -228,47 +231,48 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
           <h4 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: "#1F2937" }}>
             Research History ({researchItems.length})
           </h4>
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {researchItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setSelectedResult(item.id)}
-                style={{
-                  textAlign: "left",
-                  padding: "8px 12px",
-                  borderRadius: 8,
-                  border: "none",
-                  background: selectedResult === item.id ? "#E8F1FF" : "transparent",
-                  cursor: "pointer",
-                  fontSize: 13,
-                  color: "#374151",
-                  transition: "all 0.2s ease",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start"
-                }}
-                onMouseEnter={(e) => {
-                  if (selectedResult !== item.id) {
-                    e.currentTarget.style.background = "#F8FAFF";
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (selectedResult !== item.id) {
-                    e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.transform = "translateY(0)";
-                  }
-                }}
-                aria-label={`Research item: ${item.query}, created on ${new Date(item.ts).toLocaleDateString()}`}
-              >
-                <div style={{ fontWeight: 500, marginBottom: 2, lineHeight: 1.3 }}>
-                  {item.query.length > 60 ? item.query.substring(0, 60) + "..." : item.query}
-                </div>
-                <div style={{ color: "#9CA3AF", fontSize: 11 }}>
-                  {new Date(item.ts).toLocaleDateString()}
-                </div>
-              </button>
-            ))}
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {researchItems.map((item) => {
+              const time = new Date(item.ts);
+              const hours = String(time.getHours()).padStart(2, '0');
+              const minutes = String(time.getMinutes()).padStart(2, '0');
+              const timeStr = `${hours}:${minutes}`;
+              
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setSelectedResult(item.id)}
+                  className="muted"
+                  style={{
+                    textAlign: "left",
+                    padding: "6px 12px",
+                    borderRadius: 6,
+                    border: "none",
+                    background: selectedResult === item.id ? "#E8F1FF" : "transparent",
+                    cursor: "pointer",
+                    fontSize: 13,
+                    color: selectedResult === item.id ? "#2E7CF6" : "#6B7280",
+                    transition: "all 0.15s ease",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}
+                  onMouseEnter={(e) => {
+                    if (selectedResult !== item.id) {
+                      e.currentTarget.style.background = "#F8FAFF";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (selectedResult !== item.id) {
+                      e.currentTarget.style.background = "transparent";
+                    }
+                  }}
+                  aria-label={`Research from ${timeStr}: ${item.title}`}
+                >
+                  {timeStr} • {item.title}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
