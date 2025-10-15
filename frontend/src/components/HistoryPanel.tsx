@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ModulePills from "./ModulePills";
 
 type HistoryItem = {
   id: string;
@@ -19,7 +18,6 @@ type Props = {
   selectedItemId?: string | null;
   isMobileOpen?: boolean;
   onMobileClose?: () => void;
-  onModuleChange: (module: string) => void;
 };
 
 export default function HistoryPanel({ 
@@ -29,8 +27,7 @@ export default function HistoryPanel({
   onSelectItem,
   selectedItemId,
   isMobileOpen = false,
-  onMobileClose,
-  onModuleChange
+  onMobileClose
 }: Props) {
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [displayLimit, setDisplayLimit] = useState(50);
@@ -112,10 +109,6 @@ export default function HistoryPanel({
         }}>
           History
         </h3>
-        {/* Module Pills */}
-        <div style={{ marginTop: 12 }}>
-          <ModulePills activeModule={activeModule} onSelect={onModuleChange} />
-        </div>
       </div>
 
       {/* History List */}

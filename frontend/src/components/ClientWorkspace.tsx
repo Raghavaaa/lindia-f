@@ -81,6 +81,8 @@ export default function ClientWorkspace({
         </div>
       )}
 
+      {/* Module pills - always visible */}
+      <ModulePills activeModule={activeModule} onSelect={onModuleChange} />
 
       {/* Module content */}
       <div style={{ flex: 1, marginTop: 16, overflowY: "auto" }}>
