@@ -13,48 +13,30 @@ type ResearchItem = {
 
 type Props = {
   clientId: string;
+  selectedHistoryItem: ResearchItem | null;
+  onClearHistorySelection: () => void;
 };
 
-export default function ResearchModule({ clientId }: Props) {
+export default function ResearchModule({ clientId, selectedHistoryItem, onClearHistorySelection }: Props) {
   const [query, setQuery] = useState("");
   const [adminPrompt, setAdminPrompt] = useState("Use Indian case law & statutes where relevant. Summarize in 5 bullet points.");
   const [showAdmin, setShowAdmin] = useState(false);
   const [running, setRunning] = useState(false);
-  const [researchItems, setResearchItems] = useState<ResearchItem[]>([]);
-  const [selectedResult, setSelectedResult] = useState<string | null>(null);
+  const [currentResult, setCurrentResult] = useState<ResearchItem | null>(null);
+  const [showSavedToast, setShowSavedToast] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load research items for this client
+  // Update current result when history item is selected
   useEffect(() => {
-    try {
-      const key = `legalindia::client::${clientId}::research`;
-      const saved = localStorage.getItem(key);
-      if (saved) {
-        const items = JSON.parse(saved);
-        setResearchItems(items);
-        if (items.length > 0 && !selectedResult) {
-          setSelectedResult(items[0].id);
-        }
-      }
-    } catch (error) {
-      console.error("Error loading research items:", error);
+    if (selectedHistoryItem) {
+      setCurrentResult(selectedHistoryItem);
     }
-  }, [clientId, selectedResult]);
-
-  // Save research items
-  useEffect(() => {
-    try {
-      const key = `legalindia::client::${clientId}::research`;
-      localStorage.setItem(key, JSON.stringify(researchItems));
-    } catch (error) {
-      console.error("Error saving research items:", error);
-    }
-  }, [researchItems, clientId]);
+  }, [selectedHistoryItem]);
 
   // Handle Ctrl+Enter to run research
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === "Enter" && textareaRef.current === document.activeElement) {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && textareaRef.current === document.activeElement) {
         e.preventDefault();
         runResearch();
       }
@@ -62,7 +44,7 @@ export default function ResearchModule({ clientId }: Props) {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [query, adminPrompt, showAdmin]); // Add dependencies
 
   function runResearch() {
     if (!query.trim()) {
@@ -70,7 +52,13 @@ export default function ResearchModule({ clientId }: Props) {
       return;
     }
 
+    if (!clientId) {
+      alert("Select a client.");
+      return;
+    }
+
     setRunning(true);
+    onClearHistorySelection(); // Clear history selection when running new query
 
     // Simulate API call delay
     setTimeout(() => {
@@ -88,24 +76,79 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
       const queryText = query.trim();
       const newItem: ResearchItem = {
         id: uuidv4(),
-        title: queryText.substring(0, 60),
+        title: queryText.substring(0, 60) + (queryText.length > 60 ? "..." : ""),
         query: queryText,
         adminPrompt: showAdmin ? adminPrompt.trim() : null,
         resultText,
         ts: Date.now()
       };
 
-      setResearchItems(prev => [newItem, ...prev]);
-      setSelectedResult(newItem.id);
-      setQuery("");
+      // Save to localStorage
+      try {
+        const key = `legalindia::client::${clientId}::research`;
+        const existing = localStorage.getItem(key);
+        const items: ResearchItem[] = existing ? JSON.parse(existing) : [];
+        
+        // Add new item to front and limit to 200
+        const updatedItems = [newItem, ...items].slice(0, 200);
+        localStorage.setItem(key, JSON.stringify(updatedItems));
+        
+        // Show result
+        setCurrentResult(newItem);
+        setQuery("");
+        
+        // Show saved toast
+        setShowSavedToast(true);
+        setTimeout(() => setShowSavedToast(false), 3000);
+      } catch (error) {
+        console.error("Error saving research:", error);
+        alert("Saving disabled - localStorage may be full");
+      }
+
       setRunning(false);
     }, 1000);
   }
 
-  const currentResult = selectedResult ? researchItems.find(r => r.id === selectedResult) : null;
+  const formatTime = (ts: number) => {
+    const date = new Date(ts);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
+      {/* Saved Toast */}
+      {showSavedToast && (
+        <div style={{
+          position: "fixed",
+          bottom: 24,
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "#2E7CF6",
+          color: "white",
+          padding: "12px 24px",
+          borderRadius: 28,
+          fontSize: 14,
+          fontWeight: 500,
+          boxShadow: "0 4px 12px rgba(46, 124, 246, 0.3)",
+          zIndex: 1000,
+          display: "flex",
+          alignItems: "center",
+          gap: 12
+        }}>
+          Saved • {currentResult && formatTime(currentResult.ts)}
+        </div>
+      )}
+
+      {/* Module Title */}
+      <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 8, color: "#1F2937" }}>
+        Legal Research
+      </h3>
+      <p style={{ fontSize: 13, color: "#6B7280", marginBottom: 20 }}>
+        Enter your legal research question and get AI-powered analysis
+      </p>
+
       {/* Query Input */}
       <div style={{ marginBottom: 20 }}>
         <textarea
@@ -113,10 +156,11 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
           placeholder="Enter your legal research question (e.g., 'What are the requirements for adverse possession in urban properties under Indian law?')"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          className="input"
           style={{
             width: "100%",
-            minHeight: 100,
-            padding: 12,
+            minHeight: 120,
+            padding: 14,
             border: "1px solid #E6E9EE",
             borderRadius: 12,
             fontSize: 14,
@@ -124,7 +168,7 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
             resize: "vertical",
             marginBottom: 12
           }}
-          aria-label="Research query input"
+          aria-label="Module Research prompt"
         />
 
         {/* Admin Prompt Toggle */}
@@ -146,6 +190,7 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
           <textarea
             value={adminPrompt}
             onChange={(e) => setAdminPrompt(e.target.value)}
+            className="input"
             style={{
               width: "100%",
               minHeight: 80,
@@ -162,26 +207,29 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         )}
 
         {/* Run Button */}
-        <button
-          onClick={runResearch}
-          disabled={running}
-          style={{
-            padding: "12px 24px",
-            background: running ? "#9CA3AF" : "#2E7CF6",
-            color: "white",
-            border: "none",
-            borderRadius: 28,
-            cursor: running ? "not-allowed" : "pointer",
-            fontSize: 14,
-            fontWeight: 600,
-            boxShadow: "0 2px 4px rgba(10, 15, 25, 0.08)"
-          }}
-          aria-label="Run research query"
-        >
-          {running ? "Running…" : "Run Research"}
-        </button>
-        <div style={{ fontSize: 12, color: "#6B7280", marginTop: 4 }}>
-          Press Ctrl+Enter to run
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button
+            onClick={runResearch}
+            disabled={running}
+            className="btn btn-primary"
+            style={{
+              padding: "12px 24px",
+              background: running ? "#9CA3AF" : "#2E7CF6",
+              color: "white",
+              border: "none",
+              borderRadius: 28,
+              cursor: running ? "not-allowed" : "pointer",
+              fontSize: 14,
+              fontWeight: 600,
+              boxShadow: "0 2px 6px rgba(46, 124, 246, 0.2)"
+            }}
+            aria-label="Run Research action"
+          >
+            {running ? "Running…" : "Run Research"}
+          </button>
+          <div style={{ fontSize: 12, color: "#9CA3AF" }}>
+            Press Ctrl+Enter to run
+          </div>
         </div>
       </div>
 
@@ -191,30 +239,48 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
           background: "#F8FAFC",
           border: "1px solid #E2E8F0",
           borderRadius: 12,
-          padding: 16,
+          padding: 20,
           marginBottom: 20
         }}>
           <div style={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: "flex-start",
             marginBottom: 12
           }}>
             <h4 style={{
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: 600,
               margin: 0,
-              color: "#1F2937"
+              color: "#1F2937",
+              flex: 1
             }}>
               {currentResult.title}
             </h4>
-            <div style={{ fontSize: 11, color: "#9CA3AF" }}>
-              {new Date(currentResult.ts).toLocaleString()}
+            <div style={{ 
+              fontSize: 11, 
+              color: "#9CA3AF",
+              marginLeft: 12,
+              whiteSpace: "nowrap"
+            }}>
+              Saved {formatTime(currentResult.ts)}
             </div>
           </div>
+          
+          {currentResult.query && (
+            <div style={{
+              fontSize: 13,
+              color: "#6B7280",
+              marginBottom: 12,
+              fontStyle: "italic"
+            }}>
+              Query: {currentResult.query}
+            </div>
+          )}
+          
           <pre style={{
-            fontSize: 13,
-            lineHeight: 1.5,
+            fontSize: 14,
+            lineHeight: 1.6,
             color: "#374151",
             whiteSpace: "pre-wrap",
             fontFamily: "Inter, sans-serif",
@@ -225,57 +291,19 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         </div>
       )}
 
-      {/* Research History */}
-      {researchItems.length > 0 && (
-        <div>
-          <h4 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: "#1F2937" }}>
-            Research History ({researchItems.length})
-          </h4>
-          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {researchItems.map((item) => {
-              const time = new Date(item.ts);
-              const hours = String(time.getHours()).padStart(2, '0');
-              const minutes = String(time.getMinutes()).padStart(2, '0');
-              const timeStr = `${hours}:${minutes}`;
-              
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setSelectedResult(item.id)}
-                  className="muted"
-                  style={{
-                    textAlign: "left",
-                    padding: "6px 12px",
-                    borderRadius: 6,
-                    border: "none",
-                    background: selectedResult === item.id ? "#E8F1FF" : "transparent",
-                    cursor: "pointer",
-                    fontSize: 13,
-                    color: selectedResult === item.id ? "#2E7CF6" : "#6B7280",
-                    transition: "all 0.15s ease",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis"
-                  }}
-                  onMouseEnter={(e) => {
-                    if (selectedResult !== item.id) {
-                      e.currentTarget.style.background = "#F8FAFF";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (selectedResult !== item.id) {
-                      e.currentTarget.style.background = "transparent";
-                    }
-                  }}
-                  aria-label={`Research from ${timeStr}: ${item.title}`}
-                >
-                  {timeStr} • {item.title}
-                </button>
-              );
-            })}
-          </div>
+      {!currentResult && !running && (
+        <div style={{
+          padding: 40,
+          textAlign: "center",
+          color: "#9CA3AF",
+          fontSize: 14,
+          border: "1px dashed #E6E9EE",
+          borderRadius: 12
+        }}>
+          Your research results will appear here
         </div>
       )}
     </div>
   );
 }
+

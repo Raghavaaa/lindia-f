@@ -18,6 +18,7 @@ export default function ModulePills({ activeModule, onSelect }: Props) {
     <div style={{ 
       display: "flex", 
       gap: 8, 
+      flexWrap: "wrap",
       marginBottom: 16,
       borderBottom: "1px solid #F1F5F9",
       paddingBottom: 12
@@ -26,30 +27,35 @@ export default function ModulePills({ activeModule, onSelect }: Props) {
         <button
           key={module.id}
           onClick={() => onSelect(module.id)}
+          tabIndex={0}
           style={{
-            padding: "6px 12px",
-            borderRadius: 16,
+            padding: "8px 16px",
+            height: 36,
+            borderRadius: 18,
             border: "1px solid #E6E9EE",
-            background: activeModule === module.id ? "#2E7CF6" : "transparent",
-            color: activeModule === module.id ? "white" : "#6B7280",
-            fontSize: 13,
+            background: activeModule === module.id ? "#2E7CF6" : "#FFFFFF",
+            color: activeModule === module.id ? "#FFFFFF" : "#6B7280",
+            fontSize: 14,
             fontWeight: 500,
             cursor: "pointer",
-            transition: "all 0.2s ease"
+            transition: "all 0.2s ease",
+            whiteSpace: "nowrap"
           }}
           onMouseEnter={(e) => {
             if (activeModule !== module.id) {
               e.currentTarget.style.background = "#E8F1FF";
               e.currentTarget.style.color = "#2E7CF6";
+              e.currentTarget.style.borderColor = "#2E7CF6";
             }
           }}
           onMouseLeave={(e) => {
             if (activeModule !== module.id) {
-              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.background = "#FFFFFF";
               e.currentTarget.style.color = "#6B7280";
+              e.currentTarget.style.borderColor = "#E6E9EE";
             }
           }}
-          aria-label={`Select ${module.label} module`}
+          aria-label={`Module ${module.label}`}
         >
           {module.label}
         </button>

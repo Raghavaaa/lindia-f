@@ -341,4 +341,69 @@ select:focus {
   .card {
     padding: var(--space-12);
   }
+
+  /* Hide history panel on mobile by default */
+  .history-panel {
+    display: none;
+  }
+
+  .history-panel.mobile-open {
+    display: flex;
+    position: fixed;
+    right: 0;
+    top: 64px;
+    bottom: 56px;
+    z-index: 999;
+    box-shadow: -4px 0 12px rgba(10, 15, 25, 0.1);
+  }
+}
+
+/* ============================================
+   Mobile Navigation
+   ============================================ */
+
+.mobile-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border-medium);
+    background: var(--surface-white);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-toggle:hover {
+    background: var(--accent-pale);
+    border-color: var(--primary-blue);
+  }
+
+  .mobile-toggle:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Mobile overlay */
+.mobile-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-overlay.active {
+    display: block;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 56px;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 998;
+  }
 }
