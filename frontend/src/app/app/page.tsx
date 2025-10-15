@@ -28,6 +28,7 @@ export default function AppPage() {
   const [showModal, setShowModal] = useState(false);
   const [selectedHistoryItem, setSelectedHistoryItem] = useState<HistoryItem | null>(null);
   const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Load clients from localStorage
   useEffect(() => {
@@ -117,6 +118,7 @@ export default function AppPage() {
             onModuleChange={setActiveModule}
             selectedHistoryItem={selectedHistoryItem}
             onClearHistorySelection={() => setSelectedHistoryItem(null)}
+            onResearchComplete={() => setRefreshTrigger(prev => prev + 1)}
           />
         </main>
 
@@ -129,6 +131,7 @@ export default function AppPage() {
           selectedItemId={selectedHistoryItem?.id}
           isMobileOpen={mobileHistoryOpen}
           onMobileClose={() => setMobileHistoryOpen(false)}
+          refreshTrigger={refreshTrigger}
         />
 
         <ClientModal 

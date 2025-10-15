@@ -24,6 +24,7 @@ type Props = {
   onModuleChange: (module: string) => void;
   selectedHistoryItem: HistoryItem | null;
   onClearHistorySelection: () => void;
+  onResearchComplete?: () => void;
 };
 
 export default function ClientWorkspace({ 
@@ -31,7 +32,8 @@ export default function ClientWorkspace({
   activeModule, 
   onModuleChange,
   selectedHistoryItem,
-  onClearHistorySelection
+  onClearHistorySelection,
+  onResearchComplete
 }: Props) {
   const [allClients, setAllClients] = useState<Client[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
@@ -121,6 +123,7 @@ export default function ClientWorkspace({
           
           <ResearchModule 
             clientId={selectedClientId || client?.id || ""}
+            onResearchComplete={onResearchComplete}
           />
         </div>
 

@@ -13,9 +13,10 @@ type ResearchItem = {
 
 type Props = {
   clientId: string;
+  onResearchComplete?: () => void;
 };
 
-export default function ResearchModule({ clientId }: Props) {
+export default function ResearchModule({ clientId, onResearchComplete }: Props) {
   const [query, setQuery] = useState("");
   const [adminPrompt, setAdminPrompt] = useState("Use Indian case law & statutes where relevant. Summarize in 5 bullet points.");
   const [showAdmin, setShowAdmin] = useState(false);
@@ -111,6 +112,11 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         
         console.log("ResearchModule: Saved to key", key, "items:", updatedItems);
         setQuery("");
+        
+        // Trigger history refresh
+        if (onResearchComplete) {
+          onResearchComplete();
+        }
         
         // Show saved toast
         setShowSavedToast(true);

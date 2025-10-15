@@ -18,6 +18,7 @@ type Props = {
   selectedItemId?: string | null;
   isMobileOpen?: boolean;
   onMobileClose?: () => void;
+  refreshTrigger?: number; // Add refresh trigger
 };
 
 export default function HistoryPanel({ 
@@ -27,14 +28,15 @@ export default function HistoryPanel({
   onSelectItem,
   selectedItemId,
   isMobileOpen = false,
-  onMobileClose
+  onMobileClose,
+  refreshTrigger
 }: Props) {
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [displayLimit, setDisplayLimit] = useState(50);
 
-  // Load history when client or module changes
+  // Load history when client changes
   useEffect(() => {
-    if (!clientId || !activeModule) {
+    if (!clientId) {
       setHistoryItems([]);
       return;
     }
@@ -56,7 +58,7 @@ export default function HistoryPanel({
       console.error("Error loading history:", error);
       setHistoryItems([]);
     }
-  }, [clientId, activeModule]);
+  }, [clientId, refreshTrigger]); // Add refreshTrigger dependency
 
   const displayedItems = historyItems.slice(0, displayLimit);
   const hasMore = historyItems.length > displayLimit;
