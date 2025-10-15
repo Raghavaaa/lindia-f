@@ -1,7 +1,7 @@
 // Global configuration for frontend
 export const config = {
-  apiBase: process.env.NEXT_PUBLIC_FRONTEND_API_BASE || 'http://localhost:3001',
-  environment: process.env.NEXT_PUBLIC_FRONTEND_ENV || 'development',
+  apiBase: process.env.NEXT_PUBLIC_FRONTEND_API_BASE || 'https://api.legalindia.ai',
+  environment: process.env.NEXT_PUBLIC_FRONTEND_ENV || 'production',
   
   // API endpoints
   endpoints: {
