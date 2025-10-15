@@ -81,13 +81,10 @@ export default function ClientWorkspace({
         </div>
       )}
 
-      {/* Module pills - always visible */}
-      <ModulePills activeModule={activeModule} onSelect={onModuleChange} />
-
       {/* Module content */}
-      <div style={{ flex: 1, marginTop: 16, overflowY: "auto" }}>
-        {/* Always show the prompt window */}
-        <div>
+      <div style={{ flex: 1, marginTop: 16, display: "flex", gap: 16 }}>
+        {/* Left side - Prompt window */}
+        <div style={{ flex: 1, overflowY: "auto" }}>
           {/* Client Selection Dropdown */}
           <div style={{ marginBottom: 16 }}>
             <label style={{ 
@@ -127,41 +124,10 @@ export default function ClientWorkspace({
           />
         </div>
 
-        {activeModule === "Property Opinion" && (
-          <div>
-            <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>Property Opinion</h3>
-            <p style={{ color: "#6B7280", fontSize: 14, marginBottom: 16 }}>
-              Generate comprehensive property opinions for your clients
-            </p>
-            <div style={{ color: "#9CA3AF", fontSize: 14 }}>
-              Property Opinion module coming soon...
-            </div>
-          </div>
-        )}
-
-        {activeModule === "Case" && (
-          <div>
-            <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>Case Management</h3>
-            <p style={{ color: "#6B7280", fontSize: 14, marginBottom: 16 }}>
-              Track and manage your legal cases efficiently
-            </p>
-            <div style={{ color: "#9CA3AF", fontSize: 14 }}>
-              Case Management module coming soon...
-            </div>
-          </div>
-        )}
-
-        {activeModule === "Junior" && (
-          <div>
-            <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>Junior AI</h3>
-            <p style={{ color: "#6B7280", fontSize: 14, marginBottom: 16 }}>
-              Your AI legal assistant for drafting and research
-            </p>
-            <div style={{ color: "#9CA3AF", fontSize: 14 }}>
-              Junior AI module coming soon...
-            </div>
-          </div>
-        )}
+        {/* Right side - Module pills */}
+        <div style={{ width: 200, flexShrink: 0 }}>
+          <ModulePills activeModule={activeModule} onSelect={onModuleChange} />
+        </div>
       </div>
     </div>
   );

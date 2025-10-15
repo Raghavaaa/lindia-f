@@ -162,7 +162,7 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
           alignItems: "center",
           gap: 12
         }}>
-          Saved • {currentResult && formatTime(currentResult.ts)}
+          Saved • {formatTime(Date.now())}
         </div>
       )}
 
