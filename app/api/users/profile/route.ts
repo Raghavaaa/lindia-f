@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { withAuth, AuthenticatedRequest } from "@/lib/middleware/auth";
-import { withValidation, updateUserSchema, serverError } from "@/lib/middleware/validation";
-import { getUserById, updateUser } from "@/lib/database/services";
-import { createActivity } from "@/lib/database/services";
+import { withAuth, AuthenticatedRequest } from "../../../../lib/middleware/auth";
+import { withValidation, updateUserSchema, serverError } from "../../../../lib/middleware/validation";
+import { getUserById, updateUser } from "../../../../lib/database/services";
+import { createActivity } from "../../../../lib/database/services";
 
 async function handleGetProfile(req: AuthenticatedRequest) {
   try {
@@ -57,9 +57,13 @@ async function handleUpdateProfile(req: AuthenticatedRequest, data: any) {
   }
 }
 
-export const GET = withAuth(handleGetProfile);
+export async function GET(req: NextRequest) {
+  return withAuth(handleGetProfile)(req);
+}
 
-export const PUT = withAuth(
-  withValidation(updateUserSchema)(handleUpdateProfile)
-);
+export async function PUT(req: NextRequest) {
+  return withAuth(
+    withValidation(updateUserSchema)(handleUpdateProfile)
+  )(req);
+}
 

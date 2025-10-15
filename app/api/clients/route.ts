@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { withAuth, AuthenticatedRequest } from "@/lib/middleware/auth";
-import { withValidation, createClientSchema, paginationSchema, serverError } from "@/lib/middleware/validation";
-import { createClient, getClientsByUserId } from "@/lib/database/services";
-import { createActivity } from "@/lib/database/services";
+import { withAuth, AuthenticatedRequest } from "../../../lib/middleware/auth";
+import { withValidation, createClientSchema, paginationSchema, serverError } from "../../../lib/middleware/validation";
+import { createClient, getClientsByUserId } from "../../../lib/database/services";
+import { createActivity } from "../../../lib/database/services";
 
 async function handleCreateClient(req: AuthenticatedRequest, data: any) {
   try {
@@ -58,11 +58,15 @@ async function handleGetClients(req: AuthenticatedRequest, data: any) {
   }
 }
 
-export const POST = withAuth(
-  withValidation(createClientSchema)(handleCreateClient)
-);
+export async function POST(req: NextRequest) {
+  return withAuth(
+    withValidation(createClientSchema)(handleCreateClient)
+  )(req);
+}
 
-export const GET = withAuth(
-  withValidation(paginationSchema)(handleGetClients)
-);
+export async function GET(req: NextRequest) {
+  return withAuth(
+    withValidation(paginationSchema)(handleGetClients)
+  )(req);
+}
 

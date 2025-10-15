@@ -1,0 +1,2 @@
+"""LegalIndia.ai Backend Application."""
+

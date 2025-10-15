@@ -1,127 +1,129 @@
-# AI Law Junior Backend API
+# LegalIndia Backend API
 
-This document provides comprehensive documentation for the AI Law Junior backend API.
+Express.js backend service for LegalIndia - AI-powered legal research and assistance platform for Indian law.
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Authentication](#authentication)
+- [Quick Start](#quick-start)
 - [API Endpoints](#api-endpoints)
-- [Data Models](#data-models)
-- [Error Handling](#error-handling)
-- [Rate Limiting](#rate-limiting)
-- [Database Schema](#database-schema)
+- [Deployment](#deployment)
+- [Environment Variables](#environment-variables)
+- [Architecture](#architecture)
 
 ## Overview
 
-The AI Law Junior backend is built with Next.js API routes and provides a comprehensive legal research and case management system. It includes:
+The LegalIndia backend is built with Express.js and TypeScript, providing AI-powered legal assistance endpoints:
 
-- User authentication and authorization
-- Client management
-- Case management
-- Legal research with AI integration
-- Document management
-- Activity logging
-- Settings management
+- **Property Opinion**: Legal opinions for property matters
+- **Legal Research**: AI-powered legal research using DeepSeek and InLegalBERT
+- **Case Analysis**: Comprehensive case analysis and document drafting
+- **Junior Assistant**: General legal assistance and document review
 
-## Authentication
+## Quick Start
 
-The API uses NextAuth.js for authentication with Google OAuth provider. All protected endpoints require a valid JWT token.
+### Local Development
 
-### Authentication Headers
+```bash
+# Install dependencies
+npm install
 
-```http
-Authorization: Bearer <jwt_token>
+# Copy environment variables
+cp env.example .env
+
+# Edit .env with your API keys
+
+# Run development server
+npm run dev
 ```
 
-### User Roles
+Server runs on `http://0.0.0.0:8080`
 
-- `user`: Basic user access
-- `lawyer`: Lawyer access with client management
-- `admin`: Full administrative access
+### Production Build
+
+```bash
+# Build TypeScript
+npm run build
+
+# Start production server
+npm start
+```
+
+### Docker Deployment
+
+```bash
+# Build Docker image
+docker build -t legalindia-backend .
+
+# Run container
+docker run -p 8080:8080 --env-file .env legalindia-backend
+```
 
 ## API Endpoints
 
-### Authentication
+### Health Check
 
-#### POST /api/auth/login
-Login with email and password.
-
-**Request Body:**
-```json
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
-```
+#### GET /
+API information and health status
 
 **Response:**
 ```json
 {
   "success": true,
-  "user": {
-    "id": "user_123",
-    "name": "John Doe",
-    "email": "user@example.com"
-  }
+  "message": "LegalIndia Backend API",
+  "version": "1.0.0",
+  "status": "healthy",
+  "timestamp": "2025-10-15T10:00:00.000Z"
 }
 ```
 
-#### POST /api/auth/register
-Register a new user.
+#### GET /health
+Detailed health check
+
+**Response:**
+```json
+{
+  "success": true,
+  "status": "healthy",
+  "uptime": 12345.67,
+  "timestamp": "2025-10-15T10:00:00.000Z"
+}
+```
+
+---
+
+### Property Opinion
+
+#### POST /property-opinion
+Generate legal opinion for property matters
 
 **Request Body:**
 ```json
 {
-  "name": "John Doe",
-  "email": "user@example.com",
-  "password": "password123",
-  "role": "user"
+  "propertyType": "Residential",
+  "location": "Mumbai, Maharashtra",
+  "issue": "Boundary dispute with neighbor",
+  "details": "Neighbor constructed wall on my property",
+  "documents": ["sale_deed.pdf", "survey_map.pdf"]
 }
 ```
-
-### Users
-
-#### GET /api/users/profile
-Get current user profile.
 
 **Response:**
 ```json
 {
   "success": true,
   "data": {
-    "id": "user_123",
-    "name": "John Doe",
-    "email": "user@example.com",
-    "role": "lawyer",
-    "phone": "+1234567890",
-    "address": "123 Main St",
-    "createdAt": "2024-01-01T00:00:00Z"
+    "opinion": "Legal analysis and recommendations...",
+    "confidence": 0.85,
+    "propertyType": "Residential",
+    "location": "Mumbai, Maharashtra",
+    "timestamp": "2025-10-15T10:00:00.000Z"
   }
 }
 ```
 
-#### PUT /api/users/profile
-Update user profile.
-
-**Request Body:**
-```json
-{
-  "name": "John Smith",
-  "phone": "+1234567890",
-  "address": "456 Oak Ave"
-}
-```
-
-### Clients
-
-#### GET /api/clients
-Get all clients for the authenticated user.
-
-**Query Parameters:**
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 20)
-- `search` (optional): Search term
+#### GET /property-opinion/templates
+Get property opinion templates
 
 **Response:**
 ```json
@@ -129,87 +131,30 @@ Get all clients for the authenticated user.
   "success": true,
   "data": [
     {
-      "id": "client_123",
-      "name": "Jane Smith",
-      "email": "jane@example.com",
-      "phone": "+1234567890",
-      "address": "789 Pine St",
-      "referenceId": "REF001",
-      "userId": "user_123",
-      "createdAt": "2024-01-01T00:00:00Z"
+      "id": "sale-deed",
+      "name": "Sale Deed Review",
+      "description": "Legal review of property sale deed",
+      "propertyType": "Residential"
     }
-  ],
-  "pagination": {
-    "page": 1,
-    "limit": 20,
-    "total": 1,
-    "totalPages": 1
-  }
+  ]
 }
 ```
 
-#### POST /api/clients
-Create a new client.
-
-**Request Body:**
-```json
-{
-  "name": "Jane Smith",
-  "email": "jane@example.com",
-  "phone": "+1234567890",
-  "address": "789 Pine St",
-  "referenceId": "REF001"
-}
-```
-
-#### GET /api/clients/[id]
-Get a specific client by ID.
-
-#### PUT /api/clients/[id]
-Update a client.
-
-#### DELETE /api/clients/[id]
-Delete a client (soft delete).
-
-### Cases
-
-#### GET /api/cases
-Get all cases for the authenticated user.
-
-**Query Parameters:**
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 20)
-- `status` (optional): Filter by status (active, closed, pending)
-- `priority` (optional): Filter by priority (low, medium, high, urgent)
-
-#### POST /api/cases
-Create a new case.
-
-**Request Body:**
-```json
-{
-  "title": "Property Dispute Case",
-  "description": "Boundary dispute with neighbor",
-  "caseNumber": "CASE-2024-001",
-  "court": "District Court",
-  "priority": "high",
-  "clientId": "client_123",
-  "startDate": "2024-01-01T00:00:00Z",
-  "tags": ["property", "dispute"]
-}
-```
+---
 
 ### Research
 
-#### POST /api/research
-Perform legal research using AI.
+#### POST /research
+Perform AI-powered legal research
 
 **Request Body:**
 ```json
 {
-  "query": "What are the legal requirements for property boundary disputes in India?",
+  "query": "What are the legal requirements for property registration in India?",
+  "model": "deepseek",
   "clientId": "client_123",
-  "model": "deepseek"
+  "caseId": "case_456",
+  "save": true
 }
 ```
 
@@ -218,218 +163,272 @@ Perform legal research using AI.
 {
   "success": true,
   "data": {
-    "result": "Based on Indian law, property boundary disputes are governed by...",
-    "id": "rq_123",
-    "confidence": 0.85
+    "result": "Detailed legal research results...",
+    "confidence": 0.85,
+    "model": "deepseek",
+    "query": "What are the legal requirements...",
+    "timestamp": "2025-10-15T10:00:00.000Z"
   }
 }
 ```
 
-#### GET /api/research/saved
-Get saved research queries.
+#### GET /research/history
+Get research history (coming soon)
 
-**Query Parameters:**
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 20)
-- `clientId` (optional): Filter by client ID
+---
 
-### Settings
+### Case Management
 
-#### GET /api/admin/settings
-Get all system settings (admin only).
-
-#### PUT /api/admin/settings
-Update system settings (admin only).
+#### POST /case/analyze
+Analyze legal case and provide insights
 
 **Request Body:**
 ```json
 {
-  "key": "PROMPT_BASE",
-  "value": "Updated prompt text",
-  "description": "Base prompt for AI research"
+  "caseTitle": "Property Dispute - Smith vs Jones",
+  "caseType": "Civil - Property",
+  "description": "Boundary dispute between neighbors",
+  "parties": {
+    "plaintiff": "John Smith",
+    "defendant": "Robert Jones"
+  },
+  "facts": "Detailed case facts...",
+  "legalIssues": ["Property boundary", "Adverse possession"]
 }
 ```
 
-## Data Models
-
-### User
-```typescript
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  password?: string;
-  phone?: string;
-  address?: string;
-  image?: string;
-  provider?: string;
-  role: 'user' | 'admin' | 'lawyer';
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-```
-
-### Client
-```typescript
-interface Client {
-  id: string;
-  name: string;
-  email?: string;
-  phone: string;
-  address?: string;
-  referenceId?: string;
-  userId: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-```
-
-### Case
-```typescript
-interface Case {
-  id: string;
-  title: string;
-  description?: string;
-  caseNumber?: string;
-  court?: string;
-  status: 'active' | 'closed' | 'pending';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  clientId: string;
-  assignedTo: string;
-  startDate: string;
-  endDate?: string;
-  tags?: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-```
-
-### ResearchQuery
-```typescript
-interface ResearchQuery {
-  id: string;
-  userId?: string;
-  clientId?: string;
-  queryText: string;
-  responseText: string;
-  status: 'pending' | 'completed' | 'failed';
-  model: 'deepseek' | 'inlegalbert' | 'manual';
-  confidence?: number;
-  tags?: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-```
-
-## Error Handling
-
-All API responses follow a consistent format:
-
-### Success Response
+**Response:**
 ```json
 {
   "success": true,
-  "data": { ... },
-  "message": "Optional success message"
+  "data": {
+    "analysis": "Comprehensive case analysis...",
+    "confidence": 0.85,
+    "caseTitle": "Property Dispute - Smith vs Jones",
+    "caseType": "Civil - Property",
+    "timestamp": "2025-10-15T10:00:00.000Z"
+  }
 }
 ```
 
-### Error Response
+#### POST /case/draft
+Generate legal documents
+
+**Request Body:**
+```json
+{
+  "documentType": "Plaint",
+  "caseTitle": "Property Dispute",
+  "parties": {
+    "plaintiff": "John Smith",
+    "defendant": "Robert Jones"
+  },
+  "facts": "Detailed facts of the case...",
+  "relief": "Recovery of property"
+}
+```
+
+#### GET /case/templates
+Get case document templates
+
+---
+
+### Junior Assistant
+
+#### POST /junior
+General legal assistance
+
+**Request Body:**
+```json
+{
+  "task": "Review this contract and highlight key clauses",
+  "context": "Commercial lease agreement",
+  "priority": "high"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "assistance": "Detailed assistance and action items...",
+    "confidence": 0.85,
+    "task": "Review this contract...",
+    "priority": "high",
+    "timestamp": "2025-10-15T10:00:00.000Z"
+  }
+}
+```
+
+#### POST /junior/review
+Review legal documents
+
+**Request Body:**
+```json
+{
+  "documentType": "Contract",
+  "content": "Full document content...",
+  "focusAreas": ["Termination clauses", "Payment terms"]
+}
+```
+
+#### POST /junior/explain
+Explain legal concepts
+
+**Request Body:**
+```json
+{
+  "concept": "Force Majeure",
+  "detail": "simple"
+}
+```
+
+#### GET /junior/tasks
+Get common legal tasks
+
+## Deployment
+
+### Railway Deployment
+
+1. **Create Railway Project**
+   ```bash
+   # Install Railway CLI
+   npm install -g @railway/cli
+   
+   # Login to Railway
+   railway login
+   
+   # Initialize project
+   railway init
+   ```
+
+2. **Set Environment Variables in Railway Dashboard**
+   - `PORT` (automatically set by Railway)
+   - `DEEPSEEK_API_KEY`
+   - `HF_TOKEN`
+   - `JWT_SECRET`
+   - `PROMPT_BASE` (optional)
+   - `NODE_ENV=production`
+
+3. **Deploy**
+   ```bash
+   railway up
+   ```
+
+The service will automatically:
+- Install dependencies
+- Build TypeScript
+- Start the server on `0.0.0.0:$PORT`
+
+### Vercel Deployment
+
+Not recommended for this backend. Use Railway or Docker instead.
+
+### Docker Deployment
+
+```bash
+# Build image
+docker build -t legalindia-backend .
+
+# Run container
+docker run -d \
+  -p 8080:8080 \
+  -e PORT=8080 \
+  -e DEEPSEEK_API_KEY=your_key \
+  -e HF_TOKEN=your_token \
+  --name legalindia-backend \
+  legalindia-backend
+```
+
+## Environment Variables
+
+All environment variables are provided by Railway. Required variables:
+
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `PORT` | Server port | No | 8080 |
+| `NODE_ENV` | Environment | No | production |
+| `HOST` | Server host | No | 0.0.0.0 |
+| `CORS_ORIGIN` | CORS origin | No | * |
+| `DEEPSEEK_API_KEY` | DeepSeek API key | Yes | - |
+| `HF_TOKEN` | Hugging Face token | Yes | - |
+| `JWT_SECRET` | JWT secret key | Yes | - |
+| `PROMPT_BASE` | Base AI prompt | No | Default prompt |
+
+### Setting Variables on Railway
+
+1. Go to Railway Dashboard
+2. Select your project
+3. Go to Variables tab
+4. Add environment variables
+5. Redeploy
+
+## Architecture
+
+### Project Structure
+
+```
+backend/
+├── src/
+│   ├── server.ts              # Main Express server
+│   ├── middleware/
+│   │   ├── auth.ts           # JWT authentication
+│   │   ├── error-handler.ts  # Error handling
+│   │   └── logger.ts         # Request logging
+│   ├── routes/
+│   │   ├── property-opinion.ts
+│   │   ├── research.ts
+│   │   ├── case.ts
+│   │   └── junior.ts
+│   └── services/
+│       └── ai-service.ts     # AI model integration
+├── dist/                      # Compiled JavaScript
+├── package.json
+├── tsconfig.json
+├── Dockerfile
+├── railway.json
+└── README.md
+```
+
+### Technology Stack
+
+- **Runtime**: Node.js 18+
+- **Framework**: Express.js 4.18+
+- **Language**: TypeScript 5+
+- **Validation**: Zod
+- **AI Models**: DeepSeek, InLegalBERT
+- **Security**: Helmet, CORS
+- **Compression**: gzip
+
+### Error Handling
+
+All responses follow consistent format:
+
+**Success:**
+```json
+{
+  "success": true,
+  "data": { ... }
+}
+```
+
+**Error:**
 ```json
 {
   "success": false,
   "error": "Error message",
-  "details": [ ... ] // Optional validation details
+  "details": [ ... ]
 }
 ```
 
 ### HTTP Status Codes
 
-- `200`: Success
-- `201`: Created
-- `400`: Bad Request (validation error)
-- `401`: Unauthorized
-- `403`: Forbidden
-- `404`: Not Found
-- `409`: Conflict
-- `429`: Rate Limited
-- `500`: Internal Server Error
-
-## Rate Limiting
-
-The API implements rate limiting to prevent abuse:
-
-- **Default**: 100 requests per minute per IP
-- **Headers**: Rate limit information is included in response headers
-- **Response**: 429 status code when limit exceeded
-
-### Rate Limit Headers
-```
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 95
-X-RateLimit-Reset: 1640995200
-Retry-After: 60
-```
-
-## Database Schema
-
-The backend uses SQLite with the following main tables:
-
-### Users Table
-```sql
-CREATE TABLE users (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  email TEXT UNIQUE NOT NULL,
-  password TEXT,
-  phone TEXT,
-  address TEXT,
-  image TEXT,
-  provider TEXT,
-  role TEXT DEFAULT 'user',
-  is_active BOOLEAN DEFAULT 1,
-  created_at TEXT DEFAULT (datetime('now')),
-  updated_at TEXT DEFAULT (datetime('now'))
-);
-```
-
-### Clients Table
-```sql
-CREATE TABLE clients (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  email TEXT,
-  phone TEXT NOT NULL,
-  address TEXT,
-  reference_id TEXT,
-  user_id TEXT NOT NULL,
-  is_active BOOLEAN DEFAULT 1,
-  created_at TEXT DEFAULT (datetime('now')),
-  updated_at TEXT DEFAULT (datetime('now')),
-  FOREIGN KEY (user_id) REFERENCES users(id)
-);
-```
-
-### Research Queries Table
-```sql
-CREATE TABLE research_queries (
-  id TEXT PRIMARY KEY,
-  user_id TEXT,
-  client_id TEXT,
-  query_text TEXT NOT NULL,
-  response_text TEXT NOT NULL,
-  status TEXT DEFAULT 'completed',
-  model TEXT DEFAULT 'deepseek',
-  confidence REAL,
-  tags TEXT,
-  created_at TEXT DEFAULT (datetime('now')),
-  updated_at TEXT DEFAULT (datetime('now')),
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (client_id) REFERENCES clients(id)
-);
-```
+- `200` - Success
+- `400` - Bad Request (validation error)
+- `401` - Unauthorized
+- `404` - Not Found
+- `500` - Internal Server Error
 
 ## Environment Variables
 
@@ -455,66 +454,73 @@ PROMPT_BASE=Your base prompt for AI research
 
 ## Development
 
-### Running the Backend
+### Development Workflow
 
 ```bash
 # Install dependencies
 npm install
 
-# Run development server
+# Run in development mode (with hot reload)
 npm run dev
 
-# Build for production
+# Build TypeScript
 npm run build
 
-# Start production server
+# Run production build locally
 npm start
-```
 
-### Database Migrations
-
-The database schema is automatically created and migrated on first run. The migration system is located in `lib/database/migrations.ts`.
-
-### Testing
-
-```bash
-# Run tests (when implemented)
-npm test
-
-# Run linting
+# Lint code
 npm run lint
 ```
 
-## Security Considerations
+### Testing Endpoints
 
-1. **Authentication**: All endpoints require valid JWT tokens
-2. **Authorization**: Role-based access control
-3. **Input Validation**: All inputs are validated using Zod schemas
-4. **Rate Limiting**: Prevents abuse and DoS attacks
-5. **Error Handling**: Sensitive information is not exposed in error messages
-6. **SQL Injection**: Parameterized queries prevent SQL injection
-7. **CORS**: Configured for specific origins in production
+```bash
+# Health check
+curl http://localhost:8080/health
 
-## Monitoring and Logging
+# Property opinion
+curl -X POST http://localhost:8080/property-opinion \
+  -H "Content-Type: application/json" \
+  -d '{
+    "propertyType": "Residential",
+    "location": "Mumbai",
+    "issue": "Boundary dispute"
+  }'
 
-- All API requests are logged with user context
-- Errors are logged with stack traces
-- Activity tracking for audit trails
-- Performance monitoring through response times
+# Legal research
+curl -X POST http://localhost:8080/research \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "What are property laws in India?",
+    "model": "deepseek"
+  }'
+```
 
-## Deployment
+## Security
 
-The backend is designed to be deployed on:
+- **Helmet.js**: Security headers
+- **CORS**: Configurable origin
+- **Input Validation**: Zod schema validation
+- **Error Handling**: No sensitive data in errors
+- **JWT Authentication**: Optional auth middleware
+- **Rate Limiting**: Coming soon
 
-- **Vercel**: Recommended for Next.js applications
-- **Railway**: Alternative platform with database support
-- **Docker**: Containerized deployment option
+## Monitoring
 
-### Production Checklist
+- Request logging with timestamps
+- Error logging with stack traces
+- Performance metrics (request duration)
+- Health check endpoint for uptime monitoring
 
-- [ ] Set all required environment variables
-- [ ] Configure CORS for production domains
-- [ ] Set up monitoring and alerting
-- [ ] Configure backup strategy for database
-- [ ] Set up SSL certificates
-- [ ] Configure rate limiting for production load
+## Support
+
+For issues or questions:
+1. Check logs in Railway dashboard
+2. Verify environment variables are set
+3. Check API key validity
+4. Review request/response format
+
+## License
+
+Proprietary - LegalIndia 2025

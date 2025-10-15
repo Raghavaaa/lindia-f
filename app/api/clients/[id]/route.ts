@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { withAuth, AuthenticatedRequest } from "@/lib/middleware/auth";
-import { withValidation, updateClientSchema, idParamSchema, notFoundError, serverError } from "@/lib/middleware/validation";
-import { getClientById, updateClient, deleteClient } from "@/lib/database/services";
-import { createActivity } from "@/lib/database/services";
+import { withAuth, AuthenticatedRequest } from "../../../../lib/middleware/auth";
+import { withValidation, updateClientSchema, idParamSchema, notFoundError, serverError } from "../../../../lib/middleware/validation";
+import { getClientById, updateClient, deleteClient } from "../../../../lib/database/services";
+import { createActivity } from "../../../../lib/database/services";
 
 async function handleGetClient(req: AuthenticatedRequest, data: any) {
   try {
@@ -93,15 +93,21 @@ async function handleDeleteClient(req: AuthenticatedRequest, data: any) {
   }
 }
 
-export const GET = withAuth(
-  withValidation(idParamSchema)(handleGetClient)
-);
+export async function GET(req: NextRequest) {
+  return withAuth(
+    withValidation(idParamSchema)(handleGetClient)
+  )(req);
+}
 
-export const PUT = withAuth(
-  withValidation({ ...idParamSchema, ...updateClientSchema })(handleUpdateClient)
-);
+export async function PUT(req: NextRequest) {
+  return withAuth(
+    withValidation({ ...idParamSchema, ...updateClientSchema })(handleUpdateClient)
+  )(req);
+}
 
-export const DELETE = withAuth(
-  withValidation(idParamSchema)(handleDeleteClient)
-);
+export async function DELETE(req: NextRequest) {
+  return withAuth(
+    withValidation(idParamSchema)(handleDeleteClient)
+  )(req);
+}
 

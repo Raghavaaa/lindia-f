@@ -13,6 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className="min-h-screen flex flex-col bg-neutral-50">
         <div className="flex-1 flex flex-col">
           {children}

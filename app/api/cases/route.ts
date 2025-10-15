@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { withAuth, AuthenticatedRequest } from "@/lib/middleware/auth";
-import { withValidation, createCaseSchema, paginationSchema, serverError } from "@/lib/middleware/validation";
-import { createCase, getCasesByUserId } from "@/lib/database/services";
-import { createActivity } from "@/lib/database/services";
+import { withAuth, AuthenticatedRequest } from "../../../lib/middleware/auth";
+import { withValidation, createCaseSchema, paginationSchema, serverError } from "../../../lib/middleware/validation";
+import { createCase, getCasesByUserId } from "../../../lib/database/services";
+import { createActivity } from "../../../lib/database/services";
 
 async function handleCreateCase(req: AuthenticatedRequest, data: any) {
   try {
@@ -59,11 +59,15 @@ async function handleGetCases(req: AuthenticatedRequest, data: any) {
   }
 }
 
-export const POST = withAuth(
-  withValidation(createCaseSchema)(handleCreateCase)
-);
+export async function POST(req: NextRequest) {
+  return withAuth(
+    withValidation(createCaseSchema)(handleCreateCase)
+  )(req);
+}
 
-export const GET = withAuth(
-  withValidation(paginationSchema)(handleGetCases)
-);
+export async function GET(req: NextRequest) {
+  return withAuth(
+    withValidation(paginationSchema)(handleGetCases)
+  )(req);
+}
 

@@ -1,26 +1,96 @@
 "use client";
 import React from "react";
 
-export default function Sidebar({ clients, onSelect, onOpenNew, selected }: { clients: { id: string; name: string }[]; onSelect: (id: string) => void; onOpenNew: () => void; selected?: string }) {
-  return (
-    <aside className="hidden lg:block border-r border-gray-100 h-[calc(100vh-128px)] sticky top-16 p-4 bg-white">
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-sm font-medium">Clients</div>
-        <button onClick={onOpenNew} className="text-sm px-2 py-1 rounded-full border">+ New</button>
-      </div>
+export type ClientItem = { id: string; name: string; phone?: string };
 
-      <div className="space-y-2">
-        {clients.length === 0 && <div className="text-sm text-gray-400">No clients yet.</div>}
+type Props = {
+  clients: ClientItem[];
+  selectedId?: string | null;
+  onSelect: (id: string) => void;
+  onOpenNew: () => void;
+};
+
+export default function Sidebar({ clients, selectedId, onSelect, onOpenNew }: Props) {
+  return (
+    <div style={{ padding: 16 }}>
+      <div style={{ 
+        display: "flex", 
+        alignItems: "center", 
+        justifyContent: "space-between", 
+        marginBottom: 12 
+      }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: "#1F2937" }}>
+          Clients
+        </div>
+        <button 
+          onClick={onOpenNew} 
+          style={{
+            fontSize: 12,
+            padding: "4px 8px",
+            borderRadius: 4,
+            border: "1px solid #E6E9EE",
+            background: "transparent",
+            cursor: "pointer",
+            color: "#6B7280",
+            display: "flex",
+            alignItems: "center",
+            gap: 4
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.background = "#E8F1FF"}
+          onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+          aria-label="Add new client"
+        >
+          + New
+        </button>
+      </div>
+      
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        {clients.length === 0 && (
+          <div style={{ color: "#9CA3AF", fontSize: 13, padding: "8px 0" }}>
+            No clients yet
+          </div>
+        )}
         {clients.map((c) => (
-          <button key={c.id} onClick={() => onSelect(c.id)} className={`w-full text-left px-3 py-2 rounded-lg ${selected === c.id ? "bg-brand-50" : "hover:bg-gray-50"}`}>
-            {c.name}
+          <button
+            key={c.id}
+            onClick={() => onSelect(c.id)}
+            style={{
+              textAlign: "left",
+              padding: "8px 12px",
+              borderRadius: 8,
+              border: "none",
+              background: selectedId === c.id ? "#E8F1FF" : "transparent",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start"
+            }}
+            onMouseEnter={(e) => {
+              if (selectedId !== c.id) {
+                e.currentTarget.style.background = "#F8FAFF";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (selectedId !== c.id) {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.transform = "translateY(0)";
+              }
+            }}
+            aria-label={`Client: ${c.name}`}
+          >
+            <div style={{ fontSize: 14, fontWeight: 600, color: "#1F2937" }}>
+              {c.name}
+            </div>
+            {c.phone && (
+              <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>
+                {c.phone}
+              </div>
+            )}
           </button>
         ))}
       </div>
-
-      <div className="mt-6 pt-4 border-t">
-        <a href="/settings" className="text-sm text-gray-600 hover:underline">Settings</a>
-      </div>
-    </aside>
+    </div>
   );
 }

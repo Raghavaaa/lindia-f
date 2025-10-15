@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { getSetting } from "@/lib/db";
-import { createResearchQuery } from "@/lib/database/services";
-import { withValidation, createResearchSchema, serverError } from "@/lib/middleware/validation";
-import { withAuth, AuthenticatedRequest } from "@/lib/middleware/auth";
+import { getSetting } from "../../../lib/db";
+import { createResearchQuery } from "../../../lib/database/services";
+import { withValidation, createResearchSchema, serverError } from "../../../lib/middleware/validation";
+import { withAuth, AuthenticatedRequest } from "../../../lib/middleware/auth";
 
 async function callInLegalBert(query: string) {
   const hfToken = process.env.HF_TOKEN;
@@ -157,8 +157,10 @@ Be specific, cite relevant laws, and provide actionable advice. Focus on Indian 
   }
 }
 
-export const POST = withAuth(
-  withValidation(createResearchSchema)(handleResearch)
-);
+export async function POST(req: NextRequest) {
+  return withAuth(
+    withValidation(createResearchSchema)(handleResearch)
+  )(req);
+}
 
 

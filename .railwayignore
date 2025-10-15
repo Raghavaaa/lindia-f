@@ -7,3 +7,5 @@ node_modules
 out
 out-*
 *.zip
+frontend/
+legalindia-hostinger-*.zip

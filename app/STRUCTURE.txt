@@ -1,0 +1,79 @@
+LegalIndia.ai Backend Structure (lindia-b)
+==========================================
+
+app/
+│
+├── app/                                 # Main application package
+│   ├── __init__.py
+│   │
+│   ├── routes/                          # API Routes (Endpoints)
+│   │   ├── __init__.py
+│   │   ├── auth.py                      # Authentication endpoints
+│   │   ├── case.py                      # Case search endpoints
+│   │   ├── junior.py                    # Legal assistant endpoints
+│   │   ├── property_opinion.py          # Property opinion endpoints
+│   │   └── research.py                  # Legal research endpoints
+│   │
+│   ├── controllers/                     # Business Logic Layer
+│   │   ├── __init__.py
+│   │   ├── case_controller.py           # Case search logic
+│   │   ├── junior_controller.py         # AI assistant logic
+│   │   ├── property_opinion_controller.py # Property opinion logic
+│   │   └── research_controller.py       # Legal research logic
+│   │
+│   ├── models/                          # Database Models (SQLModel)
+│   │   ├── __init__.py
+│   │   ├── client_model.py              # Client entity
+│   │   └── user_model.py                # User entity
+│   │
+│   ├── schemas/                         # Pydantic Schemas
+│   │   ├── __init__.py
+│   │   ├── query_schema.py              # Request/Response schemas
+│   │   └── user_schema.py               # User-related schemas
+│   │
+│   └── core/                            # Core Utilities
+│       ├── __init__.py
+│       ├── config.py                    # Configuration & settings
+│       ├── logger.py                    # Logging setup (Loguru)
+│       └── security.py                  # JWT & authentication
+│
+├── main.py                              # FastAPI app entry point
+│
+├── requirements.txt                     # Python dependencies
+├── Procfile                             # Deployment configuration
+├── .env                                 # Environment variables (template)
+├── .gitignore                           # Git ignore rules
+│
+├── setup.sh                             # Setup automation script
+├── verify.py                            # Installation verification
+│
+├── README.md                            # Main documentation
+├── API_REFERENCE.md                     # API endpoints reference
+├── PROJECT_SUMMARY.md                   # Project overview
+└── STRUCTURE.txt                        # This file
+
+Files Count:
+- Python files: 24
+- Documentation: 4
+- Config files: 4
+Total: 32 files
+
+API Endpoints: 14
+- Authentication: 4
+- Property Opinion: 2
+- Legal Research: 2
+- Case Search: 3
+- Legal Junior: 2
+- Health Check: 1
+
+Technology Stack:
+- Framework: FastAPI 0.115.0
+- Server: Uvicorn 0.32.0 + Gunicorn 23.0.0
+- Authentication: JWT (python-jose)
+- Password: bcrypt (passlib)
+- Validation: Pydantic 2.9.2
+- ORM: SQLModel 0.0.22
+- HTTP Client: httpx 0.27.2
+- Logging: Loguru 0.7.2
+- Monitoring: Sentry SDK 2.17.0
+
