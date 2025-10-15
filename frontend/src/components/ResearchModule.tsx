@@ -13,11 +13,9 @@ type ResearchItem = {
 
 type Props = {
   clientId: string;
-  selectedHistoryItem: ResearchItem | null;
-  onClearHistorySelection: () => void;
 };
 
-export default function ResearchModule({ clientId, selectedHistoryItem, onClearHistorySelection }: Props) {
+export default function ResearchModule({ clientId }: Props) {
   const [query, setQuery] = useState("");
   const [adminPrompt, setAdminPrompt] = useState("Use Indian case law & statutes where relevant. Summarize in 5 bullet points.");
   const [showAdmin, setShowAdmin] = useState(false);
@@ -26,17 +24,11 @@ export default function ResearchModule({ clientId, selectedHistoryItem, onClearH
   const [showSavedToast, setShowSavedToast] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Update current result when history item is selected
-  useEffect(() => {
-    if (selectedHistoryItem) {
-      setCurrentResult(selectedHistoryItem);
-    }
-  }, [selectedHistoryItem]);
 
-  // Handle Ctrl+Enter to run research
+  // Handle Enter key to run research
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && textareaRef.current === document.activeElement) {
+      if (e.key === "Enter" && textareaRef.current === document.activeElement) {
         e.preventDefault();
         runResearch();
       }
@@ -44,7 +36,7 @@ export default function ResearchModule({ clientId, selectedHistoryItem, onClearH
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [query, adminPrompt, showAdmin]); // Add dependencies
+  }, [query, adminPrompt, showAdmin]);
 
   function runResearch() {
     if (!query.trim()) {
@@ -58,7 +50,6 @@ export default function ResearchModule({ clientId, selectedHistoryItem, onClearH
     }
 
     setRunning(true);
-    onClearHistorySelection(); // Clear history selection when running new query
 
     // Simulate API call delay
     setTimeout(() => {
@@ -228,7 +219,7 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
             {running ? "Running…" : "Run Research"}
           </button>
           <div style={{ fontSize: 12, color: "#9CA3AF" }}>
-            Press Ctrl+Enter to run
+            Press Enter to run
           </div>
         </div>
       </div>

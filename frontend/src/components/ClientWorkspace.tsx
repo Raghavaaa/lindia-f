@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ModulePills from "./ModulePills";
 import ResearchModule from "./ResearchModule";
 
@@ -22,17 +22,35 @@ type Props = {
   client: Client | null;
   activeModule: string | null;
   onModuleChange: (module: string) => void;
-  selectedHistoryItem: HistoryItem | null;
-  onClearHistorySelection: () => void;
 };
 
 export default function ClientWorkspace({ 
   client, 
   activeModule, 
-  onModuleChange,
-  selectedHistoryItem,
-  onClearHistorySelection
+  onModuleChange
 }: Props) {
+  const [allClients, setAllClients] = useState<Client[]>([]);
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+
+  // Load all clients for the dropdown
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("legalindia_clients");
+      if (raw) {
+        const clientsData = JSON.parse(raw);
+        setAllClients(clientsData);
+      }
+    } catch (error) {
+      console.error("Error loading clients:", error);
+    }
+  }, []);
+
+  // Set selected client when prop changes
+  useEffect(() => {
+    if (client) {
+      setSelectedClientId(client.id);
+    }
+  }, [client]);
   if (!client) {
     return (
       <div style={{ 
@@ -90,11 +108,45 @@ export default function ClientWorkspace({
         )}
 
         {activeModule === "Research" && (
-          <ResearchModule 
-            clientId={client.id}
-            selectedHistoryItem={selectedHistoryItem}
-            onClearHistorySelection={onClearHistorySelection}
-          />
+          <div>
+            {/* Client Selection Dropdown */}
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ 
+                display: "block", 
+                fontSize: 14, 
+                fontWeight: 500, 
+                color: "#374151", 
+                marginBottom: 6 
+              }}>
+                Select Client:
+              </label>
+              <select
+                value={selectedClientId || ""}
+                onChange={(e) => setSelectedClientId(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  borderRadius: 8,
+                  border: "1px solid #D1D5DB",
+                  background: "#FFFFFF",
+                  fontSize: 14,
+                  color: "#374151"
+                }}
+                aria-label="Select client for research"
+              >
+                <option value="">Choose a client...</option>
+                {allClients.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} {c.phone ? `(${c.phone})` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <ResearchModule 
+              clientId={selectedClientId || client.id}
+            />
+          </div>
         )}
 
         {activeModule === "Property Opinion" && (
