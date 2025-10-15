@@ -40,7 +40,11 @@ export default function HistoryPanel({
     }
 
     try {
-      const moduleKey = activeModule.toLowerCase().replace(/\s+/g, '');
+      let moduleKey = activeModule.toLowerCase().replace(/\s+/g, '');
+      // Ensure we use the exact same key format as ResearchModule
+      if (moduleKey === 'research') {
+        moduleKey = 'research';
+      }
       const key = `legalindia::client::${clientId}::${moduleKey}`;
       const saved = localStorage.getItem(key);
       

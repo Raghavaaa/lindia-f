@@ -17,11 +17,11 @@ export default function ModulePills({ activeModule, onSelect }: Props) {
   return (
     <div style={{ 
       display: "flex", 
-      gap: 4, 
+      gap: 6, 
       flexDirection: "row",
-      marginBottom: 12,
+      marginBottom: 16,
       borderBottom: "1px solid #F1F5F9",
-      paddingBottom: 8,
+      paddingBottom: 12,
       alignItems: "flex-start",
       flexWrap: "wrap"
     }}>
