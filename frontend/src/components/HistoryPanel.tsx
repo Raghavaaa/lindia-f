@@ -36,7 +36,10 @@ export default function HistoryPanel({
 
   // Load history when client changes
   useEffect(() => {
+    console.log("HistoryPanel: useEffect triggered with clientId:", clientId, "activeModule:", activeModule, "refreshTrigger:", refreshTrigger);
+    
     if (!clientId) {
+      console.log("HistoryPanel: No clientId, setting empty history");
       setHistoryItems([]);
       return;
     }
@@ -44,14 +47,19 @@ export default function HistoryPanel({
     try {
       // Use the exact same key format as ResearchModule
       const key = `legalindia::client::${clientId}::research`;
+      console.log("HistoryPanel: Looking for key:", key);
       const saved = localStorage.getItem(key);
       
       if (saved) {
         const items: HistoryItem[] = JSON.parse(saved);
-        console.log("HistoryPanel: Loaded items for key", key, items);
+        console.log("HistoryPanel: Loaded items for key", key, "items:", items);
         setHistoryItems(items.slice(0, 100)); // Limit to 100 most recent
       } else {
         console.log("HistoryPanel: No data found for key", key);
+        // Let's also check what keys exist in localStorage
+        const allKeys = Object.keys(localStorage);
+        const researchKeys = allKeys.filter(k => k.includes('research'));
+        console.log("HistoryPanel: All research keys in localStorage:", researchKeys);
         setHistoryItems([]);
       }
     } catch (error) {
@@ -121,14 +129,14 @@ export default function HistoryPanel({
         overflowY: "auto",
         padding: "8px"
       }}>
-        {!clientId || !activeModule ? (
+        {!clientId ? (
           <div style={{
             padding: "16px",
             textAlign: "center",
             fontSize: 13,
             color: "#9CA3AF"
           }}>
-            Select a client and module
+            Select a client
           </div>
         ) : historyItems.length === 0 ? (
           <div style={{
@@ -137,7 +145,7 @@ export default function HistoryPanel({
             fontSize: 13,
             color: "#9CA3AF"
           }}>
-            No history yet.
+            No history yet. (Items: {historyItems.length})
           </div>
         ) : (
           <>
