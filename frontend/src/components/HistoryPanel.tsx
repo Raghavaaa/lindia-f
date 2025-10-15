@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import ModulePills from "./ModulePills";
 
 type HistoryItem = {
   id: string;
@@ -18,6 +19,7 @@ type Props = {
   selectedItemId?: string | null;
   isMobileOpen?: boolean;
   onMobileClose?: () => void;
+  onModuleChange: (module: string) => void;
 };
 
 export default function HistoryPanel({ 
@@ -27,7 +29,8 @@ export default function HistoryPanel({
   onSelectItem,
   selectedItemId,
   isMobileOpen = false,
-  onMobileClose
+  onMobileClose,
+  onModuleChange
 }: Props) {
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [displayLimit, setDisplayLimit] = useState(50);
@@ -46,7 +49,7 @@ export default function HistoryPanel({
       
       if (saved) {
         const items: HistoryItem[] = JSON.parse(saved);
-        setHistoryItems(items.slice(0, 200)); // Limit to 200 most recent
+        setHistoryItems(items.slice(0, 100)); // Limit to 100 most recent
       } else {
         setHistoryItems([]);
       }
@@ -109,19 +112,10 @@ export default function HistoryPanel({
         }}>
           History
         </h3>
-        {activeModule && (
-          <div style={{
-            marginTop: 8,
-            fontSize: 12,
-            color: "#2E7CF6",
-            background: "#E8F1FF",
-            padding: "4px 8px",
-            borderRadius: 12,
-            display: "inline-block"
-          }}>
-            {activeModule}
-          </div>
-        )}
+        {/* Module Pills */}
+        <div style={{ marginTop: 12 }}>
+          <ModulePills activeModule={activeModule} onSelect={onModuleChange} />
+        </div>
       </div>
 
       {/* History List */}

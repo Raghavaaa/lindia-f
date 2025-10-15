@@ -23,6 +23,28 @@ export default function ResearchModule({ clientId }: Props) {
   const [showSavedToast, setShowSavedToast] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Cleanup old localStorage data on component mount
+  useEffect(() => {
+    try {
+      // Clean up old data for all clients
+      const keys = Object.keys(localStorage);
+      const researchKeys = keys.filter(key => key.startsWith('legalindia::client::') && key.endsWith('::research'));
+      
+      researchKeys.forEach(key => {
+        const data = localStorage.getItem(key);
+        if (data) {
+          const items = JSON.parse(data);
+          if (items.length > 50) {
+            // Keep only 50 most recent items
+            localStorage.setItem(key, JSON.stringify(items.slice(0, 50)));
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error cleaning up localStorage:", error);
+    }
+  }, []);
+
   // Handle Enter key to run research
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -68,18 +90,25 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         ts: Date.now()
       };
 
-      // Save to localStorage
+      // Save to localStorage with cleanup
       try {
         const key = `legalindia::client::${clientId}::research`;
         const existing = localStorage.getItem(key);
         const items: ResearchItem[] = existing ? JSON.parse(existing) : [];
         
-        // Add new item to front and limit to 200
-        const updatedItems = [newItem, ...items].slice(0, 200);
-        localStorage.setItem(key, JSON.stringify(updatedItems));
+        // Add new item to front and limit to 50 (reduced from 200)
+        const updatedItems = [newItem, ...items].slice(0, 50);
         
-        // Show result
-        setCurrentResult(newItem);
+        // Check data size before saving
+        const dataSize = JSON.stringify(updatedItems).length;
+        if (dataSize > 50000) { // 50KB limit per client
+          // Keep only 25 most recent if too large
+          const trimmedItems = updatedItems.slice(0, 25);
+          localStorage.setItem(key, JSON.stringify(trimmedItems));
+        } else {
+          localStorage.setItem(key, JSON.stringify(updatedItems));
+        }
+        
         setQuery("");
         
         // Show saved toast
@@ -87,7 +116,18 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         setTimeout(() => setShowSavedToast(false), 3000);
       } catch (error) {
         console.error("Error saving research:", error);
-        alert("Saving disabled - localStorage may be full");
+        // Try to clear old data and save just the new item
+        try {
+          const key = `legalindia::client::${clientId}::research`;
+          localStorage.removeItem(key);
+          localStorage.setItem(key, JSON.stringify([newItem]));
+          setQuery("");
+          setShowSavedToast(true);
+          setTimeout(() => setShowSavedToast(false), 3000);
+        } catch (retryError) {
+          console.error("Failed to save even after cleanup:", retryError);
+          alert("Saving disabled - localStorage is full. Please clear browser data or use incognito mode.");
+        }
       }
 
       setRunning(false);

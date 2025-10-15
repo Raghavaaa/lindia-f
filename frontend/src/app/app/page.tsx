@@ -129,6 +129,7 @@ export default function AppPage() {
           selectedItemId={selectedHistoryItem?.id}
           isMobileOpen={mobileHistoryOpen}
           onMobileClose={() => setMobileHistoryOpen(false)}
+          onModuleChange={setActiveModule}
         />
 
         <ClientModal 
