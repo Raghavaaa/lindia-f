@@ -109,6 +109,7 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
           localStorage.setItem(key, JSON.stringify(updatedItems));
         }
         
+        console.log("ResearchModule: Saved to key", key, "items:", updatedItems);
         setQuery("");
         
         // Show saved toast

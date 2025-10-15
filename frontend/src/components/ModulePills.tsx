@@ -17,13 +17,14 @@ export default function ModulePills({ activeModule, onSelect }: Props) {
   return (
     <div style={{ 
       display: "flex", 
-      gap: 6, 
+      gap: 4, 
       flexDirection: "row",
       marginBottom: 16,
       borderBottom: "1px solid #F1F5F9",
       paddingBottom: 12,
       alignItems: "flex-start",
-      flexWrap: "wrap"
+      flexWrap: "nowrap",
+      overflowX: "auto"
     }}>
       {modules.map((module) => (
         <button
@@ -31,13 +32,13 @@ export default function ModulePills({ activeModule, onSelect }: Props) {
           onClick={() => onSelect(module.id)}
           tabIndex={0}
           style={{
-            padding: "4px 8px",
-            height: 28,
-            borderRadius: 14,
+            padding: "6px 12px",
+            height: 32,
+            borderRadius: 16,
             border: "1px solid #E6E9EE",
             background: activeModule === module.id ? "#2E7CF6" : "#FFFFFF",
             color: activeModule === module.id ? "#FFFFFF" : "#6B7280",
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 500,
             cursor: "pointer",
             transition: "all 0.2s ease",

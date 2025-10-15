@@ -40,18 +40,16 @@ export default function HistoryPanel({
     }
 
     try {
-      let moduleKey = activeModule.toLowerCase().replace(/\s+/g, '');
-      // Ensure we use the exact same key format as ResearchModule
-      if (moduleKey === 'research') {
-        moduleKey = 'research';
-      }
-      const key = `legalindia::client::${clientId}::${moduleKey}`;
+      // Use the exact same key format as ResearchModule
+      const key = `legalindia::client::${clientId}::research`;
       const saved = localStorage.getItem(key);
       
       if (saved) {
         const items: HistoryItem[] = JSON.parse(saved);
+        console.log("HistoryPanel: Loaded items for key", key, items);
         setHistoryItems(items.slice(0, 100)); // Limit to 100 most recent
       } else {
+        console.log("HistoryPanel: No data found for key", key);
         setHistoryItems([]);
       }
     } catch (error) {
