@@ -124,8 +124,6 @@ export default function ClientWorkspace({
           
           <ResearchModule 
             clientId={selectedClientId || client?.id || ""}
-            selectedHistoryItem={selectedHistoryItem}
-            onClearHistorySelection={onClearHistorySelection}
           />
         </div>
 

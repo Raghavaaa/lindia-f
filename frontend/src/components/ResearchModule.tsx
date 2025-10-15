@@ -13,25 +13,15 @@ type ResearchItem = {
 
 type Props = {
   clientId: string;
-  selectedHistoryItem: ResearchItem | null;
-  onClearHistorySelection: () => void;
 };
 
-export default function ResearchModule({ clientId, selectedHistoryItem, onClearHistorySelection }: Props) {
+export default function ResearchModule({ clientId }: Props) {
   const [query, setQuery] = useState("");
   const [adminPrompt, setAdminPrompt] = useState("Use Indian case law & statutes where relevant. Summarize in 5 bullet points.");
   const [showAdmin, setShowAdmin] = useState(false);
   const [running, setRunning] = useState(false);
-  const [currentResult, setCurrentResult] = useState<ResearchItem | null>(null);
   const [showSavedToast, setShowSavedToast] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // Update current result when history item is selected
-  useEffect(() => {
-    if (selectedHistoryItem) {
-      setCurrentResult(selectedHistoryItem);
-    }
-  }, [selectedHistoryItem]);
 
   // Handle Enter key to run research
   useEffect(() => {
@@ -52,13 +42,8 @@ export default function ResearchModule({ clientId, selectedHistoryItem, onClearH
       return;
     }
 
-    if (!clientId) {
-      alert("Select a client.");
-      return;
-    }
-
+    // Client selection is optional - no alert if no client selected
     setRunning(true);
-    onClearHistorySelection(); // Clear any selected history item when running new research
 
     // Simulate API call delay
     setTimeout(() => {
@@ -233,76 +218,6 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         </div>
       </div>
 
-      {/* Current Result */}
-      {currentResult && (
-        <div style={{
-          background: "#F8FAFC",
-          border: "1px solid #E2E8F0",
-          borderRadius: 12,
-          padding: 20,
-          marginBottom: 20
-        }}>
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: 12
-          }}>
-            <h4 style={{
-              fontSize: 16,
-              fontWeight: 600,
-              margin: 0,
-              color: "#1F2937",
-              flex: 1
-            }}>
-              {currentResult.title}
-            </h4>
-            <div style={{ 
-              fontSize: 11, 
-              color: "#9CA3AF",
-              marginLeft: 12,
-              whiteSpace: "nowrap"
-            }}>
-              Saved {formatTime(currentResult.ts)}
-            </div>
-          </div>
-          
-          {currentResult.query && (
-            <div style={{
-              fontSize: 13,
-              color: "#6B7280",
-              marginBottom: 12,
-              fontStyle: "italic"
-            }}>
-              Query: {currentResult.query}
-            </div>
-          )}
-          
-          <pre style={{
-            fontSize: 14,
-            lineHeight: 1.6,
-            color: "#374151",
-            whiteSpace: "pre-wrap",
-            fontFamily: "Inter, sans-serif",
-            margin: 0
-          }}>
-            {currentResult.resultText}
-          </pre>
-        </div>
-      )}
-
-      {!currentResult && !running && (
-        <div style={{
-          padding: 40,
-          textAlign: "center",
-          color: "#9CA3AF",
-          fontSize: 14,
-          border: "1px dashed #E6E9EE",
-          borderRadius: 12
-        }}>
-          Your research results will appear here
-        </div>
-      )}
     </div>
   );
 }
