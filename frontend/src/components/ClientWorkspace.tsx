@@ -22,12 +22,16 @@ type Props = {
   client: Client | null;
   activeModule: string | null;
   onModuleChange: (module: string) => void;
+  selectedHistoryItem: HistoryItem | null;
+  onClearHistorySelection: () => void;
 };
 
 export default function ClientWorkspace({ 
   client, 
   activeModule, 
-  onModuleChange
+  onModuleChange,
+  selectedHistoryItem,
+  onClearHistorySelection
 }: Props) {
   const [allClients, setAllClients] = useState<Client[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
@@ -51,103 +55,79 @@ export default function ClientWorkspace({
       setSelectedClientId(client.id);
     }
   }, [client]);
-  if (!client) {
-    return (
-      <div style={{ 
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "center", 
-        height: 400,
-        color: "#9CA3AF",
-        fontSize: 16
-      }}>
-        Select a client.
-      </div>
-    );
-  }
 
   return (
     <div style={{ padding: 24, height: "100%", display: "flex", flexDirection: "column" }}>
       {/* Client chip */}
-      <div style={{ 
-        display: "flex", 
-        alignItems: "center", 
-        gap: 12, 
-        marginBottom: 16
-      }}>
-        <div style={{
-          padding: "6px 12px",
-          background: "#E8F1FF",
-          borderRadius: 16,
-          fontSize: 13,
-          color: "#2E7CF6",
-          fontWeight: 500
-        }}
-        aria-label={`Active client: ${client.name}`}
-        >
-          Client: {client.name}
+      {client && (
+        <div style={{ 
+          display: "flex", 
+          alignItems: "center", 
+          gap: 12, 
+          marginBottom: 16
+        }}>
+          <div style={{
+            padding: "6px 12px",
+            background: "#E8F1FF",
+            borderRadius: 16,
+            fontSize: 13,
+            color: "#2E7CF6",
+            fontWeight: 500
+          }}
+          aria-label={`Active client: ${client.name}`}
+          >
+            Client: {client.name}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Module pills */}
+      {/* Module pills - always visible */}
       <ModulePills activeModule={activeModule} onSelect={onModuleChange} />
 
       {/* Module content */}
       <div style={{ flex: 1, marginTop: 16, overflowY: "auto" }}>
-        {!activeModule && (
-          <div style={{ 
-            display: "flex", 
-            alignItems: "center", 
-            justifyContent: "center", 
-            height: 200,
-            color: "#9CA3AF",
-            fontSize: 16
-          }}>
-            Select a module.
+        {/* Always show the prompt window */}
+        <div>
+          {/* Client Selection Dropdown */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ 
+              display: "block", 
+              fontSize: 14, 
+              fontWeight: 500, 
+              color: "#374151", 
+              marginBottom: 6 
+            }}>
+              Select Client:
+            </label>
+            <select
+              value={selectedClientId || ""}
+              onChange={(e) => setSelectedClientId(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                borderRadius: 8,
+                border: "1px solid #D1D5DB",
+                background: "#FFFFFF",
+                fontSize: 14,
+                color: "#374151"
+              }}
+              aria-label="Select client for research"
+            >
+              <option value="">Choose a client...</option>
+              {allClients.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name} {c.phone ? `(${c.phone})` : ""}
+                </option>
+              ))}
+            </select>
           </div>
-        )}
-
-        {activeModule === "Research" && (
-          <div>
-            {/* Client Selection Dropdown */}
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ 
-                display: "block", 
-                fontSize: 14, 
-                fontWeight: 500, 
-                color: "#374151", 
-                marginBottom: 6 
-              }}>
-                Select Client:
-              </label>
-              <select
-                value={selectedClientId || ""}
-                onChange={(e) => setSelectedClientId(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  borderRadius: 8,
-                  border: "1px solid #D1D5DB",
-                  background: "#FFFFFF",
-                  fontSize: 14,
-                  color: "#374151"
-                }}
-                aria-label="Select client for research"
-              >
-                <option value="">Choose a client...</option>
-                {allClients.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name} {c.phone ? `(${c.phone})` : ""}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <ResearchModule 
-              clientId={selectedClientId || client.id}
-            />
-          </div>
-        )}
+          
+          <ResearchModule 
+            clientId={selectedClientId || client?.id || ""}
+            selectedHistoryItem={selectedHistoryItem}
+            onClearHistorySelection={onClearHistorySelection}
+          />
+        </div>
 
         {activeModule === "Property Opinion" && (
           <div>

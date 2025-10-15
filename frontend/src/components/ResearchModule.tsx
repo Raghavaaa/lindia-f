@@ -13,9 +13,11 @@ type ResearchItem = {
 
 type Props = {
   clientId: string;
+  selectedHistoryItem: ResearchItem | null;
+  onClearHistorySelection: () => void;
 };
 
-export default function ResearchModule({ clientId }: Props) {
+export default function ResearchModule({ clientId, selectedHistoryItem, onClearHistorySelection }: Props) {
   const [query, setQuery] = useState("");
   const [adminPrompt, setAdminPrompt] = useState("Use Indian case law & statutes where relevant. Summarize in 5 bullet points.");
   const [showAdmin, setShowAdmin] = useState(false);
@@ -24,6 +26,12 @@ export default function ResearchModule({ clientId }: Props) {
   const [showSavedToast, setShowSavedToast] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Update current result when history item is selected
+  useEffect(() => {
+    if (selectedHistoryItem) {
+      setCurrentResult(selectedHistoryItem);
+    }
+  }, [selectedHistoryItem]);
 
   // Handle Enter key to run research
   useEffect(() => {
@@ -50,6 +58,7 @@ export default function ResearchModule({ clientId }: Props) {
     }
 
     setRunning(true);
+    onClearHistorySelection(); // Clear any selected history item when running new research
 
     // Simulate API call delay
     setTimeout(() => {
