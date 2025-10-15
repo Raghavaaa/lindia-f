@@ -128,7 +128,7 @@ export default function ClientWorkspace({
         </div>
 
         {/* Right side - Module pills */}
-        <div style={{ width: 280, flexShrink: 0, marginTop: -40, marginLeft: -120 }}>
+        <div style={{ width: 320, flexShrink: 0, marginTop: -40, marginLeft: -80 }}>
           <ModulePills activeModule={activeModule} onSelect={onModuleChange} />
         </div>
       </div>

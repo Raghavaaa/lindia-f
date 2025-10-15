@@ -25,7 +25,8 @@ export default function ModulePills({ activeModule, onSelect }: Props) {
       alignItems: "flex-start",
       flexWrap: "nowrap",
       justifyContent: "flex-start",
-      width: "100%"
+      width: "100%",
+      overflowX: "visible"
     }}>
       {modules.map((module) => (
         <button
