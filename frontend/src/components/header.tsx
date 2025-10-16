@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Settings, Info, Building2, Search, FileText, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -16,7 +16,9 @@ const modules = [
 
 export default function Header() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const isAppPage = pathname === "/app";
+  const currentModule = searchParams.get("module") || "research";
 
   return (
     <>
@@ -93,12 +95,16 @@ export default function Header() {
                   >
                     <Button
                       asChild
-                      variant="ghost"
+                      variant={currentModule === module.id ? "default" : "ghost"}
                       size="sm"
-                      className="gap-2 font-semibold"
+                      className={`gap-2 font-semibold ${
+                        currentModule === module.id 
+                          ? "bg-primary text-primary-foreground shadow-md" 
+                          : "hover:bg-accent"
+                      }`}
                     >
                       <Link href={module.path}>
-                        <Icon className="w-4 h-4 text-primary" />
+                        <Icon className={`w-4 h-4 ${currentModule === module.id ? "text-primary-foreground" : "text-primary"}`} />
                         <span className="hidden md:inline">{module.label}</span>
                       </Link>
                     </Button>

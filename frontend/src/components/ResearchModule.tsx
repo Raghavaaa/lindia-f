@@ -215,19 +215,9 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
           onClick={runResearch}
           disabled={running}
           size="lg"
-          className="gap-2 w-full sm:w-auto"
+          className="w-full sm:w-auto"
         >
-          {running ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Running...
-            </>
-          ) : (
-            <>
-              <Play className="w-4 h-4" />
-              Run Research
-            </>
-          )}
+          {running ? "Running..." : "Run Research"}
         </Button>
       </div>
     </div>

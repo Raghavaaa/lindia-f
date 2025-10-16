@@ -72,17 +72,20 @@ export default function CaseModule({ clientId, onComplete }: Props) {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Upload Supporting Documents</label>
-              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer">
-                <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">
-                  Click to upload case documents, evidence, precedents
+              <label className="text-sm font-semibold text-foreground">Upload Supporting Documents</label>
+              <div className="border-2 border-dashed border-primary/30 bg-primary/5 rounded-lg p-8 text-center hover:border-primary hover:bg-primary/10 transition-all duration-200 cursor-pointer group">
+                <Upload className="w-8 h-8 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+                <p className="text-sm font-medium text-primary">
+                  Click to upload case documents
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Evidence, precedents, and supporting files
                 </p>
               </div>
             </div>
 
             <Button onClick={handleSubmit} disabled={running} size="lg" className="w-full">
-              {running ? "Processing..." : (<><Send className="w-4 h-4 mr-2" />Prepare Case Draft</>)}
+              {running ? "Processing..." : "Prepare Case Draft"}
             </Button>
           </CardContent>
         </Card>

@@ -39,11 +39,14 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Upload Property Documents</label>
-              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer">
-                <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">
+              <label className="text-sm font-semibold text-foreground">Upload Property Documents</label>
+              <div className="border-2 border-dashed border-primary/30 bg-primary/5 rounded-lg p-8 text-center hover:border-primary hover:bg-primary/10 transition-all duration-200 cursor-pointer group">
+                <Upload className="w-8 h-8 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+                <p className="text-sm font-medium text-primary">
                   Click to upload documents
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Drag and drop files here
                 </p>
               </div>
             </div>
@@ -62,7 +65,7 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
             </div>
 
             <Button onClick={handleAnalyze} disabled={running} size="lg" className="w-full">
-              {running ? "Analyzing..." : (<><Send className="w-4 h-4 mr-2" />Analyze Property</>)}
+              {running ? "Analyzing..." : "Analyze Property"}
             </Button>
           </CardContent>
         </Card>

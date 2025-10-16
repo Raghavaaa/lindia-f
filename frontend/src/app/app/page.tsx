@@ -119,8 +119,9 @@ export default function AppPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-full text-sm font-medium mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-semibold mb-6 shadow-sm"
           >
+            <div className="w-2 h-2 bg-primary rounded-full"></div>
             Client: {selectedClient.name}
           </motion.div>
         )}
