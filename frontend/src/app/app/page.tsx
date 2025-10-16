@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import ClientList from "../../components/ClientList";
 import ClientModal from "../../components/ClientModal";
@@ -27,7 +27,7 @@ type HistoryItem = {
   ts: number;
 };
 
-export default function AppPage() {
+function AppPageContent() {
   const searchParams = useSearchParams();
   const moduleParam = searchParams?.get("module") || "research";
   
@@ -158,5 +158,13 @@ export default function AppPage() {
         onCreate={handleCreateClient} 
       />
     </div>
+  );
+}
+
+export default function AppPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <AppPageContent />
+    </Suspense>
   );
 }
