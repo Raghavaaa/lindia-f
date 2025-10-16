@@ -2,7 +2,10 @@ fastapi
 uvicorn
 gunicorn
 pydantic
+python-dotenv
 requests
 bcrypt
 pyjwt
-python-dotenv
+httpx
+python-jose[cryptography]
+passlib[bcrypt]
