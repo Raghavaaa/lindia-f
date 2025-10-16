@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Scale, Upload, CheckCircle, AlertCircle } from "lucide-react";
+import { Scale, Upload, CheckCircle, AlertCircle, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -124,9 +124,24 @@ export default function CaseModule({ clientId, onComplete }: Props) {
               </div>
             </div>
 
-            <Button onClick={handleSubmit} disabled={running} size="lg" className="w-full">
+            <div className="flex justify-center">
+              <Button 
+                onClick={handleSubmit} 
+                disabled={running} 
+                size="icon" 
+                className="w-16 h-16 rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200"
+                title={running ? "Processing..." : "Prepare Case Draft"}
+              >
+                {running ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <FileText className="w-6 h-6" />
+                )}
+              </Button>
+            </div>
+            <p className="text-center text-sm text-muted-foreground mt-2">
               {running ? "Processing..." : "Prepare Case Draft"}
-            </Button>
+            </p>
           </CardContent>
         </Card>
       </motion.div>

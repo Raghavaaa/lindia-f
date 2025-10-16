@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FileText, Upload, CheckCircle, AlertCircle } from "lucide-react";
+import { FileText, Upload, CheckCircle, AlertCircle, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -84,9 +84,24 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
               />
             </div>
 
-            <Button onClick={handleAnalyze} disabled={running} size="lg" className="w-full">
+            <div className="flex justify-center">
+              <Button 
+                onClick={handleAnalyze} 
+                disabled={running} 
+                size="icon" 
+                className="w-16 h-16 rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200"
+                title={running ? "Analyzing..." : "Analyze Property"}
+              >
+                {running ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Search className="w-6 h-6" />
+                )}
+              </Button>
+            </div>
+            <p className="text-center text-sm text-muted-foreground mt-2">
               {running ? "Analyzing..." : "Analyze Property"}
-            </Button>
+            </p>
           </CardContent>
         </Card>
       </motion.div>

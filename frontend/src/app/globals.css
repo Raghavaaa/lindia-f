@@ -65,8 +65,14 @@
   }
 
   button:hover, .btn:hover, [role="button"]:hover {
-    transform: translateY(-1px) !important;
+    transform: translateY(-1px) scale(1.02) !important;
     box-shadow: 0 4px 8px -2px rgb(0 0 0 / 0.15) !important;
+  }
+
+  /* Special styling for icon buttons */
+  button[data-size="icon"]:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 12px -3px rgb(0 0 0 / 0.2) !important;
   }
 
   /* Specific button variants */

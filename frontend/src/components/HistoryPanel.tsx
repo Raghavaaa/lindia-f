@@ -128,8 +128,12 @@ export default function HistoryPanel({
                   layout
                 >
                   <Button
-                    variant={selectedItemId === item.id ? "secondary" : "ghost"}
-                    className="w-full justify-start h-auto py-3 px-3 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200"
+                    variant={selectedItemId === item.id ? "default" : "ghost"}
+                    className={`w-full justify-start h-auto py-3 px-3 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 ${
+                      selectedItemId === item.id 
+                        ? "bg-primary text-primary-foreground shadow-md hover:shadow-lg" 
+                        : "hover:bg-accent hover:scale-105"
+                    }`}
                     onClick={() => handleItemClick(item)}
                   >
                     <div className="flex flex-col items-start gap-1 w-full text-left">

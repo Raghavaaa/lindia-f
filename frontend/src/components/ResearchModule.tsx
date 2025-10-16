@@ -211,14 +211,24 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         </AnimatePresence>
 
         {/* Run Button */}
-        <Button
-          onClick={runResearch}
-          disabled={running}
-          size="lg"
-          className="w-full sm:w-auto"
-        >
+        <div className="flex justify-center">
+          <Button
+            onClick={runResearch}
+            disabled={running}
+            size="icon"
+            className="w-16 h-16 rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200"
+            title={running ? "Running..." : "Run Research"}
+          >
+            {running ? (
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Play className="w-6 h-6" />
+            )}
+          </Button>
+        </div>
+        <p className="text-center text-sm text-muted-foreground mt-2">
           {running ? "Running..." : "Run Research"}
-        </Button>
+        </p>
       </div>
     </div>
   );
