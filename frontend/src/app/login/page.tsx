@@ -114,10 +114,10 @@ export default function LoginPage() {
                     className="w-full gap-2"
                     size="lg"
                   >
-                    <a href="/">
+                    <Link href="/">
                       <Home className="w-4 h-4" />
                       Back to Home
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               </motion.div>

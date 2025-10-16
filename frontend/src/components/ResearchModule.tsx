@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 
 type ResearchItem = {
@@ -144,7 +145,7 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
   };
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* Saved Toast */}
       <AnimatePresence>
         {showSavedToast && (
@@ -162,8 +163,15 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         )}
       </AnimatePresence>
 
-      {/* Query Input */}
-      <div className="space-y-4">
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Play className="w-5 h-5 text-primary" />
+              Legal Research
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
         <div className="space-y-2">
           <Textarea
             ref={textareaRef}
@@ -229,7 +237,9 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         <p className="text-center text-sm text-muted-foreground mt-2">
           {running ? "Running..." : "Run Research"}
         </p>
-      </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }
