@@ -103,7 +103,7 @@ export default function AppPage() {
       <motion.aside
         initial={{ x: -220 }}
         animate={{ x: 0 }}
-        className="w-[220px] border-r border-border bg-card shrink-0 hidden md:block fixed left-0 top-16 md:top-[120px] bottom-14 overflow-y-auto"
+        className="w-[220px] border-r border-border bg-background shrink-0 hidden md:block fixed left-0 top-16 md:top-[120px] bottom-14 overflow-y-auto"
       >
         <ClientList 
           clients={clients} 
@@ -139,7 +139,7 @@ export default function AppPage() {
       <motion.aside
         initial={{ x: 320 }}
         animate={{ x: 0 }}
-        className="hidden lg:block fixed right-0 top-16 md:top-[120px] bottom-14 w-[320px]"
+        className="hidden lg:block fixed right-0 top-16 md:top-[120px] bottom-14 w-[320px] bg-background border-l border-border"
       >
         <HistoryPanel 
           clientId={selectedClientId}

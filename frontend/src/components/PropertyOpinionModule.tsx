@@ -14,15 +14,10 @@ type Props = {
 };
 
 export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
-  const [propertyAddress, setPropertyAddress] = useState("");
   const [specificConcerns, setSpecificConcerns] = useState("");
   const [running, setRunning] = useState(false);
 
   const handleAnalyze = () => {
-    if (!propertyAddress.trim()) {
-      alert("Please enter property address");
-      return;
-    }
     
     setRunning(true);
     setTimeout(() => {
@@ -41,30 +36,14 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
               <FileText className="w-5 h-5 text-primary" />
               Property Opinion
             </CardTitle>
-            <CardDescription>
-              Get comprehensive legal opinion on property titles and documents
-            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <label htmlFor="property-address" className="text-sm font-medium">
-                Property Address <span className="text-destructive">*</span>
-              </label>
-              <Textarea
-                id="property-address"
-                placeholder="Enter complete property address with survey numbers..."
-                value={propertyAddress}
-                onChange={(e) => setPropertyAddress(e.target.value)}
-                rows={3}
-              />
-            </div>
-
             <div className="space-y-2">
               <label className="text-sm font-medium">Upload Property Documents</label>
               <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer">
                 <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground">
-                  Click to upload Sale Deed, EC, Tax Receipts, Survey Maps
+                  Click to upload documents
                 </p>
               </div>
             </div>

@@ -27,7 +27,8 @@ export default function ClientModal({
 
   const handleCreate = () => {
     if (!name.trim()) return alert("Please enter a client name");
-    onCreate({ name: name.trim(), phone: phone.trim() || undefined });
+    if (!phone.trim()) return alert("Please enter a phone number");
+    onCreate({ name: name.trim(), phone: phone.trim() });
     onClose();
   };
 
@@ -61,7 +62,7 @@ export default function ClientModal({
 
           <div className="space-y-2">
             <label htmlFor="client-phone" className="text-sm font-medium">
-              Phone (optional)
+              Phone Number <span className="text-destructive">*</span>
             </label>
             <Input
               id="client-phone"
