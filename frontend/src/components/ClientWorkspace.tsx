@@ -1,7 +1,11 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
+import { User } from "lucide-react";
 import ModulePills from "./ModulePills";
 import ResearchModule from "./ResearchModule";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { motion } from "framer-motion";
 
 type Client = {
   id: string;
@@ -59,78 +63,65 @@ export default function ClientWorkspace({
   }, [client]);
 
   return (
-    <div style={{ padding: 24, height: "100%", display: "flex", flexDirection: "column" }}>
+    <div className="flex-1 p-6 space-y-6 max-w-7xl mx-auto">
       {/* Client chip */}
       {client && (
-        <div style={{ 
-          display: "flex", 
-          alignItems: "center", 
-          gap: 12, 
-          marginBottom: 16
-        }}>
-          <div style={{
-            padding: "6px 12px",
-            background: "#E8F1FF",
-            borderRadius: 16,
-            fontSize: 13,
-            color: "#2E7CF6",
-            fontWeight: 500
-          }}
-          aria-label={`Active client: ${client.name}`}
-          >
-            Client: {client.name}
-          </div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-full text-sm font-medium"
+        >
+          <User className="w-4 h-4" />
+          Client: {client.name}
+        </motion.div>
       )}
 
       {/* Module content */}
-      <div style={{ flex: 1, marginTop: 8, display: "flex", gap: 16 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr,320px] gap-6">
         {/* Left side - Prompt window */}
-        <div style={{ flex: 1, overflowY: "auto" }}>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+          className="space-y-4"
+        >
           {/* Client Selection Dropdown */}
-          <div style={{ marginBottom: 6 }}>
-            <label style={{ 
-              display: "block", 
-              fontSize: 10, 
-              fontWeight: 500, 
-              color: "#374151", 
-              marginBottom: 2 
-            }}>
-              Client:
+          <div className="space-y-2 max-w-md">
+            <label htmlFor="client-select" className="text-sm font-medium text-foreground">
+              Select Client
             </label>
-            <select
+            <Select
               value={selectedClientId || ""}
-              onChange={(e) => setSelectedClientId(e.target.value)}
-              style={{
-                width: "60%",
-                padding: "3px 6px",
-                borderRadius: 3,
-                border: "1px solid #D1D5DB",
-                background: "#FFFFFF",
-                fontSize: 11,
-                color: "#374151"
-              }}
-              aria-label="Select client for research"
+              onValueChange={setSelectedClientId}
             >
-              <option value="">Choose...</option>
-              {allClients.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger id="client-select" className="w-full">
+                <SelectValue placeholder="Choose a client..." />
+              </SelectTrigger>
+              <SelectContent>
+                {allClients.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           
           <ResearchModule 
             clientId={selectedClientId || client?.id || ""}
             onResearchComplete={onResearchComplete}
           />
-        </div>
+        </motion.div>
 
         {/* Right side - Module pills */}
-        <div style={{ width: 320, flexShrink: 0, marginTop: -60, marginLeft: -240 }}>
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="lg:sticky lg:top-20 lg:self-start"
+        >
           <ModulePills activeModule={activeModule} onSelect={onModuleChange} />
-        </div>
+        </motion.div>
       </div>
     </div>
   );

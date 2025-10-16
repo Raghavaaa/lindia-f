@@ -1,7 +1,21 @@
 import type { Metadata } from "next";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "../components/header";
 import Footer from "../components/footer";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const poppins = Poppins({
+  weight: ["400", "600", "700", "800"],
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "LegalIndia.ai - AI-Powered Legal Assistant",
@@ -14,15 +28,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="min-h-screen flex flex-col bg-neutral-50">
+      <body className="min-h-screen flex flex-col antialiased">
         <Header />
-        <div className="flex-1 flex flex-col">
+        <main className="flex-1 flex flex-col pt-16 pb-14">
           {children}
-        </div>
+        </main>
         <Footer />
       </body>
     </html>

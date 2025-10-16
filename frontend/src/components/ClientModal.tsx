@@ -1,45 +1,86 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
 
-export default function ClientModal({ open, onClose, onCreate }: { open: boolean; onClose: () => void; onCreate: (c: { name: string; phone?: string }) => void; }) {
+import React, { useState, useEffect } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+
+export default function ClientModal({ 
+  open, 
+  onClose, 
+  onCreate 
+}: { 
+  open: boolean; 
+  onClose: () => void; 
+  onCreate: (c: { name: string; phone?: string }) => void; 
+}) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const nameRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (open) {
       setName("");
       setPhone("");
-      setTimeout(() => nameRef.current?.focus(), 80);
     }
   }, [open]);
 
-  if (!open) return null;
+  const handleCreate = () => {
+    if (!name.trim()) return alert("Please enter a client name");
+    onCreate({ name: name.trim(), phone: phone.trim() || undefined });
+    onClose();
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-      <div className="client-modal" style={{ background: "#fff", borderRadius: 12, padding: 18, boxShadow: "0 12px 40px rgba(10,15,25,0.12)" }}>
-        <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Create new client</h3>
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="font-heading">Create New Client</DialogTitle>
+          <DialogDescription>
+            Add a new client to your workspace
+          </DialogDescription>
+        </DialogHeader>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <input ref={nameRef} className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Client name" />
-          <input className="input" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone (optional)" />
-
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 8 }}>
-            <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                if (!name.trim()) return alert("Please enter a client name");
-                onCreate({ name: name.trim(), phone: phone.trim() || undefined });
-                onClose();
-              }}
-            >
-              Create
-            </button>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-4 py-4"
+        >
+          <div className="space-y-2">
+            <label htmlFor="client-name" className="text-sm font-medium">
+              Client Name <span className="text-destructive">*</span>
+            </label>
+            <Input
+              id="client-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter client name"
+              autoFocus
+            />
           </div>
-        </div>
-      </div>
-    </div>
+
+          <div className="space-y-2">
+            <label htmlFor="client-phone" className="text-sm font-medium">
+              Phone (optional)
+            </label>
+            <Input
+              id="client-phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+91 99999 99999"
+            />
+          </div>
+        </motion.div>
+
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button onClick={handleCreate}>
+            Create Client
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

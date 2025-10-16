@@ -1,5 +1,10 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
+import { History, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { motion, AnimatePresence } from "framer-motion";
 
 type HistoryItem = {
   id: string;
@@ -18,7 +23,7 @@ type Props = {
   selectedItemId?: string | null;
   isMobileOpen?: boolean;
   onMobileClose?: () => void;
-  refreshTrigger?: number; // Add refresh trigger
+  refreshTrigger?: number;
 };
 
 export default function HistoryPanel({ 
@@ -34,7 +39,6 @@ export default function HistoryPanel({
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [displayLimit, setDisplayLimit] = useState(50);
 
-  // Load history when client changes
   useEffect(() => {
     console.log("HistoryPanel: useEffect triggered with clientId:", clientId, "activeModule:", activeModule, "refreshTrigger:", refreshTrigger);
     
@@ -45,7 +49,6 @@ export default function HistoryPanel({
     }
 
     try {
-      // Use the exact same key format as ResearchModule
       const key = `legalindia::client::${clientId}::research`;
       console.log("HistoryPanel: Looking for key:", key);
       const saved = localStorage.getItem(key);
@@ -53,10 +56,9 @@ export default function HistoryPanel({
       if (saved) {
         const items: HistoryItem[] = JSON.parse(saved);
         console.log("HistoryPanel: Loaded items for key", key, "items:", items);
-        setHistoryItems(items.slice(0, 100)); // Limit to 100 most recent
+        setHistoryItems(items.slice(0, 100));
       } else {
         console.log("HistoryPanel: No data found for key", key);
-        // Let's also check what keys exist in localStorage
         const allKeys = Object.keys(localStorage);
         const researchKeys = allKeys.filter(k => k.includes('research'));
         console.log("HistoryPanel: All research keys in localStorage:", researchKeys);
@@ -66,7 +68,7 @@ export default function HistoryPanel({
       console.error("Error loading history:", error);
       setHistoryItems([]);
     }
-  }, [clientId, refreshTrigger]); // Add refreshTrigger dependency
+  }, [clientId, refreshTrigger]);
 
   const displayedItems = historyItems.slice(0, displayLimit);
   const hasMore = historyItems.length > displayLimit;
@@ -86,141 +88,84 @@ export default function HistoryPanel({
   };
 
   return (
-    <div style={{
-      width: 320,
-      borderLeft: "1px solid #F1F5F9",
-      background: "#FFFFFF",
-      height: "100vh",
-      position: "sticky",
-      top: 0,
-      display: "flex",
-      flexDirection: "column",
-      overflow: "hidden"
-    }}
-    className={`history-panel ${isMobileOpen ? 'mobile-open' : ''}`}
-    >
+    <div className={`w-80 border-l border-border bg-card flex flex-col h-screen sticky top-0 ${isMobileOpen ? 'mobile-open' : ''}`}>
       {/* Header */}
-      <div style={{
-        padding: "16px",
-        borderBottom: "1px solid #F1F5F9"
-      }}>
+      <div className="p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <History className="w-4 h-4" />
+            History
+          </h3>
+        </div>
         {clientName && (
-          <div style={{
-            fontSize: 12,
-            color: "#9CA3AF",
-            marginBottom: 8
-          }}>
+          <p className="text-xs text-muted-foreground">
             Client: {clientName}
-          </div>
+          </p>
         )}
-        <h3 style={{
-          fontSize: 16,
-          fontWeight: 600,
-          color: "#1F2937",
-          margin: 0
-        }}>
-          History
-        </h3>
+        <Separator />
       </div>
 
       {/* History List */}
-      <div style={{
-        flex: 1,
-        overflowY: "auto",
-        padding: "8px"
-      }}>
+      <div className="flex-1 overflow-y-auto px-2 pb-4 scrollbar-thin">
         {!clientId ? (
-          <div style={{
-            padding: "16px",
-            textAlign: "center",
-            fontSize: 13,
-            color: "#9CA3AF"
-          }}>
+          <div className="text-center py-8 text-sm text-muted-foreground">
             Select a client
           </div>
         ) : historyItems.length === 0 ? (
-          <div style={{
-            padding: "16px",
-            textAlign: "center",
-            fontSize: 13,
-            color: "#9CA3AF"
-          }}>
-            No history yet. (Items: {historyItems.length})
+          <div className="text-center py-8 text-sm text-muted-foreground">
+            No history yet
           </div>
         ) : (
-          <>
-            {displayedItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleItemClick(item)}
-                tabIndex={0}
-                style={{
-                  width: "100%",
-                  textAlign: "left",
-                  padding: "10px 12px",
-                  marginBottom: "4px",
-                  borderRadius: 8,
-                  border: "none",
-                  background: selectedItemId === item.id ? "#E8F1FF" : "transparent",
-                  cursor: "pointer",
-                  transition: "all 0.15s ease",
-                  display: "block"
-                }}
-                onMouseEnter={(e) => {
-                  if (selectedItemId !== item.id) {
-                    e.currentTarget.style.background = "#F8FAFC";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (selectedItemId !== item.id) {
-                    e.currentTarget.style.background = "transparent";
-                  }
-                }}
-                aria-label={`History item ${item.title}, ${new Date(item.ts).toLocaleString()}`}
-              >
-                <div style={{
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: selectedItemId === item.id ? "#2E7CF6" : "#1F2937",
-                  marginBottom: 4,
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis"
-                }}>
-                  {formatTime(item.ts)} • {item.title.substring(0, 40)}{item.title.length > 40 ? "..." : ""}
-                </div>
-                <div style={{
-                  fontSize: 12,
-                  color: "#9CA3AF"
-                }}>
-                  {new Date(item.ts).toLocaleDateString()}
-                </div>
-              </button>
-            ))}
+          <AnimatePresence mode="popLayout">
+            <div className="space-y-1">
+              {displayedItems.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ delay: index * 0.02 }}
+                  layout
+                >
+                  <Button
+                    variant={selectedItemId === item.id ? "secondary" : "ghost"}
+                    className="w-full justify-start h-auto py-3 px-3"
+                    onClick={() => handleItemClick(item)}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full text-left">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        <span>{formatTime(item.ts)}</span>
+                        <span>•</span>
+                        <span>{new Date(item.ts).toLocaleDateString()}</span>
+                      </div>
+                      <div className="text-sm font-medium line-clamp-2 w-full">
+                        {item.title}
+                      </div>
+                    </div>
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
             
             {hasMore && (
-              <button
-                onClick={() => setDisplayLimit(prev => prev + 50)}
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  marginTop: "8px",
-                  border: "none",
-                  background: "transparent",
-                  color: "#2E7CF6",
-                  fontSize: 13,
-                  cursor: "pointer",
-                  textAlign: "center"
-                }}
-                aria-label="Load more history items"
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="pt-2"
               >
-                Load more...
-              </button>
+                <Button
+                  variant="ghost"
+                  className="w-full"
+                  onClick={() => setDisplayLimit(prev => prev + 50)}
+                >
+                  Load more...
+                </Button>
+              </motion.div>
             )}
-          </>
+          </AnimatePresence>
         )}
       </div>
     </div>
   );
 }
-

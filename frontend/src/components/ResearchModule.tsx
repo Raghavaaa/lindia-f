@@ -1,6 +1,12 @@
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
+import { Play, Loader2, Check } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { motion, AnimatePresence } from "framer-motion";
 
 type ResearchItem = {
   id: string;
@@ -27,7 +33,6 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
   // Cleanup old localStorage data on component mount
   useEffect(() => {
     try {
-      // Clean up old data for all clients
       const keys = Object.keys(localStorage);
       const researchKeys = keys.filter(key => key.startsWith('legalindia::client::') && key.endsWith('::research'));
       
@@ -36,7 +41,6 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
         if (data) {
           const items = JSON.parse(data);
           if (items.length > 50) {
-            // Keep only 50 most recent items
             localStorage.setItem(key, JSON.stringify(items.slice(0, 50)));
           }
         }
@@ -65,10 +69,8 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
       return;
     }
 
-    // Client selection is optional - no alert if no client selected
     setRunning(true);
 
-    // Simulate API call delay
     setTimeout(() => {
       const resultText = `Research Summary for: "${query}"
 
@@ -91,19 +93,15 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         ts: Date.now()
       };
 
-      // Save to localStorage with cleanup
       try {
         const key = `legalindia::client::${clientId}::research`;
         const existing = localStorage.getItem(key);
         const items: ResearchItem[] = existing ? JSON.parse(existing) : [];
         
-        // Add new item to front and limit to 50 (reduced from 200)
         const updatedItems = [newItem, ...items].slice(0, 50);
         
-        // Check data size before saving
         const dataSize = JSON.stringify(updatedItems).length;
-        if (dataSize > 50000) { // 50KB limit per client
-          // Keep only 25 most recent if too large
+        if (dataSize > 50000) {
           const trimmedItems = updatedItems.slice(0, 25);
           localStorage.setItem(key, JSON.stringify(trimmedItems));
         } else {
@@ -113,17 +111,14 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         console.log("ResearchModule: Saved to key", key, "items:", updatedItems);
         setQuery("");
         
-        // Trigger history refresh
         if (onResearchComplete) {
           onResearchComplete();
         }
         
-        // Show saved toast
         setShowSavedToast(true);
         setTimeout(() => setShowSavedToast(false), 3000);
       } catch (error) {
         console.error("Error saving research:", error);
-        // Try to clear old data and save just the new item
         try {
           const key = `legalindia::client::${clientId}::research`;
           localStorage.removeItem(key);
@@ -149,116 +144,92 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className="space-y-4">
       {/* Saved Toast */}
-      {showSavedToast && (
-        <div style={{
-          position: "fixed",
-          bottom: 24,
-          left: "50%",
-          transform: "translateX(-50%)",
-          background: "#2E7CF6",
-          color: "white",
-          padding: "12px 24px",
-          borderRadius: 28,
-          fontSize: 14,
-          fontWeight: 500,
-          boxShadow: "0 4px 12px rgba(46, 124, 246, 0.3)",
-          zIndex: 1000,
-          display: "flex",
-          alignItems: "center",
-          gap: 12
-        }}>
-          Saved • {formatTime(Date.now())}
-        </div>
-      )}
-
+      <AnimatePresence>
+        {showSavedToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-primary text-primary-foreground px-6 py-3 rounded-full shadow-lg flex items-center gap-3"
+          >
+            <Check className="w-4 h-4" />
+            <span className="text-sm font-medium">
+              Saved • {formatTime(Date.now())}
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Query Input */}
-      <div style={{ marginBottom: 20 }}>
-        <textarea
-          ref={textareaRef}
-          placeholder="Enter your legal research question (e.g., 'What are the requirements for adverse possession in urban properties under Indian law?')"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="input"
-          style={{
-            width: "100%",
-            minHeight: 120,
-            padding: 14,
-            border: "1px solid #E6E9EE",
-            borderRadius: 12,
-            fontSize: 14,
-            fontFamily: "Inter, sans-serif",
-            resize: "vertical",
-            marginBottom: 12
-          }}
-          aria-label="Module Research prompt"
-        />
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Textarea
+            ref={textareaRef}
+            placeholder="Enter your legal research question (e.g., 'What are the requirements for adverse possession in urban properties under Indian law?')"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="min-h-[120px] resize-y"
+            aria-label="Research query input"
+          />
+          <p className="text-xs text-muted-foreground">
+            Press Enter to run research
+          </p>
+        </div>
 
         {/* Admin Prompt Toggle */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-          <input
-            type="checkbox"
+        <div className="flex items-center gap-3">
+          <Switch
             id="showAdmin"
             checked={showAdmin}
-            onChange={(e) => setShowAdmin(e.target.checked)}
-            style={{ margin: 0 }}
-            aria-label="Show admin prompt"
+            onCheckedChange={setShowAdmin}
           />
-          <label htmlFor="showAdmin" style={{ fontSize: 13, color: "#6B7280", cursor: "pointer" }}>
+          <label htmlFor="showAdmin" className="text-sm text-muted-foreground cursor-pointer">
             Show admin prompt
           </label>
         </div>
 
-        {showAdmin && (
-          <textarea
-            value={adminPrompt}
-            onChange={(e) => setAdminPrompt(e.target.value)}
-            className="input"
-            style={{
-              width: "100%",
-              minHeight: 80,
-              padding: 12,
-              border: "1px solid #E6E9EE",
-              borderRadius: 12,
-              fontSize: 13,
-              fontFamily: "Inter, sans-serif",
-              resize: "vertical",
-              marginBottom: 12
-            }}
-            aria-label="Admin prompt for research customization"
-          />
-        )}
+        {/* Admin Prompt Textarea */}
+        <AnimatePresence>
+          {showAdmin && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="space-y-2"
+            >
+              <Textarea
+                value={adminPrompt}
+                onChange={(e) => setAdminPrompt(e.target.value)}
+                className="min-h-[80px] resize-y"
+                placeholder="Admin prompt..."
+                aria-label="Admin prompt for research customization"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Run Button */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button
-            onClick={runResearch}
-            disabled={running}
-            className="btn btn-primary"
-            style={{
-              padding: "12px 24px",
-              background: running ? "#9CA3AF" : "#2E7CF6",
-              color: "white",
-              border: "none",
-              borderRadius: 28,
-              cursor: running ? "not-allowed" : "pointer",
-              fontSize: 14,
-              fontWeight: 600,
-              boxShadow: "0 2px 6px rgba(46, 124, 246, 0.2)"
-            }}
-            aria-label="Run Research action"
-          >
-            {running ? "Running…" : "Run Research"}
-          </button>
-          <div style={{ fontSize: 12, color: "#9CA3AF" }}>
-            Press Enter to run
-          </div>
-        </div>
+        <Button
+          onClick={runResearch}
+          disabled={running}
+          size="lg"
+          className="gap-2 w-full sm:w-auto"
+        >
+          {running ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Running...
+            </>
+          ) : (
+            <>
+              <Play className="w-4 h-4" />
+              Run Research
+            </>
+          )}
+        </Button>
       </div>
-
     </div>
   );
 }
-

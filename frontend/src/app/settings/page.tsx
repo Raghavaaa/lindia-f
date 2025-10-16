@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { User, Bell, Shield, CreditCard, Key } from "lucide-react";
+import { User, Bell, Shield, CreditCard, Key, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { motion } from "framer-motion";
 
 export default function SettingsPage() {
   const [notifications, setNotifications] = useState({
@@ -11,203 +18,235 @@ export default function SettingsPage() {
   });
 
   return (
-    <div className="min-h-[calc(100vh-theme(spacing.32))] bg-gradient-to-b from-blue-50 to-white">
-      <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="min-h-screen px-4 py-12">
+      <div className="mx-auto max-w-5xl space-y-6">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
-          <p className="mt-2 text-slate-600">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="text-3xl font-bold font-heading text-foreground">Settings</h1>
+          <p className="mt-2 text-muted-foreground">
             Manage your account settings and preferences
           </p>
-        </div>
+        </motion.div>
 
         <div className="space-y-6">
           {/* Profile Section */}
-          <div className="rounded-xl bg-white border border-slate-200 shadow-sm p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                <User className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900">Profile</h2>
-                <p className="text-sm text-slate-600">Update your personal information</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="John Doe"
-                  className="block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="john@example.com"
-                  className="block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">
-                  Bar Council ID
-                </label>
-                <input
-                  type="text"
-                  placeholder="BAR/1234/2023"
-                  className="block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">
-                  Practice Area
-                </label>
-                <select className="block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20">
-                  <option>Property Law</option>
-                  <option>Corporate Law</option>
-                  <option>Criminal Law</option>
-                  <option>Family Law</option>
-                  <option>Other</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-end">
-              <button className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-all">
-                Save Changes
-              </button>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                    <User className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle>Profile</CardTitle>
+                    <CardDescription>Update your personal information</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="text-sm font-medium">
+                      Full Name
+                    </label>
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="John Doe"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-medium">
+                      Email
+                    </label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="john@example.com"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="bar-id" className="text-sm font-medium">
+                      Bar Council ID
+                    </label>
+                    <Input
+                      id="bar-id"
+                      type="text"
+                      placeholder="BAR/1234/2023"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="practice-area" className="text-sm font-medium">
+                      Practice Area
+                    </label>
+                    <Select defaultValue="property">
+                      <SelectTrigger id="practice-area">
+                        <SelectValue placeholder="Select practice area" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="property">Property Law</SelectItem>
+                        <SelectItem value="corporate">Corporate Law</SelectItem>
+                        <SelectItem value="criminal">Criminal Law</SelectItem>
+                        <SelectItem value="family">Family Law</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="flex justify-end pt-4">
+                  <Button>Save Changes</Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Notifications Section */}
-          <div className="rounded-xl bg-white border border-slate-200 shadow-sm p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                <Bell className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900">Notifications</h2>
-                <p className="text-sm text-slate-600">Manage how you receive notifications</p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-900">Email Notifications</p>
-                  <p className="text-sm text-slate-600">Receive email updates about your research</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                    <Bell className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle>Notifications</CardTitle>
+                    <CardDescription>Manage how you receive notifications</CardDescription>
+                  </div>
                 </div>
-                <button
-                  onClick={() => setNotifications(prev => ({ ...prev, email: !prev.email }))}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    notifications.email ? "bg-blue-600" : "bg-slate-200"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      notifications.email ? "translate-x-6" : "translate-x-1"
-                    }`}
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <label htmlFor="email-notif" className="text-sm font-medium">
+                      Email Notifications
+                    </label>
+                    <p className="text-sm text-muted-foreground">
+                      Receive email updates about your research
+                    </p>
+                  </div>
+                  <Switch
+                    id="email-notif"
+                    checked={notifications.email}
+                    onCheckedChange={(checked) =>
+                      setNotifications((prev) => ({ ...prev, email: checked }))
+                    }
                   />
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-900">Research Alerts</p>
-                  <p className="text-sm text-slate-600">Get notified when research is complete</p>
                 </div>
-                <button
-                  onClick={() => setNotifications(prev => ({ ...prev, research: !prev.research }))}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    notifications.research ? "bg-blue-600" : "bg-slate-200"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      notifications.research ? "translate-x-6" : "translate-x-1"
-                    }`}
+                <Separator />
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <label htmlFor="research-notif" className="text-sm font-medium">
+                      Research Alerts
+                    </label>
+                    <p className="text-sm text-muted-foreground">
+                      Get notified when research is complete
+                    </p>
+                  </div>
+                  <Switch
+                    id="research-notif"
+                    checked={notifications.research}
+                    onCheckedChange={(checked) =>
+                      setNotifications((prev) => ({ ...prev, research: checked }))
+                    }
                   />
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-900">Product Updates</p>
-                  <p className="text-sm text-slate-600">News about new features and updates</p>
                 </div>
-                <button
-                  onClick={() => setNotifications(prev => ({ ...prev, updates: !prev.updates }))}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    notifications.updates ? "bg-blue-600" : "bg-slate-200"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      notifications.updates ? "translate-x-6" : "translate-x-1"
-                    }`}
+                <Separator />
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <label htmlFor="updates-notif" className="text-sm font-medium">
+                      Product Updates
+                    </label>
+                    <p className="text-sm text-muted-foreground">
+                      News about new features and updates
+                    </p>
+                  </div>
+                  <Switch
+                    id="updates-notif"
+                    checked={notifications.updates}
+                    onCheckedChange={(checked) =>
+                      setNotifications((prev) => ({ ...prev, updates: checked }))
+                    }
                   />
-                </button>
-              </div>
-            </div>
-          </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Security Section */}
-          <div className="rounded-xl bg-white border border-slate-200 shadow-sm p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                <Shield className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900">Security</h2>
-                <p className="text-sm text-slate-600">Manage your password and security settings</p>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <button className="flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card>
+              <CardHeader>
                 <div className="flex items-center gap-3">
-                  <Key className="h-5 w-5 text-slate-400" />
-                  <span>Change Password</span>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                    <Shield className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle>Security</CardTitle>
+                    <CardDescription>Manage your password and security settings</CardDescription>
+                  </div>
                 </div>
-                <span className="text-slate-400">→</span>
-              </button>
-            </div>
-          </div>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full justify-between">
+                  <div className="flex items-center gap-3">
+                    <Key className="h-5 w-5 text-muted-foreground" />
+                    <span>Change Password</span>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Billing Section */}
-          <div className="rounded-xl bg-white border border-slate-200 shadow-sm p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                <CreditCard className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900">Billing</h2>
-                <p className="text-sm text-slate-600">Manage your subscription and billing</p>
-              </div>
-            </div>
-
-            <div className="rounded-lg bg-blue-50 border border-blue-200 p-4 mb-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-900">Current Plan: Free Trial</p>
-                  <p className="text-sm text-slate-600">14 days remaining</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                    <CreditCard className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle>Billing</CardTitle>
+                    <CardDescription>Manage your subscription and billing</CardDescription>
+                  </div>
                 </div>
-                <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-all">
-                  Upgrade
-                </button>
-              </div>
-            </div>
-          </div>
+              </CardHeader>
+              <CardContent>
+                <div className="rounded-lg bg-secondary border p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">Current Plan: Free Trial</p>
+                      <p className="text-sm text-muted-foreground">14 days remaining</p>
+                    </div>
+                    <Button>Upgrade</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </div>
     </div>
   );
 }
-

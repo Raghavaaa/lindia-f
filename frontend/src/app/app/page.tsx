@@ -1,10 +1,14 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import ClientList from "../../components/ClientList";
 import ClientWorkspace from "../../components/ClientWorkspace";
 import ClientModal from "../../components/ClientModal";
 import HistoryPanel from "../../components/HistoryPanel";
+import { Button } from "@/components/ui/button";
 import { v4 as uuidv4 } from "uuid";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Client = {
   id: string;
@@ -64,7 +68,7 @@ export default function AppPage() {
 
   function handleSelectClient(clientId: string) {
     setSelectedClientId(clientId);
-    setSelectedHistoryItem(null); // Clear history selection when changing clients
+    setSelectedHistoryItem(null);
   }
 
   function handleHistoryItemSelect(item: HistoryItem) {
@@ -75,41 +79,33 @@ export default function AppPage() {
 
   return (
     <>
-      <div style={{ minHeight: "100vh", display: "flex", position: "relative" }}>
-        {/* Left: Client List (220px) */}
-        <div style={{ 
-          width: 220, 
-          borderRight: "1px solid #F1F5F9",
-          background: "#FFFFFF",
-          flexShrink: 0
-        }}>
+      <div className="min-h-screen flex relative">
+        {/* Left: Client List */}
+        <motion.aside
+          initial={{ x: -220 }}
+          animate={{ x: 0 }}
+          className="w-[220px] border-r border-border bg-card shrink-0 hidden md:block"
+        >
           <ClientList 
             clients={clients} 
             selectedId={selectedClientId} 
             onSelect={handleSelectClient} 
             onOpenNew={() => setShowModal(true)} 
           />
-        </div>
+        </motion.aside>
 
         {/* Center: Client Workspace (fluid) */}
-        <main style={{ flex: 1, background: "#FFFFFF", minWidth: 0, position: "relative" }}>
+        <main className="flex-1 bg-background min-w-0 relative">
           {/* Mobile History Toggle Button */}
           {activeModule && (
-            <button
-              className="mobile-toggle"
+            <Button
+              variant="default"
+              size="icon"
+              className="md:hidden fixed bottom-20 right-4 z-[900] shadow-lg"
               onClick={() => setMobileHistoryOpen(!mobileHistoryOpen)}
-              style={{
-                position: "fixed",
-                bottom: 80,
-                right: 16,
-                zIndex: 900
-              }}
-              aria-label="Toggle history panel"
             >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 5V15M5 10H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            </button>
+              {mobileHistoryOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
           )}
 
           <ClientWorkspace 
@@ -122,17 +118,23 @@ export default function AppPage() {
           />
         </main>
 
-        {/* Right: History Panel (320px) */}
-        <HistoryPanel 
-          clientId={selectedClientId}
-          clientName={selectedClient?.name || null}
-          activeModule={activeModule}
-          onSelectItem={handleHistoryItemSelect}
-          selectedItemId={selectedHistoryItem?.id}
-          isMobileOpen={mobileHistoryOpen}
-          onMobileClose={() => setMobileHistoryOpen(false)}
-          refreshTrigger={refreshTrigger}
-        />
+        {/* Right: History Panel */}
+        <motion.aside
+          initial={{ x: 320 }}
+          animate={{ x: 0 }}
+          className={`hidden lg:block ${mobileHistoryOpen ? 'mobile-open' : ''}`}
+        >
+          <HistoryPanel 
+            clientId={selectedClientId}
+            clientName={selectedClient?.name || null}
+            activeModule={activeModule}
+            onSelectItem={handleHistoryItemSelect}
+            selectedItemId={selectedHistoryItem?.id}
+            isMobileOpen={mobileHistoryOpen}
+            onMobileClose={() => setMobileHistoryOpen(false)}
+            refreshTrigger={refreshTrigger}
+          />
+        </motion.aside>
 
         <ClientModal 
           open={showModal} 
@@ -142,13 +144,18 @@ export default function AppPage() {
       </div>
 
       {/* Mobile Overlay */}
-      {mobileHistoryOpen && (
-        <div 
-          className="mobile-overlay active"
-          onClick={() => setMobileHistoryOpen(false)}
-          aria-label="Close history panel"
-        />
-      )}
+      <AnimatePresence>
+        {mobileHistoryOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/30 z-[899] md:hidden"
+            onClick={() => setMobileHistoryOpen(false)}
+            aria-label="Close history panel"
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }
