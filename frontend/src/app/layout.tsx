@@ -35,7 +35,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col antialiased">
         <Header />
-        <main className="flex-1 flex flex-col pt-16 pb-14">
+        <main className="flex-1 flex flex-col">
           {children}
         </main>
         <Footer />
