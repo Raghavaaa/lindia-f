@@ -1,0 +1,633 @@
+openapi: 3.0.3
+info:
+  title: LegalIndia.ai Backend API
+  description: |
+    Secure backend API for LegalIndia.ai platform.
+    
+    **Security Rules:**
+    - All endpoints require authentication
+    - Service-to-service communication uses Bearer JWT
+    - Database access ONLY through this API
+    - Frontend and AI Engine never access database directly
+  version: 1.0.0
+  contact:
+    name: LegalIndia.ai Engineering
+    email: engineering@legalindia.ai
+
+servers:
+  - url: https://api.legalindia.ai
+    description: Production
+  - url: https://staging-api.legalindia.ai
+    description: Staging
+  - url: http://localhost:8000
+    description: Local Development
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Authentication
+    description: Service-to-service authentication
+  - name: Clients
+    description: Client management
+  - name: Cases
+    description: Case management
+  - name: Research
+    description: Legal research queries
+  - name: Junior
+    description: AI Junior agent operations
+  - name: Analytics
+    description: Analytics and reporting
+
+paths:
+  /auth/service-token:
+    post:
+      tags: [Authentication]
+      summary: Issue service token
+      description: Issues scoped JWT for machine-to-machine authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [service_id, client_secret]
+              properties:
+                service_id:
+                  type: string
+                  enum: [ai-engine, junior-agent, analytics]
+                client_secret:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Token issued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: Bearer
+                  expires_in:
+                    type: integer
+                    example: 3600
+                  scopes:
+                    type: array
+                    items:
+                      type: string
+                    example: ["client:read", "research:write"]
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v1/clients:
+    get:
+      tags: [Clients]
+      summary: List clients
+      security:
+        - BearerAuth: [client:read]
+      parameters:
+        - name: lawyer_id
+          in: query
+          schema:
+            type: integer
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 10
+            maximum: 100
+      responses:
+        '200':
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  clients:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Client'
+                  page:
+                    type: integer
+                  per_page:
+                    type: integer
+                  total:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      tags: [Clients]
+      summary: Create client
+      security:
+        - BearerAuth: [client:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, lawyer_id]
+              properties:
+                name:
+                  type: string
+                lawyer_id:
+                  type: integer
+                contact:
+                  type: string
+                address:
+                  type: string
+      responses:
+        '201':
+          description: Client created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  request_id:
+                    type: string
+                    format: uuid
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /v1/clients/{client_id}:
+    get:
+      tags: [Clients]
+      summary: Get client by ID
+      security:
+        - BearerAuth: [client:read]
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Client details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/clients/{client_id}/cases:
+    get:
+      tags: [Cases]
+      summary: List cases for client
+      security:
+        - BearerAuth: [case:read]
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of cases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cases:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Case'
+
+  /v1/cases:
+    post:
+      tags: [Cases]
+      summary: Create case
+      security:
+        - BearerAuth: [case:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [client_id, title, status]
+              properties:
+                client_id:
+                  type: integer
+                title:
+                  type: string
+                status:
+                  type: string
+                  enum: [active, pending, closed]
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Case created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  request_id:
+                    type: string
+                    format: uuid
+
+  /v1/research:
+    post:
+      tags: [Research]
+      summary: Submit research query
+      security:
+        - BearerAuth: [research:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query_text, lawyer_id]
+              properties:
+                query_text:
+                  type: string
+                lawyer_id:
+                  type: integer
+      responses:
+        '201':
+          description: Research query submitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  request_id:
+                    type: string
+                    format: uuid
+
+  /v1/research/{id}:
+    get:
+      tags: [Research]
+      summary: Get research query
+      security:
+        - BearerAuth: [research:read]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Research query details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResearchQuery'
+
+  /v1/junior/execute:
+    post:
+      tags: [Junior]
+      summary: Execute Junior agent action
+      description: |
+        Backend orchestrates Junior action, logs to junior_logs, and triggers inference.
+        Only callable by service accounts with junior:invoke scope.
+      security:
+        - BearerAuth: [junior:invoke]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action, lawyer_id]
+              properties:
+                action:
+                  type: string
+                  enum: [draft_contract, research_case_law, summarize_document]
+                context:
+                  type: string
+                lawyer_id:
+                  type: integer
+                references:
+                  type: array
+                  items:
+                    type: string
+                  example: ["client_id:123", "case_id:456"]
+      responses:
+        '200':
+          description: Action executed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  log_id:
+                    type: integer
+                  response:
+                    type: string
+                  request_id:
+                    type: string
+                    format: uuid
+
+  /v1/junior/logs:
+    get:
+      tags: [Junior]
+      summary: Get Junior logs
+      description: Returns PII-redacted logs for authorized users/analytics
+      security:
+        - BearerAuth: [junior:read, analytics:read]
+      parameters:
+        - name: lawyer_id
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            maximum: 100
+      responses:
+        '200':
+          description: Junior logs (redacted)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JuniorLog'
+
+  /v1/inference/log:
+    post:
+      tags: [Junior]
+      summary: Log inference (internal only)
+      description: Backend-internal endpoint for logging AI inference metrics
+      security:
+        - BearerAuth: [inference:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query_id]
+              properties:
+                query_id:
+                  type: integer
+                model_used:
+                  type: string
+                tokens:
+                  type: integer
+                cost:
+                  type: number
+                  format: float
+                response_hash:
+                  type: string
+      responses:
+        '201':
+          description: Inference logged
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  log_id:
+                    type: integer
+                  request_id:
+                    type: string
+                    format: uuid
+
+  /v1/analytics/junior_logs:
+    get:
+      tags: [Analytics]
+      summary: Get Junior logs for analytics
+      security:
+        - BearerAuth: [analytics:read]
+      parameters:
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+            maximum: 100
+      responses:
+        '200':
+          description: Aggregated analytics (PII redacted)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JuniorLog'
+
+  /v1/analytics/inference_logs:
+    get:
+      tags: [Analytics]
+      summary: Get inference logs for analytics
+      security:
+        - BearerAuth: [analytics:read]
+      parameters:
+        - name: model:
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Inference metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        model_used:
+                          type: string
+                        total_tokens:
+                          type: integer
+                        total_cost:
+                          type: number
+                        count:
+                          type: integer
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Client:
+      type: object
+      properties:
+        id:
+          type: integer
+        lawyer_id:
+          type: integer
+        name:
+          type: string
+        contact:
+          type: string
+        address:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    Case:
+      type: object
+      properties:
+        id:
+          type: integer
+        client_id:
+          type: integer
+        title:
+          type: string
+        status:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ResearchQuery:
+      type: object
+      properties:
+        id:
+          type: integer
+        lawyer_id:
+          type: integer
+        query_text:
+          type: string
+        response_text:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    JuniorLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        lawyer_id:
+          type: integer
+        action:
+          type: string
+        context:
+          type: string
+          description: PII redacted in analytics responses
+        response:
+          type: string
+          description: PII redacted in analytics responses
+        timestamp:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+        message:
+          type: string
+        request_id:
+          type: string
+          format: uuid
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error_code: validation_error
+            message: Invalid input data
+            request_id: 550e8400-e29b-41d4-a716-446655440000
+
+    Unauthorized:
+      description: Unauthorized - missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error_code: unauthorized
+            message: Authentication required
+            request_id: 550e8400-e29b-41d4-a716-446655440000
+
+    Forbidden:
+      description: Forbidden - insufficient permissions/scopes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error_code: insufficient_scope
+            message: Required scope client:write not found
+            request_id: 550e8400-e29b-41d4-a716-446655440000
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error_code: not_found
+            message: Client not found
+            request_id: 550e8400-e29b-41d4-a716-446655440000
+
