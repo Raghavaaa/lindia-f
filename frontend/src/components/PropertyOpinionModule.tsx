@@ -84,12 +84,12 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
               />
             </div>
 
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-6">
               <Button 
                 onClick={handleAnalyze} 
                 disabled={running} 
                 size="icon" 
-                className="w-16 h-16 rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200"
+                className="w-16 h-16 rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary/90"
                 title={running ? "Analyzing..." : "Analyze Property"}
               >
                 {running ? (

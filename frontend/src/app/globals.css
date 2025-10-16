@@ -62,17 +62,34 @@
     border-radius: 1rem !important; /* 2xl = 1rem */
     transition: all 0.2s ease-in-out !important;
     box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1) !important;
+    cursor: pointer !important;
   }
 
   button:hover, .btn:hover, [role="button"]:hover {
     transform: translateY(-1px) scale(1.02) !important;
     box-shadow: 0 4px 8px -2px rgb(0 0 0 / 0.15) !important;
+    cursor: pointer !important;
   }
 
   /* Special styling for icon buttons */
-  button[data-size="icon"]:hover {
+  button[data-size="icon"]:hover,
+  button.size-icon:hover,
+  .w-16.h-16:hover {
     transform: scale(1.1) !important;
     box-shadow: 0 6px 12px -3px rgb(0 0 0 / 0.2) !important;
+    cursor: pointer !important;
+  }
+
+  /* Ensure all circular action buttons are visible and highlighted */
+  .w-16.h-16.rounded-full {
+    cursor: pointer !important;
+    transition: all 0.2s ease-in-out !important;
+  }
+
+  .w-16.h-16.rounded-full:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 12px -3px rgb(0 0 0 / 0.2) !important;
+    cursor: pointer !important;
   }
 
   /* Specific button variants */
