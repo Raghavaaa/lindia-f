@@ -219,27 +219,30 @@ ${adminPrompt && showAdmin ? `\n(Admin prompt applied: ${adminPrompt})` : ""}`;
         </AnimatePresence>
 
         {/* Run Button */}
-        <div className="flex justify-center mt-6">
-          <Button
-            onClick={runResearch}
-            disabled={running}
-            size="icon"
-            className="w-16 h-16 rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary/90"
-            title={running ? "Running..." : "Run Research"}
-          >
-            {running ? (
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <Play className="w-6 h-6" />
-            )}
-          </Button>
+        <div className="flex justify-center mt-8">
+          <div className="text-center">
+            <Button
+              onClick={runResearch}
+              disabled={running}
+              size="icon"
+              className="w-24 h-24 rounded-full shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary/90 border-4 border-primary/30 relative z-10"
+              title={running ? "Running..." : "Run Research"}
+            >
+              {running ? (
+                <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Play className="w-10 h-10" />
+              )}
+            </Button>
+            <p className="text-center text-base text-foreground mt-4 font-semibold">
+              {running ? "Running..." : "Run Research"}
+            </p>
+          </div>
         </div>
-        <p className="text-center text-sm text-muted-foreground mt-2">
-          {running ? "Running..." : "Run Research"}
-        </p>
           </CardContent>
         </Card>
       </motion.div>
+      
     </div>
   );
 }
