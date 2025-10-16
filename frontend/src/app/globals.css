@@ -56,6 +56,37 @@
     border-radius: 1rem !important; /* 2xl = 1rem */
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important; /* soft shadow */
   }
+
+  /* Ensure all buttons have rounded corners and hover effects */
+  button, .btn, [role="button"] {
+    border-radius: 1rem !important; /* 2xl = 1rem */
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1) !important;
+  }
+
+  button:hover, .btn:hover, [role="button"]:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px -2px rgb(0 0 0 / 0.15) !important;
+  }
+
+  /* Specific button variants */
+  button[data-variant="default"]:hover,
+  button[data-variant="primary"]:hover {
+    background-color: hsl(var(--primary) / 0.9) !important;
+  }
+
+  button[data-variant="secondary"]:hover {
+    background-color: hsl(var(--secondary) / 0.8) !important;
+  }
+
+  button[data-variant="outline"]:hover {
+    background-color: hsl(var(--accent)) !important;
+    border-color: hsl(var(--primary)) !important;
+  }
+
+  button[data-variant="ghost"]:hover {
+    background-color: hsl(var(--accent)) !important;
+  }
   
   body {
     background-color: hsl(var(--background));

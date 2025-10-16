@@ -80,7 +80,7 @@ export default function Page() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="gap-2"
+                    className="gap-2 hover:bg-accent hover:shadow-md hover:scale-105 transition-all duration-200"
                   >
                     <Icon className="w-4 h-4 text-primary" />
                     <span className="hidden sm:inline">{module.label}</span>

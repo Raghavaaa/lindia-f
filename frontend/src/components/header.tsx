@@ -97,10 +97,10 @@ export default function Header() {
                       asChild
                       variant={currentModule === module.id ? "default" : "ghost"}
                       size="sm"
-                      className={`gap-2 font-semibold ${
+                      className={`gap-2 font-semibold transition-all duration-200 ${
                         currentModule === module.id 
-                          ? "bg-primary text-primary-foreground shadow-md" 
-                          : "hover:bg-accent"
+                          ? "bg-primary text-primary-foreground shadow-md hover:shadow-lg hover:scale-105" 
+                          : "hover:bg-accent hover:shadow-md hover:scale-105"
                       }`}
                     >
                       <Link href={module.path}>
