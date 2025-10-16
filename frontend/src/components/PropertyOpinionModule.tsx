@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { FileText, Upload, Send } from "lucide-react";
+import { FileText, Upload, CheckCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
   clientId: string;
@@ -16,19 +16,39 @@ type Props = {
 export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
   const [specificConcerns, setSpecificConcerns] = useState("");
   const [running, setRunning] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleAnalyze = () => {
-    
     setRunning(true);
     setTimeout(() => {
       setRunning(false);
-      alert("Property analysis complete! (Demo)");
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
       if (onComplete) onComplete();
     }, 2000);
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      {/* Success Popup */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            className="fixed bottom-6 right-6 z-50 bg-green-500 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm"
+          >
+            <CheckCircle className="w-6 h-6 flex-shrink-0" />
+            <div>
+              <p className="font-semibold">Analysis Complete!</p>
+              <p className="text-sm opacity-90">Property opinion generated successfully</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <Card>
           <CardHeader>

@@ -86,7 +86,7 @@ export default function ClientList({ clients, selectedId, onSelect, onOpenNew }:
                 >
                   <Button
                     variant={selectedId === c.id ? "secondary" : "ghost"}
-                    className="w-full justify-start h-auto py-2 px-3"
+                    className="w-full justify-start h-auto py-2 px-3 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200"
                     onClick={() => onSelect(c.id)}
                     tabIndex={0}
                   >

@@ -50,6 +50,12 @@
   * {
     border-color: hsl(var(--border));
   }
+
+  /* Global rounded corners and shadows for UI elements */
+  .btn, .card, .dialog, .popover, .dropdown, .list, .modal {
+    border-radius: 1rem !important; /* 2xl = 1rem */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important; /* soft shadow */
+  }
   
   body {
     background-color: hsl(var(--background));

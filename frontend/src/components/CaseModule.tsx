@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Scale, Upload, Send } from "lucide-react";
+import { Scale, Upload, CheckCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
   clientId: string;
@@ -17,23 +17,63 @@ export default function CaseModule({ clientId, onComplete }: Props) {
   const [caseTitle, setCaseTitle] = useState("");
   const [caseDetails, setCaseDetails] = useState("");
   const [running, setRunning] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleSubmit = () => {
     if (!caseTitle.trim()) {
-      alert("Please enter case title");
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
       return;
     }
     
     setRunning(true);
     setTimeout(() => {
       setRunning(false);
-      alert("Case draft prepared! (Demo)");
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
       if (onComplete) onComplete();
     }, 2000);
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      {/* Success Popup */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            className="fixed bottom-6 right-6 z-50 bg-green-500 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm"
+          >
+            <CheckCircle className="w-6 h-6 flex-shrink-0" />
+            <div>
+              <p className="font-semibold">Case Draft Ready!</p>
+              <p className="text-sm opacity-90">Legal documents prepared successfully</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Error Popup */}
+      <AnimatePresence>
+        {showError && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            className="fixed bottom-6 right-6 z-50 bg-red-500 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm"
+          >
+            <AlertCircle className="w-6 h-6 flex-shrink-0" />
+            <div>
+              <p className="font-semibold">Missing Information</p>
+              <p className="text-sm opacity-90">Please enter a case title</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <Card>
           <CardHeader>
