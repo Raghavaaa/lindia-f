@@ -5,12 +5,12 @@ export const config = {
   
   // API endpoints
   endpoints: {
-    health: '/api/v1/health',
+    health: '/',
     auth: {
       google: '/api/v1/auth/google',
       me: '/api/v1/me',
     },
-    clients: '/api/v1/clients',
+    clients: '/clients',
     research: {
       run: '/api/v1/research/run',
       save: '/api/v1/research/save',
@@ -27,19 +27,47 @@ export const buildApiUrl = (endpoint: string): string => {
   return `${config.apiBase}${endpoint}`;
 };
 
-// CORS-safe fetch wrapper
+// JWT Token Management
+const TOKEN_KEY = 'legalindia_jwt_token';
+
+export const setAuthToken = (token: string): void => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(TOKEN_KEY, token);
+  }
+};
+
+export const getAuthToken = (): string | null => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(TOKEN_KEY);
+  }
+  return null;
+};
+
+export const clearAuthToken = (): void => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(TOKEN_KEY);
+  }
+};
+
+// CORS-safe fetch wrapper with automatic JWT token injection
 export const apiFetch = async (
   endpoint: string,
   options: RequestInit = {}
 ): Promise<Response> => {
   const url = buildApiUrl(endpoint);
   
+  // Get JWT token from localStorage
+  const token = getAuthToken();
+  
+  const defaultHeaders: HeadersInit = {
+    'Content-Type': 'application/json',
+    ...(token && { 'Authorization': `Bearer ${token}` }), // Add JWT token if available
+    ...options.headers,
+  };
+  
   const defaultOptions: RequestInit = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    credentials: 'include', // For JWT cookies
+    headers: defaultHeaders,
+    credentials: 'include', // For cookies
   };
 
   return fetch(url, { ...defaultOptions, ...options });
