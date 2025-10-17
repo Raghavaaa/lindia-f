@@ -125,10 +125,11 @@ async def database_status():
     try:
         from app.database import engine
         from app.models import Upload
+        from sqlalchemy import text
         
         # Test connection
         with engine.connect() as conn:
-            result = conn.execute("SELECT 1")
+            result = conn.execute(text("SELECT 1"))
             result.fetchone()
         
         # Check if uploads table exists
