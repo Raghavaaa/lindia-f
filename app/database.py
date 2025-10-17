@@ -11,6 +11,11 @@ from sqlalchemy.orm import sessionmaker
 default_db_path = "/tmp/legalindia.db" if os.getenv("RAILWAY_ENVIRONMENT") else "./legalindia.db"
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{default_db_path}")
 
+# Debug: Log database URL (first 50 chars only for security)
+import logging
+logger = logging.getLogger(__name__)
+logger.info(f"Database URL: {DATABASE_URL[:50]}...")
+
 # Convert postgres:// to postgresql:// for SQLAlchemy compatibility
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
