@@ -114,6 +114,38 @@ async def health_check():
     }
 
 
+# Database Status Endpoint
+@app.get("/db-status")
+async def database_status():
+    """Check database connection and table status."""
+    try:
+        from app.database import engine
+        from app.models import Upload
+        
+        # Test connection
+        with engine.connect() as conn:
+            result = conn.execute("SELECT 1")
+            result.fetchone()
+        
+        # Check if uploads table exists
+        from sqlalchemy import inspect
+        inspector = inspect(engine)
+        tables = inspector.get_table_names()
+        
+        return {
+            "database_connected": True,
+            "database_url": os.getenv("DATABASE_URL", "Not set")[:50] + "..." if os.getenv("DATABASE_URL") else "Not set",
+            "tables": tables,
+            "uploads_table_exists": "uploads" in tables
+        }
+    except Exception as e:
+        return {
+            "database_connected": False,
+            "error": str(e),
+            "database_url": os.getenv("DATABASE_URL", "Not set")[:50] + "..." if os.getenv("DATABASE_URL") else "Not set"
+        }
+
+
 # Automatic Router Registration
 def register_routes():
     """
