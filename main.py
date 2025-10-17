@@ -41,8 +41,8 @@ except Exception as e:
 # Initialize FastAPI application
 app = FastAPI(
     title="LegalIndia Backend",
-    version="1.0.0",
-    description="Production-grade FastAPI backend for LegalIndia.ai platform"
+    version="1.0.1",
+    description="Production-grade FastAPI backend for LegalIndia.ai platform with Client Management"
 )
 
 # CORS Configuration
