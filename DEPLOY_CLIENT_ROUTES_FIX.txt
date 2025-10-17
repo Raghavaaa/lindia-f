@@ -1,0 +1,87 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           🔧 FIX: Deploy Client Routes to Production                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+❌ PROBLEM: Client endpoints not showing at https://api.legalindia.ai/docs
+
+✅ SOLUTION: Missing app/schemas/__init__.py file created!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 DEPLOY TO PRODUCTION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd /Users/raghavankarthik/ai-law-junior/legalindia-backend
+
+# 1. Add the new file
+git add app/schemas/__init__.py
+
+# 2. Add JWT helper and token generator
+git add app/utils/jwt_helper.py
+git add generate_token.py
+
+# 3. Commit
+git commit -m "fix: add schemas __init__.py to register client routes in production"
+
+# 4. Push (Railway will auto-deploy)
+git push origin main
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ AFTER DEPLOYMENT (2-3 minutes):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Check Swagger UI:
+   https://api.legalindia.ai/docs
+   
+   Should now see "Client Management" section!
+
+2. Client endpoints will be:
+   GET    /clients/       - List all clients
+   POST   /clients/       - Create client
+   GET    /clients/{id}   - Get single client
+   PUT    /clients/{id}   - Update client
+   DELETE /clients/{id}   - Delete client
+
+3. Generate token and test:
+   python3 generate_token.py
+   
+   Then use in Swagger UI:
+   - Click "Authorize"
+   - Enter: Bearer YOUR_TOKEN
+   - Test endpoints!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 WHAT WAS FIXED:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Created: app/schemas/__init__.py
+   - Exports ClientCreate, ClientUpdate, ClientResponse, ClientListResponse
+   - Required for client routes to load properly
+
+✅ Already have:
+   - app/routes/client.py (client API routes)
+   - app/schemas/client_schema.py (schemas)
+   - app/models/client.py (database model)
+   - app/utils/jwt_helper.py (JWT token generation)
+   - generate_token.py (CLI token generator)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 VERIFY DEPLOYMENT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After pushing, check Railway logs:
+
+Look for:
+   ✅ "Registered router: app.routes.client"
+   ✅ "LegalIndia Backend started successfully"
+
+Then test:
+   curl https://api.legalindia.ai/docs
+   
+Should show Client Management endpoints!
+
+╚══════════════════════════════════════════════════════════════════════════════╝
+

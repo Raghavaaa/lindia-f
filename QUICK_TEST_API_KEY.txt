@@ -1,0 +1,70 @@
+🚀 QUICK TEST - API Key Authentication
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 THE API KEY:
+
+legalindia_secure_api_key_2025
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 TEST COMMANDS:
+
+# 1. Health Check (No Auth)
+curl https://api.legalindia.ai/
+
+# 2. Database Status (No Auth)
+curl https://api.legalindia.ai/db-status
+
+# 3. List Clients (Requires API Key)
+curl https://api.legalindia.ai/clients/ \
+  -H 'X-API-Key: legalindia_secure_api_key_2025'
+
+# 4. Create Client (Requires API Key)
+curl -X POST https://api.legalindia.ai/clients/ \
+  -H 'X-API-Key: legalindia_secure_api_key_2025' \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"API Test","email":"api@test.com","phone":"1234567890"}'
+
+# 5. Test Wrong Key (Should Fail)
+curl https://api.legalindia.ai/clients/ \
+  -H 'X-API-Key: wrong_key'
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ EXPECTED RESPONSES:
+
+1. {"service":"LegalIndia Backend","status":"Active","version":"1.0.0"}
+
+2. {"database_connected":true,"database_url":"postgresql://...",...}
+
+3. {"clients":[],"total":0}  OR  {"clients":[...],"total":N}
+
+4. {"client_id":"...","name":"API Test","email":"api@test.com",...}
+
+5. {"detail":"Invalid API key"}  OR  {"detail":"Missing API key..."}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 RAILWAY SETUP:
+
+Variable Name:  API_SECRET_KEY
+Variable Value: legalindia_secure_api_key_2025
+
+Delete: JWT_SECRET (no longer needed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📱 FRONTEND SETUP:
+
+No setup needed! The API key is already configured in:
+frontend/src/lib/config.ts
+
+It automatically adds X-API-Key header to all API requests.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+That's it! Copy/paste these commands to test! 🎉
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+

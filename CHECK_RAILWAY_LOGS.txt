@@ -1,0 +1,67 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              🔍 DEBUG: Check Railway Logs                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+The token is STILL invalid even after:
+✅ Railway deployed (1 minute ago)
+✅ JWT_SECRET updated in Railway
+✅ Fresh token generated
+✅ Token used in Swagger
+
+This means something is wrong with how the backend is reading or using JWT_SECRET.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 CHECK RAILWAY LOGS NOW:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. In Railway → lindia-b service
+2. Click "Logs" tab (next to Variables)
+3. Look for recent errors when you tried the token
+
+Look for lines containing:
+- "Invalid token"
+- "JWT"
+- "Token validation"
+- "SECRET"
+- Any Python tracebacks
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🐛 POSSIBLE ISSUES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. JWT_SECRET has extra spaces or newlines
+2. Backend code has an issue reading the secret
+3. Token format mismatch
+4. Different algorithm being used
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ WHAT TO LOOK FOR IN LOGS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Good logs should show:
+  "JWT_SECRET loaded: True"
+  "Token validation: ..."
+
+Bad logs might show:
+  "JWT_SECRET not configured"
+  "InvalidToken"
+  "DecodeError"
+  Any Python errors
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 CAN YOU:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to Railway → lindia-b → Logs tab
+2. Scroll to the MOST RECENT entries (bottom)
+3. Look for any errors or "Invalid token" messages
+4. Take a screenshot or copy the error message
+
+This will tell us EXACTLY what's failing!
+
+╚══════════════════════════════════════════════════════════════════════════════╝
+

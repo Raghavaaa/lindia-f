@@ -1,0 +1,54 @@
+🔑 YOUR JWT TOKEN - Use This to Test!
+
+======================================================================
+COPY THIS TOKEN:
+======================================================================
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X3VzZXJfMTIzIiwidXNlcl9pZCI6InRlc3RfdXNlcl8xMjMiLCJpYXQiOjE3NjA3MDY0MDAsImVtYWlsIjoidGVzdF91c2VyXzEyM0B0ZXN0LmNvbSIsInRlc3QiOnRydWUsImV4cCI6MTc2MzI5ODQwMH0.ZLjF3H2bBN_LHc4zTYtw1cEnL5liJeevhnZYG8JK2BM
+
+======================================================================
+HOW TO USE IT:
+======================================================================
+
+Option 1: Test Backend in Swagger (Recommended First)
+----------------------------------------------------------------------
+1. Go to: https://api.legalindia.ai/docs
+2. Click the green "Authorize" button (lock icon)
+3. Paste the token above
+4. Click "Authorize" → "Close"
+5. Try GET /clients/ → "Try it out" → "Execute"
+   ✅ Should return: {"clients": [], "total": 0}
+6. Try POST /clients/ with:
+   {
+     "name": "Database Test Client",
+     "email": "test@db.com",
+     "phone": "1234567890"
+   }
+   ✅ Should return: 201 Created with client data
+7. Try GET /clients/ again
+   ✅ Should see your new client in the array!
+
+Option 2: Use in Frontend
+----------------------------------------------------------------------
+1. Go to your frontend (wherever it's deployed)
+2. Go to /login page
+3. Paste the token
+4. Click "Login"
+5. Go to /app page
+6. Create a client - it will save to PostgreSQL!
+
+======================================================================
+⚠️ IMPORTANT:
+======================================================================
+
+This token will ONLY work if Railway has the matching JWT_SECRET:
+test1234567890abcdefghijklmnopqrstuvwxyz1234567890abc
+
+If you get "Invalid token" error, it means Railway JWT_SECRET is 
+still different. Update it in Railway dashboard!
+
+======================================================================
+✅ Token expires in: 30 days
+User ID: test_user_123
+======================================================================
+

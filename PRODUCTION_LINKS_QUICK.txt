@@ -1,0 +1,41 @@
+╔════════════════════════════════════════════════════════════════╗
+║        🌐 PRODUCTION API - api.legalindia.ai                   ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ CLICK THESE LINKS (No Auth):
+
+🔗 Health Check:
+   https://api.legalindia.ai/
+
+🔗 Database Status:
+   https://api.legalindia.ai/db-status
+
+🔗 API Documentation:
+   https://api.legalindia.ai/docs
+
+🔗 Alternative Docs:
+   https://api.legalindia.ai/redoc
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔐 CLIENT ENDPOINTS (Need Token):
+
+📋 List Clients:
+   https://api.legalindia.ai/api/v1/clients/
+   
+➕ Create Client:
+   https://api.legalindia.ai/api/v1/clients/
+   
+📄 Get/Update/Delete:
+   https://api.legalindia.ai/api/v1/clients/{id}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔑 Get Token:
+   python3 legalindia-backend/generate_token.py
+
+📱 Test in Swagger:
+   https://api.legalindia.ai/docs
+   → Click "Authorize" → Enter token
+
+╚════════════════════════════════════════════════════════════════╝

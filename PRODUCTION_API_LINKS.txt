@@ -1,0 +1,192 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              🌐 PRODUCTION API LINKS - api.legalindia.ai                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ BACKEND STATUS: LIVE & ACTIVE
+   Response: {"service":"LegalIndia Backend","status":"Active","version":"1.0.0"}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ NO AUTHENTICATION - Open these in your browser:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Health Check:
+   https://api.legalindia.ai/
+   
+   ✅ Status: Active
+
+2. Database Status:
+   https://api.legalindia.ai/db-status
+   
+   Shows: PostgreSQL connection, tables, client table status
+
+3. API Documentation (Swagger UI):
+   https://api.legalindia.ai/docs
+   
+   Interactive API docs - test endpoints with "Try it out"
+
+4. Alternative Documentation (ReDoc):
+   https://api.legalindia.ai/redoc
+   
+   Clean, readable API documentation
+
+5. OpenAPI Schema:
+   https://api.legalindia.ai/openapi.json
+   
+   Raw API specification
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔐 CLIENT ENDPOINTS (Require JWT Token):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6. List All Clients:
+   https://api.legalindia.ai/api/v1/clients/
+   
+   Method: GET
+   Headers: Authorization: Bearer YOUR_TOKEN
+
+7. Create Client:
+   https://api.legalindia.ai/api/v1/clients/
+   
+   Method: POST
+   Headers: Authorization: Bearer YOUR_TOKEN
+   Content-Type: application/json
+   Body: {"name": "Client Name", "email": "client@example.com"}
+
+8. Get Single Client:
+   https://api.legalindia.ai/api/v1/clients/{client_id}
+   
+   Method: GET
+   Headers: Authorization: Bearer YOUR_TOKEN
+
+9. Update Client:
+   https://api.legalindia.ai/api/v1/clients/{client_id}
+   
+   Method: PUT
+   Headers: Authorization: Bearer YOUR_TOKEN
+   Body: {"name": "Updated Name"}
+
+10. Delete Client:
+    https://api.legalindia.ai/api/v1/clients/{client_id}
+    
+    Method: DELETE
+    Headers: Authorization: Bearer YOUR_TOKEN
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 TEST WITH CURL:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Health Check (works!)
+curl https://api.legalindia.ai/
+
+# Database Status
+curl https://api.legalindia.ai/db-status
+
+# Generate Token (run locally)
+cd legalindia-backend
+python3 generate_token.py
+
+# List Clients (with token)
+TOKEN="YOUR_TOKEN_HERE"
+curl -H "Authorization: Bearer $TOKEN" \
+  https://api.legalindia.ai/api/v1/clients/
+
+# Create Client (with token)
+curl -X POST https://api.legalindia.ai/api/v1/clients/ \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Production Test Client", "email": "prod@example.com"}'
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📱 USING SWAGGER UI (Recommended):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Open in browser:
+   https://api.legalindia.ai/docs
+
+2. Click "Authorize" button (top right)
+
+3. Generate token locally:
+   python3 legalindia-backend/generate_token.py
+
+4. Enter in Swagger: Bearer YOUR_TOKEN
+
+5. Test all endpoints with "Try it out" buttons!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🌐 FRONTEND INTEGRATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Update your frontend .env file:
+
+NEXT_PUBLIC_FRONTEND_API_BASE=https://api.legalindia.ai
+
+Then frontend will automatically use production API!
+
+All API calls will go to:
+  ✅ https://api.legalindia.ai/api/v1/clients/
+  ✅ https://api.legalindia.ai/api/v1/research/
+  etc.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔑 AUTHENTICATION FOR PRODUCTION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Generate token (locally):
+   cd /Users/raghavankarthik/ai-law-junior/legalindia-backend
+   python3 generate_token.py
+
+2. Token is valid for 30 days
+
+3. Use in frontend:
+   localStorage.setItem('legalindia_jwt_token', 'YOUR_TOKEN');
+
+4. Or use in API calls:
+   headers: { 'Authorization': 'Bearer YOUR_TOKEN' }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 PRODUCTION STATUS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Backend URL:     https://api.legalindia.ai/
+Status:          ✅ LIVE & ACTIVE
+Version:         1.0.0
+Database:        PostgreSQL (Railway)
+Authentication:  JWT (Bearer Token)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 QUICK LINKS SUMMARY:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Health:           https://api.legalindia.ai/
+✅ Database:         https://api.legalindia.ai/db-status
+✅ API Docs:         https://api.legalindia.ai/docs
+✅ ReDoc:            https://api.legalindia.ai/redoc
+✅ OpenAPI:          https://api.legalindia.ai/openapi.json
+
+🔐 Clients List:    https://api.legalindia.ai/api/v1/clients/
+🔐 Create Client:   https://api.legalindia.ai/api/v1/clients/ (POST)
+🔐 Get Client:      https://api.legalindia.ai/api/v1/clients/{id}
+🔐 Update Client:   https://api.legalindia.ai/api/v1/clients/{id} (PUT)
+🔐 Delete Client:   https://api.legalindia.ai/api/v1/clients/{id} (DELETE)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ YOUR BACKEND IS LIVE!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Start testing:
+1. Open: https://api.legalindia.ai/docs
+2. Generate token: python3 generate_token.py
+3. Authorize in Swagger UI
+4. Test client endpoints!
+
+╚══════════════════════════════════════════════════════════════════════════════╝
+

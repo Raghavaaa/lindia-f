@@ -22,7 +22,7 @@ export function useToast() {
     // Show browser notification if supported
     if (typeof window !== 'undefined') {
       // For now, just log - can enhance with proper toast UI later
-      console.log('Toast:', title, description);
+      console.log('Toast:', newToast.title, newToast.description);
     }
   }, []);
 
