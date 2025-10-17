@@ -12,7 +12,7 @@ from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException, s
 
 from app.schemas.upload_schema import UploadResponse, UploadListResponse
 from app.services.upload_service import UploadService
-from app.utils.auth import verify_token
+from app.utils.api_key_auth import verify_api_key
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ router = APIRouter(prefix="/upload", tags=["File Upload"])
 async def upload_property_file(
     file: UploadFile = File(...),
     client_id: Optional[str] = Form(None),
-    current_user: Dict[str, Any] = Depends(verify_token)
+    current_user: Dict[str, Any] = Depends(verify_api_key)
 ):
     """
     Upload property-related document.
@@ -43,7 +43,7 @@ async def upload_property_file(
     Returns:
         UploadResponse with file metadata
     """
-    user_id = current_user.get("sub") or current_user.get("user_id")
+    user_id = current_user.get("user_id")
     
     if not user_id:
         raise HTTPException(
@@ -86,7 +86,7 @@ async def upload_property_file(
 async def upload_case_file(
     file: UploadFile = File(...),
     client_id: Optional[str] = Form(None),
-    current_user: Dict[str, Any] = Depends(verify_token)
+    current_user: Dict[str, Any] = Depends(verify_api_key)
 ):
     """
     Upload case-related document.
@@ -102,7 +102,7 @@ async def upload_case_file(
     Returns:
         UploadResponse with file metadata
     """
-    user_id = current_user.get("sub") or current_user.get("user_id")
+    user_id = current_user.get("user_id")
     
     if not user_id:
         raise HTTPException(
@@ -144,7 +144,7 @@ async def upload_case_file(
 async def upload_research_file(
     file: UploadFile = File(...),
     client_id: Optional[str] = Form(None),
-    current_user: Dict[str, Any] = Depends(verify_token)
+    current_user: Dict[str, Any] = Depends(verify_api_key)
 ):
     """
     Upload research-related document.
@@ -160,7 +160,7 @@ async def upload_research_file(
     Returns:
         UploadResponse with file metadata
     """
-    user_id = current_user.get("sub") or current_user.get("user_id")
+    user_id = current_user.get("user_id")
     
     if not user_id:
         raise HTTPException(
@@ -202,7 +202,7 @@ async def upload_research_file(
 async def upload_junior_file(
     file: UploadFile = File(...),
     client_id: Optional[str] = Form(None),
-    current_user: Dict[str, Any] = Depends(verify_token)
+    current_user: Dict[str, Any] = Depends(verify_api_key)
 ):
     """
     Upload junior assistant-related document.
@@ -218,7 +218,7 @@ async def upload_junior_file(
     Returns:
         UploadResponse with file metadata
     """
-    user_id = current_user.get("sub") or current_user.get("user_id")
+    user_id = current_user.get("user_id")
     
     if not user_id:
         raise HTTPException(
@@ -263,7 +263,7 @@ async def upload_junior_file(
 @router.get("/download/{file_id}")
 async def download_file(
     file_id: str,
-    current_user: Dict[str, Any] = Depends(verify_token)
+    current_user: Dict[str, Any] = Depends(verify_api_key)
 ):
     """
     Download a file by ID.
@@ -285,7 +285,7 @@ async def download_file(
     """
     from fastapi.responses import FileResponse
     
-    user_id = current_user.get("sub") or current_user.get("user_id")
+    user_id = current_user.get("user_id")
     
     if not user_id:
         raise HTTPException(
@@ -318,7 +318,7 @@ async def download_file(
 @router.get("/list", response_model=UploadListResponse)
 async def list_user_uploads(
     tab_type: Optional[str] = None,
-    current_user: Dict[str, Any] = Depends(verify_token)
+    current_user: Dict[str, Any] = Depends(verify_api_key)
 ):
     """
     List all uploads for the logged-in user.
@@ -332,7 +332,7 @@ async def list_user_uploads(
     Returns:
         List of user's uploads
     """
-    user_id = current_user.get("sub") or current_user.get("user_id")
+    user_id = current_user.get("user_id")
     
     if not user_id:
         raise HTTPException(

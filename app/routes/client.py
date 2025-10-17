@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 from app.schemas.client_schema import ClientCreate, ClientUpdate, ClientResponse, ClientListResponse
 from app.models.client import Client
 from app.database import get_db
-from app.utils.auth import verify_token
+from app.utils.api_key_auth import verify_api_key
 
 logger = logging.getLogger(__name__)
 
@@ -31,16 +31,16 @@ router = APIRouter(prefix="/clients", tags=["Client Management"])
 @router.post("/", response_model=ClientResponse, status_code=status.HTTP_201_CREATED)
 async def create_client(
     client_data: ClientCreate,
-    current_user: Dict[str, Any] = Depends(verify_token),
+    current_user: Dict[str, Any] = Depends(verify_api_key),
     db: Session = Depends(get_db)
 ):
     """
     Create a new client.
     
-    SECURITY: Restricted to logged-in users only.
-    Client is associated with user_id from JWT token.
+    SECURITY: Restricted to authenticated API key users only.
+    Client is associated with user_id from auth context.
     """
-    user_id = current_user.get("sub") or current_user.get("user_id")
+    user_id = current_user.get("user_id")
     
     if not user_id:
         raise HTTPException(
@@ -101,7 +101,7 @@ async def create_client(
 async def list_clients(
     is_active: Optional[bool] = Query(None, description="Filter by active status"),
     search: Optional[str] = Query(None, description="Search by name, email, or company"),
-    current_user: Dict[str, Any] = Depends(verify_token),
+    current_user: Dict[str, Any] = Depends(verify_api_key),
     db: Session = Depends(get_db)
 ):
     """
@@ -173,7 +173,7 @@ async def list_clients(
 @router.get("/{client_id}", response_model=ClientResponse)
 async def get_client(
     client_id: str,
-    current_user: Dict[str, Any] = Depends(verify_token),
+    current_user: Dict[str, Any] = Depends(verify_api_key),
     db: Session = Depends(get_db)
 ):
     """
@@ -234,7 +234,7 @@ async def get_client(
 async def update_client(
     client_id: str,
     client_data: ClientUpdate,
-    current_user: Dict[str, Any] = Depends(verify_token),
+    current_user: Dict[str, Any] = Depends(verify_api_key),
     db: Session = Depends(get_db)
 ):
     """
@@ -305,7 +305,7 @@ async def update_client(
 @router.delete("/{client_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_client(
     client_id: str,
-    current_user: Dict[str, Any] = Depends(verify_token),
+    current_user: Dict[str, Any] = Depends(verify_api_key),
     db: Session = Depends(get_db)
 ):
     """
