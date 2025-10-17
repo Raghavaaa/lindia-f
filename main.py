@@ -26,6 +26,10 @@ try:
     from app.models import Base
     from app.database import engine
     
+    # Debug: Log environment variables
+    logger.info(f"RAILWAY_ENVIRONMENT: {os.getenv('RAILWAY_ENVIRONMENT', 'Not set')}")
+    logger.info(f"DATABASE_URL present: {'Yes' if os.getenv('DATABASE_URL') else 'No'}")
+    
     # Create all tables if not present
     logger.info("Initializing database tables...")
     Base.metadata.create_all(bind=engine)
