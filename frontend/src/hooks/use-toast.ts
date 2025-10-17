@@ -20,8 +20,9 @@ export function useToast() {
     console.log(`[Toast] ${newToast.variant === 'destructive' ? '❌' : '✅'} ${newToast.title}`, newToast.description);
     
     // Show browser notification if supported
-    if (typeof window !== 'undefined' && window.alert) {
+    if (typeof window !== 'undefined') {
       // For now, just log - can enhance with proper toast UI later
+      console.log('Toast:', title, description);
     }
   }, []);
 
