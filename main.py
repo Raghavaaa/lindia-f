@@ -21,6 +21,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Database setup - Auto-create tables on startup
+from app.models import Base
+from app.database import engine
+
+# Create all tables if not present
+logger.info("Initializing database tables...")
+Base.metadata.create_all(bind=engine)
+logger.info("Database tables ready")
+
 # Initialize FastAPI application
 app = FastAPI(
     title="LegalIndia Backend",
