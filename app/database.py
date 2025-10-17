@@ -2,11 +2,14 @@
 Database configuration and session management.
 """
 import os
+from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # Database configuration
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./legalindia.db")
+# Use /tmp for SQLite in production (Railway), local path for development
+default_db_path = "/tmp/legalindia.db" if os.getenv("RAILWAY_ENVIRONMENT") else "./legalindia.db"
+DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{default_db_path}")
 
 # Convert postgres:// to postgresql:// for SQLAlchemy compatibility
 if DATABASE_URL.startswith("postgres://"):

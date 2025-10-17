@@ -5,5 +5,5 @@ nixPkgs = ["python39", "postgresql"]
 cmds = ["pip install -r requirements.txt"]
 
 [start]
-cmd = "gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT"
+cmd = "gunicorn -w 2 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT --timeout 120"
 

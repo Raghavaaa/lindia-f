@@ -22,13 +22,17 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Database setup - Auto-create tables on startup
-from app.models import Base
-from app.database import engine
-
-# Create all tables if not present
-logger.info("Initializing database tables...")
-Base.metadata.create_all(bind=engine)
-logger.info("Database tables ready")
+try:
+    from app.models import Base
+    from app.database import engine
+    
+    # Create all tables if not present
+    logger.info("Initializing database tables...")
+    Base.metadata.create_all(bind=engine)
+    logger.info("Database tables ready")
+except Exception as e:
+    logger.error(f"Database initialization failed: {str(e)}", exc_info=True)
+    logger.warning("Continuing without database - some features may not work")
 
 # Initialize FastAPI application
 app = FastAPI(
