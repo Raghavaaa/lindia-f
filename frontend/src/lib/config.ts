@@ -3,6 +3,9 @@ export const config = {
   apiBase: process.env.NEXT_PUBLIC_FRONTEND_API_BASE || 'https://api.legalindia.ai',
   environment: process.env.NEXT_PUBLIC_FRONTEND_ENV || 'production',
   
+  // API Key for authentication (replaces JWT)
+  apiKey: process.env.NEXT_PUBLIC_API_KEY || 'legalindia_secure_api_key_2025',
+  
   // API endpoints
   endpoints: {
     health: '/',
@@ -27,48 +30,40 @@ export const buildApiUrl = (endpoint: string): string => {
   return `${config.apiBase}${endpoint}`;
 };
 
-// JWT Token Management
-const TOKEN_KEY = 'legalindia_jwt_token';
-
-export const setAuthToken = (token: string): void => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem(TOKEN_KEY, token);
-  }
+// Get API Key - Simple and reliable
+export const getApiKey = (): string => {
+  return config.apiKey;
 };
 
-export const getAuthToken = (): string | null => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem(TOKEN_KEY);
-  }
-  return null;
-};
-
-export const clearAuthToken = (): void => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem(TOKEN_KEY);
-  }
-};
-
-// CORS-safe fetch wrapper with automatic JWT token injection
+// API Fetch wrapper - automatically includes API key
 export const apiFetch = async (
   endpoint: string,
   options: RequestInit = {}
 ): Promise<Response> => {
   const url = buildApiUrl(endpoint);
-  
-  // Get JWT token from localStorage
-  const token = getAuthToken();
-  
+  const apiKey = getApiKey();
+
   const defaultHeaders: HeadersInit = {
     'Content-Type': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` }), // Add JWT token if available
+    'X-API-Key': apiKey,  // Use API key instead of JWT
     ...options.headers,
   };
-  
+
   const defaultOptions: RequestInit = {
     headers: defaultHeaders,
-    credentials: 'include', // For cookies
+    credentials: 'include',
   };
 
   return fetch(url, { ...defaultOptions, ...options });
+};
+
+// Check if API is accessible
+export const checkApiHealth = async (): Promise<boolean> => {
+  try {
+    const response = await apiFetch('/');
+    return response.ok;
+  } catch (error) {
+    console.error('API health check failed:', error);
+    return false;
+  }
 };

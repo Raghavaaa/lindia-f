@@ -1,5 +1,6 @@
 /**
  * Client API - Backend integration for client management
+ * Uses simple API key authentication (no JWT)
  */
 
 import { apiFetch } from '../config';
@@ -133,4 +134,3 @@ export async function deleteClient(clientId: string): Promise<void> {
     throw new Error(`Failed to delete client: ${error}`);
   }
 }
-
