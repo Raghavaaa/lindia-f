@@ -144,7 +144,7 @@ I'm here to assist with comprehensive legal research, drafting, and analysis to 
               AI Legal Junior
             </CardTitle>
             <CardDescription>
-              Your AI assistant for legal research, drafting, and analysis - LIVE AI RESPONSES
+              Your AI assistant for legal research, drafting, and analysis - REAL AI INTEGRATION
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col space-y-4">
