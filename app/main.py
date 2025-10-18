@@ -44,7 +44,7 @@ async def health_check():
     Returns:
         Dictionary with status information
     """
-    return {"status": "ok"}
+    return {"status": "ok", "version": "1.0.1", "deployment": "redeploy"}
 
 
 @app.get("/")
