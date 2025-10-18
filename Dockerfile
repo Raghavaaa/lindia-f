@@ -1,35 +1,24 @@
-# Use official Python 3.9 slim image
-FROM python:3.9-slim
+FROM node:18-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+# Copy package files
+COPY package*.json ./
 
-# Copy requirements first for better caching
-COPY requirements.txt .
+# Install dependencies with cache optimization
+RUN npm ci --production=false --frozen-lockfile
 
-# Install Python dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
-
-# Copy application code
+# Copy source code
 COPY . .
 
-# Create storage directory
-RUN mkdir -p /tmp/storage
+# Remove frontend directory to avoid conflicts
+RUN rm -rf frontend/
 
-# Expose port (Railway will override with $PORT)
-EXPOSE 8000
+# Build the application
+RUN npm run build
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:${PORT:-8000}/')"
+# Expose port
+EXPOSE 3000
 
-# Start command
-CMD gunicorn -w 1 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:${PORT:-8000} --timeout 120 --log-level info
-
+# Start the application
+CMD ["npm", "start"]

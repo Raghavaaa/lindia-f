@@ -1,0 +1,1 @@
+globalThis.__RSC_MANIFEST=(globalThis.__RSC_MANIFEST||{});globalThis.__RSC_MANIFEST["/api/cases/route"]={"moduleLoading":{"prefix":"/_next/"},"ssrModuleMapping":{},"edgeSSRModuleMapping":{},"clientModules":{},"entryCSSFiles":{"/Users/raghavankarthik/ai-law-junior/":[],"/Users/raghavankarthik/ai-law-junior/app/api/cases/route":[]},"rscModuleMapping":{},"edgeRscModuleMapping":{}}

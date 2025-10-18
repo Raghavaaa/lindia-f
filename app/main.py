@@ -1,124 +1,103 @@
 """
-Main FastAPI application for LegalIndia.ai backend.
-Production-ready with security configurations.
+Main application file for LegalIndia.ai backend.
+Initializes FastAPI app with routers, middleware, and configuration.
 """
-import os
-import logging
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.security import HTTPBearer
-import time
 
-# Import routes
-from routes import case, client, junior, property_opinion, research, upload
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from app.core.config import settings
+from app.core.logger import logger
+from app.routes import auth, property_opinion, research, case, junior
 
 # Initialize FastAPI application
 app = FastAPI(
-    title="LegalIndia.ai Backend",
-    version="1.0.0",
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
     description="Backend API for LegalIndia.ai - Your AI-powered legal assistant for Indian law",
-    docs_url="/docs" if os.getenv("ENVIRONMENT") == "development" else None,
-    redoc_url="/redoc" if os.getenv("ENVIRONMENT") == "development" else None,
-    openapi_url="/openapi.json" if os.getenv("ENVIRONMENT") == "development" else None,
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
-# Security middleware
-app.add_middleware(
-    TrustedHostMiddleware, 
-    allowed_hosts=["legalindia.ai", "www.legalindia.ai", "api.legalindia.ai", "*.railway.app"]
-)
-
-# Configure CORS with specific origins
-allowed_origins = [
-    "https://legalindia.ai",
-    "https://www.legalindia.ai",
-    "http://localhost:3000",  # Development
-    "http://localhost:3001",  # Development
-]
-
-severity = os.getenv("ENVIRONMENT", "production")
-if severity == "development":
-    allowed_origins.extend([
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-    ])
-
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=[settings.FRONTEND_ORIGIN],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Request logging middleware
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    start_time = time.time()
-    response = await call_next(request)
-    process_time = time.time() - start_time
-    
-    logger.info(
-        f"{request.method} {request.url.path} - "
-        f"Status: {response.status_code} - "
-        f"Time: {process_time:.4f}s"
-    )
-    
-    response.headers["X-Process-Time"] = str(process_time)
-    return response
-
 # Include routers
-app.include_router(case.router, prefix="/api/v1")
-app.include_router(client.router, prefix="/api/v1")
-app.include_router(junior.router, prefix="/api/v1")
-app.include_router(property_opinion.router, prefix="/api/v1")
-app.include_router(research.router, prefix="/api/v1")
-app.include_router(upload.router, prefix="/api/v1")
+app.include_router(auth.router, prefix=settings.API_V1_PREFIX)
+app.include_router(property_opinion.router, prefix=settings.API_V1_PREFIX)
+app.include_router(research.router, prefix=settings.API_V1_PREFIX)
+app.include_router(case.router, prefix=settings.API_V1_PREFIX)
+app.include_router(junior.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/health")
 async def health_check():
-    """Comprehensive health check endpoint."""
-    try:
-        # Check database connection
-        from database import engine
-        with engine.connect() as conn:
-            conn.execute("SELECT 1")
-        
-        return {
-            "status": "healthy",
-            "timestamp": time.time(),
-            "version": "1.0.0",
-            "environment": os.getenv("ENVIRONMENT", "production"),
-            "database": "connected"
-        }
-    except Exception as e:
-        logger.error(f"Health check failed: {str(e)}")
-        raise HTTPException(status_code=503, detail="Service unhealthy")
+    """
+    Health check endpoint.
+    
+    Returns:
+        Dictionary with status information
+    """
+    return {"status": "ok"}
 
 
 @app.get("/")
 async def root():
-    """Root endpoint with API information."""
+    """
+    Root endpoint with API information.
+    
+    Returns:
+        Dictionary with API information
+    """
     return {
-        "name": "LegalIndia.ai Backend",
-        "version": "1.0.0",
+        "name": settings.APP_NAME,
+        "version": settings.APP_VERSION,
         "status": "running",
-        "environment": os.getenv("ENVIRONMENT", "production"),
-        "docs": "/docs" if os.getenv("ENVIRONMENT") == "development" else "disabled",
+        "docs": "/docs",
         "health": "/health"
     }
 
 
-# Global exception handler
+@app.on_event("startup")
+async def startup_event():
+    """
+    Application startup event handler.
+    Initialize connections, load resources, etc.
+    """
+    logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
+    logger.info(f"Environment: {'Development' if settings.DEBUG else 'Production'}")
+    logger.info(f"API Prefix: {settings.API_V1_PREFIX}")
+    logger.info(f"CORS Origin: {settings.FRONTEND_ORIGIN}")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """
+    Application shutdown event handler.
+    Cleanup connections, resources, etc.
+    """
+    logger.info(f"Shutting down {settings.APP_NAME}")
+
+
+# Exception handlers
+@app.exception_handler(404)
+async def not_found_handler(request, exc):
+    """Handle 404 errors."""
+    return JSONResponse(
+        status_code=404,
+        content={"detail": "Resource not found"}
+    )
+
+
 @app.exception_handler(500)
-async def internal_error_handler(request: Request, exc: Exception):
+async def internal_error_handler(request, exc):
+    """Handle 500 errors."""
     logger.error(f"Internal server error: {str(exc)}")
     return JSONResponse(
         status_code=500,
@@ -126,19 +105,12 @@ async def internal_error_handler(request: Request, exc: Exception):
     )
 
 
-@app.exception_handler(404)
-async def not_found_handler(request: Request, exc: Exception):
-    return JSONResponse(
-        status_code=404,
-        content={"detail": "Resource not found"}
-    )
-
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
-        "main:app", 
-        host="0.0.0.0", 
-        port=int(os.getenv("PORT", 8000)), 
-        reload=os.getenv("ENVIRONMENT") == "development"
+        "main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=settings.DEBUG
     )
+

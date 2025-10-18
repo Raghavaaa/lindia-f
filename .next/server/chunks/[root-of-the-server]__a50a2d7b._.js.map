@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
+    {"offset": {"line": 109, "column": 0}, "map": {"version":3,"sources":["file:///Users/raghavankarthik/ai-law-junior/app/api/auth/%5B...nextauth%5D/route.ts"],"sourcesContent":["import NextAuth from \"next-auth\";\nimport GoogleProvider from \"next-auth/providers/google\";\n\nconst handler = NextAuth({\n  providers: [\n    GoogleProvider({\n      clientId: process.env.GOOGLE_CLIENT_ID!,\n      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,\n    }),\n  ],\n  secret: process.env.NEXTAUTH_SECRET,\n  callbacks: {\n    async redirect({ url, baseUrl }) {\n      console.log(\"Redirect callback:\", { url, baseUrl });\n      return baseUrl;\n    },\n  },\n  debug: true,\n});\n\nexport { handler as GET, handler as POST };\n"],"names":[],"mappings":";;;;;;AAAA;AACA;;;AAEA,MAAM,UAAU,IAAA,kJAAQ,EAAC;IACvB,WAAW;QACT,IAAA,gKAAc,EAAC;YACb,UAAU,QAAQ,GAAG,CAAC,gBAAgB;YACtC,cAAc,QAAQ,GAAG,CAAC,oBAAoB;QAChD;KACD;IACD,QAAQ,QAAQ,GAAG,CAAC,eAAe;IACnC,WAAW;QACT,MAAM,UAAS,EAAE,GAAG,EAAE,OAAO,EAAE;YAC7B,QAAQ,GAAG,CAAC,sBAAsB;gBAAE;gBAAK;YAAQ;YACjD,OAAO;QACT;IACF;IACA,OAAO;AACT","debugId":null}}]
+}

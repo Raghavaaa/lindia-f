@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 217 91% 60%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  /* Global rounded corners and shadows for UI elements */
+  .btn, .card, .dialog, .popover, .dropdown, .list, .modal {
+    border-radius: 1rem !important; /* 2xl = 1rem */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important; /* soft shadow */
+  }
+
+  /* Ensure all buttons have rounded corners and hover effects */
+  button, .btn, [role="button"] {
+    border-radius: 1rem !important; /* 2xl = 1rem */
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1) !important;
+    cursor: pointer !important;
+  }
+
+  button:hover, .btn:hover, [role="button"]:hover {
+    transform: translateY(-1px) scale(1.02) !important;
+    box-shadow: 0 4px 8px -2px rgb(0 0 0 / 0.15) !important;
+    cursor: pointer !important;
+  }
+
+  /* Special styling for icon buttons */
+  button[data-size="icon"]:hover,
+  button.size-icon:hover,
+  .w-16.h-16:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 12px -3px rgb(0 0 0 / 0.2) !important;
+    cursor: pointer !important;
+  }
+
+  /* Ensure all circular action buttons are visible and highlighted */
+  .w-16.h-16.rounded-full {
+    cursor: pointer !important;
+    transition: all 0.2s ease-in-out !important;
+  }
+
+  .w-16.h-16.rounded-full:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 12px -3px rgb(0 0 0 / 0.2) !important;
+    cursor: pointer !important;
+  }
+
+  /* Specific button variants */
+  button[data-variant="default"]:hover,
+  button[data-variant="primary"]:hover {
+    background-color: hsl(var(--primary) / 0.9) !important;
+  }
+
+  button[data-variant="secondary"]:hover {
+    background-color: hsl(var(--secondary) / 0.8) !important;
+  }
+
+  button[data-variant="outline"]:hover {
+    background-color: hsl(var(--accent)) !important;
+    border-color: hsl(var(--primary)) !important;
+  }
+
+  button[data-variant="ghost"]:hover {
+    background-color: hsl(var(--accent)) !important;
+  }
+  
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+}
+
+/* Custom scrollbar styles */
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.4);
+    border-radius: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.6);
+  }
+}
