@@ -50,7 +50,7 @@ export default function JuniorModule({ clientId, onComplete }: Props) {
     setIsTyping(true);
 
     try {
-      // Call the AI engine directly for presentation
+      // Call the AI engine directly - working solution
       const response = await fetch('https://lindia-ai-production.up.railway.app/inference', {
         method: 'POST',
         headers: {

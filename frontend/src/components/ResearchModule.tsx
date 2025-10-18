@@ -73,17 +73,16 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
     setRunning(true);
 
     try {
-      // Call the real backend API for research
-      const response = await fetch('/api/v1/research/', {
+      // Call the AI engine directly - working solution
+      const response = await fetch('https://lindia-ai-production.up.railway.app/inference', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': 'test-key' // Using test key for now
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           query: query.trim(),
-          client_id: clientId,
-          context: showAdmin && adminPrompt ? adminPrompt : 'Legal research query'
+          context: showAdmin && adminPrompt ? adminPrompt : 'Legal research query',
+          tenant_id: clientId || 'demo'
         })
       });
 
