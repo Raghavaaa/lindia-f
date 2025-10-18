@@ -50,17 +50,16 @@ export default function JuniorModule({ clientId, onComplete }: Props) {
     setIsTyping(true);
 
     try {
-      // Call the real backend API
-      const response = await fetch('/api/v1/junior/', {
+      // Call the AI engine directly for presentation
+      const response = await fetch('https://lindia-ai-production.up.railway.app/inference', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': 'test-key' // Using test key for now
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           query: queryText,
-          client_id: clientId,
-          context: 'AI Legal Junior Assistant'
+          context: 'AI Legal Junior Assistant - comprehensive legal analysis',
+          tenant_id: clientId || 'demo'
         })
       });
 
