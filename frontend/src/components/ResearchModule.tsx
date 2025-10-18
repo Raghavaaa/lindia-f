@@ -175,6 +175,9 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
         }
         
         console.log("ResearchModule: Saved to key", key, "items:", updatedItems);
+        setResearchResults(updatedItems);
+        setCurrentResult(newItem);
+        setShowResults(true);
         setQuery("");
         
         if (onResearchComplete) {
@@ -189,7 +192,10 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
           const key = `legalindia::client::${clientId}::research`;
           localStorage.removeItem(key);
           localStorage.setItem(key, JSON.stringify([newItem]));
-          setQuery("");
+          setResearchResults(updatedItems);
+        setCurrentResult(newItem);
+        setShowResults(true);
+        setQuery("");
           setShowSavedToast(true);
           setTimeout(() => setShowSavedToast(false), 3000);
         } catch (retryError) {
@@ -262,6 +268,9 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
         }
         
         console.log("ResearchModule: Saved to key", key, "items:", updatedItems);
+        setResearchResults(updatedItems);
+        setCurrentResult(newItem);
+        setShowResults(true);
         setQuery("");
         
         if (onResearchComplete) {
@@ -276,7 +285,10 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
           const key = `legalindia::client::${clientId}::research`;
           localStorage.removeItem(key);
           localStorage.setItem(key, JSON.stringify([newItem]));
-          setQuery("");
+          setResearchResults(updatedItems);
+        setCurrentResult(newItem);
+        setShowResults(true);
+        setQuery("");
           setShowSavedToast(true);
           setTimeout(() => setShowSavedToast(false), 3000);
         } catch (retryError) {
