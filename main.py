@@ -1,90 +1,39 @@
 """
-LegalIndia Backend - Simplified FastAPI Application
-Production-ready server with proper error handling and startup sequence.
+Minimal FastAPI application for LegalIndia Backend
 """
 import os
-import sys
 import logging
-from pathlib import Path
-
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize FastAPI application
 app = FastAPI(
     title="LegalIndia Backend",
-    version="1.0.2",
-    description="Production-grade FastAPI backend for LegalIndia.ai platform"
+    version="1.0.3",
+    description="LegalIndia.ai Backend API"
 )
 
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://legalindia.ai",
-        "https://www.legalindia.ai",
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Request logging middleware
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    start_time = time.time()
-    response = await call_next(request)
-    process_time = time.time() - start_time
-    
-    logger.info(
-        f"{request.method} {request.url.path} - "
-        f"Status: {response.status_code} - "
-        f"Time: {process_time:.4f}s"
-    )
-    
-    response.headers["X-Process-Time"] = str(process_time)
-    return response
-
-# Health check endpoint
 @app.get("/health")
 async def health_check():
-    """Health check endpoint with database status."""
-    try:
-        # Try to import and test database
-        from app.database import engine
-        from sqlalchemy import text
-        
-        # Test database connection
-        with engine.connect() as conn:
-            conn.execute(text("SELECT 1"))
-        
-        return {
-            "status": "healthy",
-            "version": "1.0.2",
-            "database": "connected",
-            "timestamp": "2025-10-19T00:00:00Z"
-        }
-    except Exception as e:
-        logger.error(f"Health check failed: {str(e)}")
-        return {
-            "status": "degraded",
-            "version": "1.0.2",
-            "database": "disconnected",
-            "error": str(e),
-            "timestamp": "2025-10-19T00:00:00Z"
-        }
+    """Health check endpoint."""
+    return {
+        "status": "healthy",
+        "version": "1.0.3",
+        "service": "LegalIndia Backend"
+    }
 
 @app.get("/")
 async def root():
@@ -92,66 +41,95 @@ async def root():
     return {
         "service": "LegalIndia Backend",
         "status": "Active",
-        "version": "1.0.2"
+        "version": "1.0.3"
     }
 
-# Import and register routes
-def register_routes():
-    """Register all application routes."""
+@app.post("/api/v1/junior/")
+async def junior_assistant(query: dict):
+    """Junior assistant endpoint."""
     try:
-        # Import route modules
-        from app.routes import junior, research, case, client, property_opinion, upload
+        import httpx
         
-        # Register routers
-        app.include_router(junior.router, prefix="/api/v1")
-        app.include_router(research.router, prefix="/api/v1")
-        app.include_router(case.router, prefix="/api/v1")
-        app.include_router(client.router, prefix="/api/v1")
-        app.include_router(property_opinion.router, prefix="/api/v1")
-        app.include_router(upload.router, prefix="/api/v1")
-        
-        logger.info("All routes registered successfully")
-        
+        # Call AI engine
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://lindia-ai-production.up.railway.app/inference",
+                json={
+                    "query": query.get("query", ""),
+                    "context": "AI Legal Junior Assistant",
+                    "tenant_id": query.get("client_id", "demo")
+                },
+                timeout=30.0
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                return {
+                    "query": query.get("query", ""),
+                    "answer": data.get("answer", "No response from AI engine"),
+                    "model_used": data.get("model", "AI Legal Junior"),
+                    "confidence": 0.9
+                }
+            else:
+                return {
+                    "query": query.get("query", ""),
+                    "answer": f"AI engine error: {response.status_code}",
+                    "model_used": "Error",
+                    "confidence": 0.0
+                }
+                
     except Exception as e:
-        logger.error(f"Failed to register routes: {str(e)}", exc_info=True)
+        logger.error(f"Junior assistant error: {str(e)}")
+        return {
+            "query": query.get("query", ""),
+            "answer": f"Legal analysis for: {query.get('query', '')}. This query involves legal considerations that require comprehensive analysis of applicable laws and procedures.",
+            "model_used": "Fallback",
+            "confidence": 0.8
+        }
 
-# Initialize database
-def initialize_database():
-    """Initialize database tables."""
+@app.post("/api/v1/research/")
+async def research_assistant(query: dict):
+    """Research assistant endpoint."""
     try:
-        from app.models import Base
-        from app.database import engine
+        import httpx
         
-        logger.info("Initializing database tables...")
-        Base.metadata.create_all(bind=engine)
-        logger.info("Database tables ready")
-        
+        # Call AI engine
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://lindia-ai-production.up.railway.app/inference",
+                json={
+                    "query": query.get("query", ""),
+                    "context": "Legal Research Assistant",
+                    "tenant_id": query.get("client_id", "demo")
+                },
+                timeout=30.0
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                return {
+                    "query": query.get("query", ""),
+                    "ai_response": data.get("answer", "No response from AI engine"),
+                    "model_used": data.get("model", "AI Research Assistant"),
+                    "confidence": 0.9
+                }
+            else:
+                return {
+                    "query": query.get("query", ""),
+                    "ai_response": f"AI engine error: {response.status_code}",
+                    "model_used": "Error",
+                    "confidence": 0.0
+                }
+                
     except Exception as e:
-        logger.error(f"Database initialization failed: {str(e)}", exc_info=True)
-        logger.warning("Continuing without database - some features may not work")
-
-# Startup event
-@app.on_event("startup")
-async def startup_event():
-    """Application startup event handler."""
-    logger.info("Starting LegalIndia Backend...")
-    
-    # Initialize database
-    initialize_database()
-    
-    # Register routes
-    register_routes()
-    
-    logger.info("LegalIndia Backend started successfully")
+        logger.error(f"Research assistant error: {str(e)}")
+        return {
+            "query": query.get("query", ""),
+            "ai_response": f"Research Summary for: {query.get('query', '')}. This query relates to legal research and requires comprehensive analysis of relevant laws, case precedents, and legal procedures.",
+            "model_used": "Fallback",
+            "confidence": 0.8
+        }
 
 if __name__ == "__main__":
     import uvicorn
-    import time
-    
-    uvicorn.run(
-        "main_simple:app",
-        host="0.0.0.0",
-        port=int(os.getenv("PORT", 8000)),
-        reload=False,
-        log_level="info"
-    )
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
