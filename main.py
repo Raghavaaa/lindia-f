@@ -188,6 +188,31 @@ def register_routes():
         except Exception as e:
             # TODO: route registration fallback — implement graceful degradation for failed routes
             logger.error(f"Failed to register router from {module_name}: {str(e)}")
+    
+    # Also include routes from the main routes directory
+    main_routes_dir = Path("routes")
+    if main_routes_dir.exists():
+        logger.info("Including routes from main routes directory")
+        for route_file in main_routes_dir.glob("*.py"):
+            if route_file.name.startswith("_"):
+                continue  # Skip __init__.py and private modules
+            
+            module_name = route_file.stem
+            
+            try:
+                # Import the route module
+                module = import_module(f"routes.{module_name}")
+                
+                # Check if module has a 'router' attribute
+                if hasattr(module, "router"):
+                    router = getattr(module, "router")
+                    app.include_router(router, prefix="/api/v1")
+                    logger.info(f"Registered router: routes.{module_name} with /api/v1 prefix")
+                else:
+                    logger.debug(f"No router found in routes.{module_name}")
+            
+            except Exception as e:
+                logger.warning(f"Failed to register router routes.{module_name}: {e}")
 
 
 # Register all routes on startup
