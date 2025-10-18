@@ -29,7 +29,24 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
   const [showAdmin, setShowAdmin] = useState(false);
   const [running, setRunning] = useState(false);
   const [showSavedToast, setShowSavedToast] = useState(false);
+  const [researchResults, setResearchResults] = useState<ResearchItem[]>([]);
+  const [showResults, setShowResults] = useState(false);
+  const [currentResult, setCurrentResult] = useState<ResearchItem | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Load research results from localStorage
+  useEffect(() => {
+    try {
+      const key = `legalindia::client::${clientId}::research`;
+      const data = localStorage.getItem(key);
+      if (data) {
+        const items = JSON.parse(data);
+        setResearchResults(items);
+      }
+    } catch (error) {
+      console.error("Error loading research results:", error);
+    }
+  }, [clientId]);
 
   // Cleanup old localStorage data on component mount
   useEffect(() => {
@@ -377,6 +394,83 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Research Results Window */}
+      {researchResults.length > 0 && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-4"
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-green-600" />
+                  Research Results ({researchResults.length})
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowResults(!showResults)}
+                >
+                  {showResults ? 'Hide' : 'Show'} Results
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            {showResults && (
+              <CardContent className="space-y-4">
+                {/* Results List */}
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {researchResults.map((result, index) => (
+                    <div
+                      key={result.id}
+                      className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                        currentResult?.id === result.id 
+                          ? 'bg-primary/10 border-primary' 
+                          : 'bg-muted/50 border-border hover:bg-muted/70'
+                      }`}
+                      onClick={() => setCurrentResult(result)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm">{result.title}</h4>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {result.query}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {formatTime(result.ts)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Current Result Display */}
+                {currentResult && (
+                  <div className="mt-6 p-4 bg-muted/30 rounded-lg">
+                    <h3 className="font-semibold mb-3 text-primary">
+                      Research Result: {currentResult.title}
+                    </h3>
+                    <div className="prose prose-sm max-w-none">
+                      <pre className="whitespace-pre-wrap text-sm leading-relaxed">
+                        {currentResult.resultText}
+                      </pre>
+                    </div>
+                    {currentResult.adminPrompt && (
+                      <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                        <p className="text-xs font-medium text-blue-800 mb-1">Admin Prompt:</p>
+                        <p className="text-xs text-blue-700">{currentResult.adminPrompt}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            )}
+          </Card>
+        </motion.div>
+      )}
       
     </div>
   );
