@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Remove frontend directory to avoid conflicts
-RUN rm -rf frontend/
+RUN rm -rf frontend/ || true
 
 # Expose port
 EXPOSE 8000
