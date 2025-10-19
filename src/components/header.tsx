@@ -26,17 +26,22 @@ export default function Header() {
   useEffect(() => {
     try {
       const profile = localStorage.getItem("legalindia_profile");
-      if (profile) {
+      if (profile && !isAuthenticated) {
         const parsedProfile = JSON.parse(profile);
         setLawyerProfile(parsedProfile);
+      } else if (isAuthenticated) {
+        // Clear localStorage profile when using Google Auth
+        setLawyerProfile(null);
       }
     } catch (error) {
       // Handle error silently
     }
-  }, []);
+  }, [isAuthenticated]);
 
-  // Get display name (Google Auth user or localStorage profile)
-  const displayName = user?.name || user?.email || lawyerProfile?.name || lawyerProfile?.email;
+  // Get display name (prioritize Google Auth over localStorage)
+  const displayName = isAuthenticated 
+    ? (user?.name || user?.email) 
+    : (lawyerProfile?.name || lawyerProfile?.email);
   const isLoggedIn = isAuthenticated || lawyerProfile;
   const currentModule = searchParams.get("module") || "research";
 
