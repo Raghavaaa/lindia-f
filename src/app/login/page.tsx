@@ -22,9 +22,17 @@ export default function LoginPage() {
     setName("");
   }
 
+  // Phone validation for international standards
+  const validatePhone = (phone: string): boolean => {
+    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+    return phoneRegex.test(cleanPhone) && cleanPhone.length >= 10 && cleanPhone.length <= 15;
+  };
+
   function handleContinue() {
     if (!name.trim()) return alert("Enter name");
     if (!phone.trim()) return alert("Enter phone");
+    if (!validatePhone(phone)) return alert("Please enter a valid international phone number (10-15 digits)");
     
     const profile = { name, address, phone };
     try {
@@ -166,7 +174,7 @@ export default function LoginPage() {
                     id="phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+91 99999 99999"
+                    placeholder="+1 234 567 8900"
                   />
                 </div>
 
