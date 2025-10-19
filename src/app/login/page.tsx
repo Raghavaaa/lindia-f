@@ -15,6 +15,8 @@ export default function LoginPage() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [errors, setErrors] = useState<{name?: string; phone?: string}>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   function simulateGoogleSignIn() {
@@ -22,23 +24,64 @@ export default function LoginPage() {
     setName("");
   }
 
-  // Phone validation for international standards
+  // Validation functions for international standards
+  const validateName = (name: string): boolean => {
+    return name.trim().length >= 2 && name.trim().length <= 100;
+  };
+
   const validatePhone = (phone: string): boolean => {
     const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
     const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
     return phoneRegex.test(cleanPhone) && cleanPhone.length >= 10 && cleanPhone.length <= 15;
   };
 
-  function handleContinue() {
-    if (!name.trim()) return alert("Enter name");
-    if (!phone.trim()) return alert("Enter phone");
-    if (!validatePhone(phone)) return alert("Please enter a valid international phone number (10-15 digits)");
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setName(value);
+    if (errors.name) {
+      setErrors(prev => ({ ...prev, name: undefined }));
+    }
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPhone(value);
+    if (errors.phone) {
+      setErrors(prev => ({ ...prev, phone: undefined }));
+    }
+  };
+
+  async function handleContinue() {
+    setIsSubmitting(true);
+    const newErrors: {name?: string; phone?: string} = {};
+
+    if (!name.trim()) {
+      newErrors.name = "Name is required";
+    } else if (!validateName(name)) {
+      newErrors.name = "Name must be 2-100 characters long";
+    }
+
+    if (!phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!validatePhone(phone)) {
+      newErrors.phone = "Please enter a valid international phone number (10-15 digits)";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setIsSubmitting(false);
+      return;
+    }
     
-    const profile = { name, address, phone };
+    const profile = { name: name.trim(), address: address.trim(), phone: phone.trim() };
     try {
       localStorage.setItem("legalindia_profile", JSON.stringify(profile));
-    } catch {}
-    router.push("/app");
+      router.push("/app");
+    } catch (error) {
+      console.error("Error saving profile:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -144,38 +187,80 @@ export default function LoginPage() {
 
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium">
-                    Name <span className="text-destructive">*</span>
+                    Full Name <span className="text-destructive">*</span>
                   </label>
-                  <Input
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Your full name"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="name"
+                      type="text"
+                      value={name}
+                      onChange={handleNameChange}
+                      placeholder="Enter your full legal name"
+                      className={`pr-10 ${errors.name ? 'border-destructive focus:border-destructive' : ''}`}
+                      aria-label="Full name"
+                      aria-describedby={errors.name ? "name-error" : undefined}
+                      aria-invalid={!!errors.name}
+                      autoComplete="name"
+                    />
+                    {name && validateName(name) && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500">
+                        ✓
+                      </div>
+                    )}
+                  </div>
+                  {errors.name && (
+                    <div id="name-error" className="text-sm text-destructive">
+                      {errors.name}
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <label htmlFor="address" className="text-sm font-medium">
-                    Address
+                    Office Address
                   </label>
                   <Input
                     id="address"
+                    type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Office / City"
+                    placeholder="Enter your office address or city"
+                    aria-label="Office address"
+                    autoComplete="address-line1"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <label htmlFor="phone" className="text-sm font-medium">
-                    Phone <span className="text-destructive">*</span>
+                    Phone Number <span className="text-destructive">*</span>
                   </label>
-                  <Input
-                    id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+1 234 567 8900"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={phone}
+                      onChange={handlePhoneChange}
+                      placeholder="+1 234 567 8900"
+                      className={`pr-10 ${errors.phone ? 'border-destructive focus:border-destructive' : ''}`}
+                      aria-label="Phone number"
+                      aria-describedby={errors.phone ? "phone-error" : undefined}
+                      aria-invalid={!!errors.phone}
+                      autoComplete="tel"
+                    />
+                    {phone && validatePhone(phone) && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500">
+                        ✓
+                      </div>
+                    )}
+                  </div>
+                  {errors.phone && (
+                    <div id="phone-error" className="text-sm text-destructive">
+                      {errors.phone}
+                    </div>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Enter international format: +1 234 567 8900 or 1234567890
+                  </p>
                 </div>
 
                 <p className="text-xs text-muted-foreground">
