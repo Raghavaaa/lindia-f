@@ -103,7 +103,7 @@ function AppPageContent() {
       <motion.aside
         initial={{ x: -220 }}
         animate={{ x: 0 }}
-        className="w-[220px] border-r border-border bg-background shrink-0 hidden md:block fixed left-0 top-16 md:top-[120px] bottom-14 overflow-y-auto"
+        className="w-[220px] border-r border-border bg-background shrink-0 hidden md:block fixed left-0 top-16 md:top-[120px] bottom-14 overflow-y-auto z-10"
       >
         <ClientList 
           clients={clients} 
@@ -114,14 +114,14 @@ function AppPageContent() {
       </motion.aside>
 
       {/* Center: Module Workspace */}
-      <main className="flex-1 bg-background min-w-0 md:ml-[220px] md:mr-[320px] p-6">
+      <main className="flex-1 bg-background min-w-0 md:ml-[220px] md:mr-[320px] p-4 md:p-6">
         {selectedClient && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-semibold mb-6 shadow-sm"
           >
-            <div className="w-2 h-2 bg-primary rounded-full"></div>
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
             Client: {selectedClient.name}
           </motion.div>
         )}
@@ -131,6 +131,7 @@ function AppPageContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
+          className="max-w-6xl mx-auto"
         >
           {renderModule()}
         </motion.div>
@@ -140,7 +141,7 @@ function AppPageContent() {
       <motion.aside
         initial={{ x: 320 }}
         animate={{ x: 0 }}
-        className="hidden lg:block fixed right-0 top-16 md:top-[120px] bottom-14 w-[320px] bg-background border-l border-border"
+        className="hidden lg:block fixed right-0 top-16 md:top-[120px] bottom-14 w-[320px] bg-background border-l border-border z-10"
       >
         <HistoryPanel 
           clientId={selectedClientId}
