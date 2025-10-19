@@ -1,11 +1,11 @@
 {
-  "/_not-found/page": "/_not-found",
   "/favicon.ico/route": "/favicon.ico",
-  "/history/page": "/history",
+  "/_not-found/page": "/_not-found",
   "/about/page": "/about",
-  "/page": "/",
+  "/history/page": "/history",
   "/app/page": "/app",
   "/login/page": "/login",
   "/settings/page": "/settings",
+  "/page": "/",
   "/research/page": "/research"
 }
