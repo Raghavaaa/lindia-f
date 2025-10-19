@@ -1,0 +1,340 @@
+{
+  "timestamp": "2025-10-19T13:04:04.003Z",
+  "visual": [
+    {
+      "route": "/",
+      "breakpoint": "desktop",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/home-desktop-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/",
+      "breakpoint": "tablet",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/home-tablet-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/",
+      "breakpoint": "mobile",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/home-mobile-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/about",
+      "breakpoint": "desktop",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/about-desktop-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/about",
+      "breakpoint": "tablet",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/about-tablet-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/about",
+      "breakpoint": "mobile",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/about-mobile-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/app",
+      "breakpoint": "desktop",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/app-desktop-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/app",
+      "breakpoint": "tablet",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/app-tablet-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/app",
+      "breakpoint": "mobile",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/app-mobile-2025-10-19T13-04-04-002Z.png",
+      "issues": [
+        {
+          "type": "layout",
+          "severity": "high",
+          "description": "Sidebar not collapsing properly on mobile",
+          "element": ".sidebar",
+          "screenshot": "mobile-sidebar-issue.png"
+        }
+      ],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/login",
+      "breakpoint": "desktop",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/login-desktop-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/login",
+      "breakpoint": "tablet",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/login-tablet-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/login",
+      "breakpoint": "mobile",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/login-mobile-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/research",
+      "breakpoint": "desktop",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/research-desktop-2025-10-19T13-04-04-002Z.png",
+      "issues": [
+        {
+          "type": "contrast",
+          "severity": "medium",
+          "description": "Low contrast on submit button",
+          "element": "button[type=\"submit\"]",
+          "screenshot": "contrast-issue.png"
+        }
+      ],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/research",
+      "breakpoint": "tablet",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/research-tablet-2025-10-19T13-04-04-002Z.png",
+      "issues": [
+        {
+          "type": "contrast",
+          "severity": "medium",
+          "description": "Low contrast on submit button",
+          "element": "button[type=\"submit\"]",
+          "screenshot": "contrast-issue.png"
+        }
+      ],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/research",
+      "breakpoint": "mobile",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/research-mobile-2025-10-19T13-04-04-002Z.png",
+      "issues": [
+        {
+          "type": "contrast",
+          "severity": "medium",
+          "description": "Low contrast on submit button",
+          "element": "button[type=\"submit\"]",
+          "screenshot": "contrast-issue.png"
+        }
+      ],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/history",
+      "breakpoint": "desktop",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/history-desktop-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/history",
+      "breakpoint": "tablet",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/history-tablet-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/history",
+      "breakpoint": "mobile",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/history-mobile-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/settings",
+      "breakpoint": "desktop",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/settings-desktop-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.008Z"
+    },
+    {
+      "route": "/settings",
+      "breakpoint": "tablet",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/settings-tablet-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.009Z"
+    },
+    {
+      "route": "/settings",
+      "breakpoint": "mobile",
+      "screenshot": "/Users/raghavankarthik/lindia-f-work/qa-automation/reports/screenshots/settings-mobile-2025-10-19T13-04-04-002Z.png",
+      "issues": [],
+      "timestamp": "2025-10-19T13:04:04.009Z"
+    }
+  ],
+  "accessibility": [
+    {
+      "type": "critical",
+      "rule": "color-contrast",
+      "description": "Button text does not meet WCAG AA contrast requirements",
+      "element": ".btn-primary",
+      "impact": "serious",
+      "help": "Ensure text has a contrast ratio of at least 4.5:1"
+    },
+    {
+      "type": "critical",
+      "rule": "missing-label",
+      "description": "Form input missing accessible label",
+      "element": "input[name=\"phone\"]",
+      "impact": "serious",
+      "help": "Add aria-label or associate with label element"
+    },
+    {
+      "type": "moderate",
+      "rule": "keyboard-navigation",
+      "description": "Modal not focusable with keyboard",
+      "element": ".modal-dialog",
+      "impact": "moderate",
+      "help": "Ensure modal can be opened and closed with keyboard"
+    }
+  ],
+  "functional": [
+    {
+      "name": "Client Creation Flow",
+      "route": "/app",
+      "steps": [
+        "Click \"Add Client\" button",
+        "Fill name field",
+        "Fill phone field",
+        "Submit form"
+      ],
+      "expected": "Client added to list",
+      "status": "fail",
+      "error": "Phone validation not working - accepts invalid formats"
+    },
+    {
+      "name": "Research Submission",
+      "route": "/research",
+      "steps": [
+        "Enter research query",
+        "Click submit",
+        "Wait for results"
+      ],
+      "expected": "Results displayed in modal",
+      "status": "fail",
+      "error": "Results window not opening"
+    },
+    {
+      "name": "File Upload",
+      "route": "/app",
+      "steps": [
+        "Click upload button",
+        "Select file",
+        "Wait for upload"
+      ],
+      "expected": "File uploads or queues",
+      "status": "fail",
+      "error": "File picker not opening"
+    },
+    {
+      "name": "Junior Assistant",
+      "route": "/app",
+      "steps": [
+        "Enter question",
+        "Submit",
+        "Wait for response"
+      ],
+      "expected": "AI response displayed",
+      "status": "pass"
+    }
+  ],
+  "performance": {
+    "metrics": {
+      "firstContentfulPaint": 1.2,
+      "largestContentfulPaint": 2.1,
+      "firstInputDelay": 45,
+      "cumulativeLayoutShift": 0.15,
+      "timeToInteractive": 3.2
+    },
+    "issues": [
+      {
+        "type": "performance",
+        "severity": "medium",
+        "description": "CLS exceeds 0.1 threshold",
+        "metric": "cumulativeLayoutShift",
+        "value": 0.15,
+        "threshold": 0.1
+      }
+    ]
+  },
+  "critical": [
+    {
+      "type": "functional",
+      "severity": "critical",
+      "description": "Phone validation not working - accepts invalid formats",
+      "test": "Client Creation Flow"
+    },
+    {
+      "type": "functional",
+      "severity": "critical",
+      "description": "Results window not opening",
+      "test": "Research Submission"
+    },
+    {
+      "type": "functional",
+      "severity": "critical",
+      "description": "File picker not opening",
+      "test": "File Upload"
+    }
+  ],
+  "high": [
+    {
+      "type": "layout",
+      "severity": "high",
+      "description": "Sidebar not collapsing properly on mobile",
+      "element": ".sidebar",
+      "screenshot": "mobile-sidebar-issue.png"
+    }
+  ],
+  "medium": [
+    {
+      "type": "contrast",
+      "severity": "medium",
+      "description": "Low contrast on submit button",
+      "element": "button[type=\"submit\"]",
+      "screenshot": "contrast-issue.png"
+    },
+    {
+      "type": "contrast",
+      "severity": "medium",
+      "description": "Low contrast on submit button",
+      "element": "button[type=\"submit\"]",
+      "screenshot": "contrast-issue.png"
+    },
+    {
+      "type": "contrast",
+      "severity": "medium",
+      "description": "Low contrast on submit button",
+      "element": "button[type=\"submit\"]",
+      "screenshot": "contrast-issue.png"
+    },
+    {
+      "type": "performance",
+      "severity": "medium",
+      "description": "CLS exceeds 0.1 threshold",
+      "metric": "cumulativeLayoutShift",
+      "value": 0.15,
+      "threshold": 0.1
+    }
+  ],
+  "low": []
+}

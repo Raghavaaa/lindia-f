@@ -11,6 +11,8 @@ import CaseModule from "../../components/CaseModule";
 import JuniorModule from "../../components/JuniorModule";
 import { v4 as uuidv4 } from "uuid";
 import { motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type Client = {
   id: string;
@@ -36,6 +38,7 @@ function AppPageContent() {
   const [showModal, setShowModal] = useState(false);
   const [selectedHistoryItem, setSelectedHistoryItem] = useState<HistoryItem | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
   // Load clients from localStorage
   useEffect(() => {
@@ -99,7 +102,15 @@ function AppPageContent() {
 
   return (
     <div className="min-h-screen flex relative pt-16 md:pt-[120px]">
-      {/* Left: Client List */}
+      {/* Mobile Sidebar Overlay */}
+      {showMobileSidebar && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
+
+      {/* Left: Client List - Desktop */}
       <motion.aside
         initial={{ x: -220 }}
         animate={{ x: 0 }}
@@ -113,8 +124,54 @@ function AppPageContent() {
         />
       </motion.aside>
 
+      {/* Left: Client List - Mobile */}
+      <motion.aside
+        initial={{ x: -220 }}
+        animate={{ x: showMobileSidebar ? 0 : -220 }}
+        className="w-[220px] border-r border-border bg-background shrink-0 md:hidden fixed left-0 top-16 bottom-14 overflow-y-auto z-50"
+      >
+        <div className="p-4 border-b border-border">
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold">Clients</h2>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowMobileSidebar(false)}
+              className="h-8 w-8"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+        <ClientList 
+          clients={clients} 
+          selectedId={selectedClientId} 
+          onSelect={(id) => {
+            handleSelectClient(id);
+            setShowMobileSidebar(false);
+          }} 
+          onOpenNew={() => {
+            setShowModal(true);
+            setShowMobileSidebar(false);
+          }} 
+        />
+      </motion.aside>
+
       {/* Center: Module Workspace */}
       <main className="flex-1 bg-background min-w-0 md:ml-[220px] md:mr-[320px] p-4 md:p-6">
+        {/* Mobile Menu Button */}
+        <div className="md:hidden mb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowMobileSidebar(true)}
+            className="flex items-center gap-2"
+          >
+            <Menu className="h-4 w-4" />
+            Clients
+          </Button>
+        </div>
+
         {selectedClient && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}

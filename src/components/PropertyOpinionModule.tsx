@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FileText, Upload, CheckCircle, AlertCircle, Search } from "lucide-react";
+import { FileText, Upload, CheckCircle, AlertCircle, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -18,15 +18,46 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
   const [running, setRunning] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    setSelectedFiles(files);
+  };
+
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    const files = Array.from(event.dataTransfer.files);
+    setSelectedFiles(files);
+  };
+
+  const removeFile = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  };
 
   const handleAnalyze = () => {
     setRunning(true);
-    setTimeout(() => {
-      setRunning(false);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
-      if (onComplete) onComplete();
-    }, 2000);
+    setUploadProgress(0);
+    
+    // Simulate upload progress
+    const progressInterval = setInterval(() => {
+      setUploadProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          setRunning(false);
+          setShowSuccess(true);
+          setTimeout(() => setShowSuccess(false), 3000);
+          if (onComplete) onComplete();
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 200);
   };
 
   return (
@@ -60,7 +91,20 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <label className="text-sm font-semibold text-foreground">Upload Property Documents</label>
-              <div className="border-2 border-dashed border-primary/30 bg-primary/5 rounded-lg p-8 text-center hover:border-primary hover:bg-primary/10 transition-all duration-200 cursor-pointer group">
+              <div 
+                className="border-2 border-dashed border-primary/30 bg-primary/5 rounded-lg p-8 text-center hover:border-primary hover:bg-primary/10 transition-all duration-200 cursor-pointer group relative"
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onClick={() => document.getElementById('file-input')?.click()}
+              >
+                <input
+                  id="file-input"
+                  type="file"
+                  multiple
+                  accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
+                  onChange={handleFileSelect}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
                 <Upload className="w-8 h-8 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
                 <p className="text-sm font-medium text-primary">
                   Click to upload documents
@@ -68,7 +112,56 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
                 <p className="text-xs text-muted-foreground mt-1">
                   Drag and drop files here
                 </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Accepted: PDF, DOC, DOCX, TXT, JPG, PNG
+                </p>
               </div>
+              
+              {/* Selected Files Display */}
+              {selectedFiles.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-foreground">Selected Files:</p>
+                  <div className="space-y-2">
+                    {selectedFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <FileText className="w-4 h-4 text-primary" />
+                          <div>
+                            <p className="text-sm font-medium">{file.name}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {(file.size / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeFile(index)}
+                          className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Upload Progress */}
+              {running && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Uploading...</span>
+                    <span>{uploadProgress}%</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div 
+                      className="bg-primary h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">
