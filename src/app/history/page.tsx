@@ -35,7 +35,7 @@ export default function HistoryPage() {
       
       setHasMore(data.hasMore || false);
     } catch (error) {
-      console.error("Error fetching research:", error);
+      // Handle error silently
     } finally {
       setLoading(false);
     }

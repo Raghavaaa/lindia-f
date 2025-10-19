@@ -1,47 +1,12 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-venv/
-env/
-ENV/
-*.egg-info/
-.eggs/
-dist/
-build/
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Git
-.git/
-.gitignore
-
-# Docs
-*.md
-!README.md
-
-# Tests
-tests/
-.pytest_cache/
-
-# Misc
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+README.md
 .env
 .env.local
-*.log
-
+.env.production.local
+.env.development.local
+.next
+.git
+.gitignore

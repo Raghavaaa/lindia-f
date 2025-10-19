@@ -1,33 +1,31 @@
 // Global configuration for frontend
 export const config = {
-  apiBase: process.env.NEXT_PUBLIC_FRONTEND_API_BASE || 'http://localhost:3001',
-  environment: process.env.NEXT_PUBLIC_FRONTEND_ENV || 'development',
+  apiBase: process.env.NEXT_PUBLIC_BACKEND_URL || '',
+  environment: process.env.NEXT_PUBLIC_ENV || 'production',
   
   // API endpoints
   endpoints: {
-    health: '/api/v1/health',
-    auth: {
-      google: '/api/v1/auth/google',
-      me: '/api/v1/me',
-    },
-    clients: '/api/v1/clients',
-    research: {
-      run: '/api/v1/research/run',
-      save: '/api/v1/research/save',
-      history: '/api/v1/research/history',
-    },
-    admin: {
-      prompt: '/api/v1/admin/prompt',
-    },
+    health: '/health',
+    research: '/api/research',
+    junior: '/api/junior',
+    storage: '/api/storage',
   },
 } as const;
 
+// Check if backend URL is configured
+export const isBackendConfigured = (): boolean => {
+  return !!config.apiBase && config.apiBase.trim() !== '';
+};
+
 // Helper function to build full API URLs
 export const buildApiUrl = (endpoint: string): string => {
+  if (!isBackendConfigured()) {
+    throw new Error('BACKEND_URL is not configured. Please set NEXT_PUBLIC_BACKEND_URL environment variable.');
+  }
   return `${config.apiBase}${endpoint}`;
 };
 
-// CORS-safe fetch wrapper
+// CORS-safe fetch wrapper with network error handling
 export const apiFetch = async (
   endpoint: string,
   options: RequestInit = {}
@@ -39,8 +37,33 @@ export const apiFetch = async (
       'Content-Type': 'application/json',
       ...options.headers,
     },
-    credentials: 'include', // For JWT cookies
+    credentials: 'include',
   };
 
-  return fetch(url, { ...defaultOptions, ...options });
+  try {
+    const response = await fetch(url, { ...defaultOptions, ...options });
+    return response;
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('NETWORK_ERROR: Unable to reach backend. Please check your connection.');
+    }
+    throw error;
+  }
+};
+
+// Health check function
+export const checkBackendHealth = async (): Promise<boolean> => {
+  if (!isBackendConfigured()) {
+    return false;
+  }
+  
+  try {
+    const response = await fetch(buildApiUrl(config.endpoints.health), {
+      method: 'GET',
+      signal: AbortSignal.timeout(5000), // 5 second timeout
+    });
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
 };
