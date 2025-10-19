@@ -11,7 +11,8 @@ export default function ClientModal({
   open, 
   onClose, 
   onCreate 
-}: { 
+}: {
+  // Force rebuild trigger 
   open: boolean; 
   onClose: () => void; 
   onCreate: (c: { name: string; phone?: string }) => void; 
