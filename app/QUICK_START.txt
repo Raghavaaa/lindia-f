@@ -1,0 +1,235 @@
+================================================================================
+LEGALINDIA.AI BACKEND v2.0 - QUICK START GUIDE
+================================================================================
+
+⚡ 5-MINUTE DEPLOYMENT GUIDE
+
+Branch: working-provider-abstraction-20251019-final
+Commit: 60c56320
+
+================================================================================
+STEP 1: SET ENVIRONMENT VARIABLES
+================================================================================
+
+Go to Railway Dashboard → Your Project → Variables
+
+Add these (MINIMUM):
+
+RUNTIME_MODE=PROD
+API_SECRET_KEY=<generate-with-openssl-rand-hex-32>
+
+Add ONE of these (choose easiest):
+
+Option A (Easiest - Current Setup):
+  AI_ENGINE_URL=https://lindia-ai-production.up.railway.app
+
+Option B (OpenAI):
+  OPENAI_API_KEY=sk-...
+
+Option C (Multi-provider with failover):
+  AI_ENGINE_URL=https://lindia-ai-production.up.railway.app
+  OPENAI_API_KEY=sk-...
+  GROQ_API_KEY=gsk_...
+
+================================================================================
+STEP 2: UPDATE DOCKERFILE
+================================================================================
+
+Railway Settings → Docker → Set Dockerfile Path:
+  Dockerfile.optimized
+
+(Or rename Dockerfile.optimized to Dockerfile)
+
+================================================================================
+STEP 3: DEPLOY
+================================================================================
+
+Railway will auto-deploy from the branch.
+
+Or manually trigger:
+  git push origin working-provider-abstraction-20251019-final
+
+================================================================================
+STEP 4: VERIFY (After Deployment)
+================================================================================
+
+1. Health Check:
+   curl https://your-app.railway.app/health
+   
+   Expected: {"status": "ok", "subsystems": {...}}
+
+2. Provider Status:
+   curl https://your-app.railway.app/api/v2/management/providers \
+     -H "X-API-Key: your-api-secret-key"
+   
+   Expected: List of providers with at least one "healthy"
+
+3. Test Inference:
+   curl -X POST https://your-app.railway.app/api/v2/inference \
+     -H "X-API-Key: your-api-secret-key" \
+     -H "Content-Type: application/json" \
+     -d '{"query": "What is Section 302 IPC?"}'
+   
+   Expected: Structured response with citations
+
+4. Metrics:
+   curl https://your-app.railway.app/metrics
+   
+   Expected: JSON with request stats, cache, providers
+
+================================================================================
+STEP 5: MONITOR
+================================================================================
+
+Check these endpoints regularly:
+  /health   - System health
+  /metrics  - Performance metrics
+  /status   - Quick status
+
+Watch Railway logs for errors.
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: "No healthy providers"
+Solution: Check API keys are set correctly, verify AI_ENGINE_URL is accessible
+
+Problem: "API_SECRET_KEY not configured"
+Solution: Set API_SECRET_KEY in environment variables
+
+Problem: All requests return 401
+Solution: Include X-API-Key header with correct value
+
+Problem: High latency
+Solution: Check provider status, verify network connectivity
+
+Problem: Build fails
+Solution: Ensure Dockerfile.optimized is being used
+
+================================================================================
+ROLLBACK IF NEEDED
+================================================================================
+
+1. Railway → Deployments → Click previous deployment → "Redeploy"
+
+OR
+
+2. Git: git checkout backup-before-provider-abstraction-20251019-complete
+   Push to Railway
+
+================================================================================
+LOCAL TESTING (Optional)
+================================================================================
+
+1. Install dependencies:
+   pip install -r requirements.production.txt
+
+2. Set env vars:
+   export RUNTIME_MODE=LOCAL
+   export API_SECRET_KEY=test-key
+
+3. Run:
+   python main_v2.py
+
+4. Test:
+   curl http://localhost:8000/health
+
+================================================================================
+DOCUMENTATION
+================================================================================
+
+Full Documentation: FINAL_DEPLOYMENT_REPORT.txt
+Executive Summary: EXECUTIVE_SUMMARY.txt
+Environment Template: env.example.txt
+API Docs (when running): /docs
+
+================================================================================
+SUPPORT COMMANDS
+================================================================================
+
+Pre-deploy validation:
+  python pre_deploy_check.py
+
+Run tests:
+  pytest tests/ -v
+
+Check dependencies:
+  pip list | wc -l
+  # Should be ~36 packages
+
+Check image size (Docker):
+  docker images legalindia-backend:v2
+  # Should be ~300MB
+
+================================================================================
+DECISION POINTS
+================================================================================
+
+DECISION 1: Which providers?
+  → Recommend: AI_ENGINE_URL + one backup (OpenAI or Groq)
+  → Minimum: Just AI_ENGINE_URL
+
+DECISION 2: Cache backend?
+  → Recommend: memory (default) for start
+  → Upgrade to Redis later if needed
+
+DECISION 3: Rate limits?
+  → Recommend: Keep defaults (100 req/60s)
+  → Adjust per tenant later if needed
+
+================================================================================
+SUCCESS CHECKLIST
+================================================================================
+
+□ Environment variables set in Railway
+□ Dockerfile.optimized configured
+□ Deployment successful (no errors)
+□ /health returns "ok"
+□ At least 1 provider "healthy"
+□ Sample inference works
+□ Metrics endpoint responding
+□ No errors in logs
+□ Response time < 2 seconds
+
+✓ ALL CHECKED → PRODUCTION READY
+
+================================================================================
+NEXT STEPS AFTER DEPLOYMENT
+================================================================================
+
+Day 1-2:
+  - Monitor /metrics every few hours
+  - Check cache hit rate increasing
+  - Verify no errors in logs
+  - Test all API endpoints
+
+Week 1:
+  - Review provider performance
+  - Adjust rate limits if needed
+  - Add monitoring alerts
+  - Document any issues
+
+Month 1:
+  - Analyze usage patterns
+  - Optimize provider selection
+  - Consider enabling RAG
+  - Plan feature enhancements
+
+================================================================================
+KEY FILES LOCATIONS
+================================================================================
+
+Main app: app/main_v2.py
+Config: app/config/app_config.py
+Providers: app/providers/
+Pipeline: app/pipeline/
+Routes: app/routes_v2/
+Tests: app/tests/
+Dockerfile: app/Dockerfile.optimized
+Requirements: app/requirements.production.txt
+
+================================================================================
+END OF QUICK START
+================================================================================
+
