@@ -46,7 +46,7 @@ function AppPageContent() {
         setClients(clientsData);
       }
     } catch (error) {
-      console.error("Error loading clients:", error);
+      // Handle error silently
     }
   }, []);
 

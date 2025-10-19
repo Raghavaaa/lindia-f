@@ -40,32 +40,22 @@ export default function HistoryPanel({
   const [displayLimit, setDisplayLimit] = useState(50);
 
   useEffect(() => {
-    console.log("HistoryPanel: useEffect triggered with clientId:", clientId, "activeModule:", activeModule, "refreshTrigger:", refreshTrigger);
-    
     if (!clientId) {
-      console.log("HistoryPanel: No clientId, setting empty history");
       setHistoryItems([]);
       return;
     }
 
     try {
       const key = `legalindia::client::${clientId}::research`;
-      console.log("HistoryPanel: Looking for key:", key);
       const saved = localStorage.getItem(key);
       
       if (saved) {
         const items: HistoryItem[] = JSON.parse(saved);
-        console.log("HistoryPanel: Loaded items for key", key, "items:", items);
         setHistoryItems(items.slice(0, 100));
       } else {
-        console.log("HistoryPanel: No data found for key", key);
-        const allKeys = Object.keys(localStorage);
-        const researchKeys = allKeys.filter(k => k.includes('research'));
-        console.log("HistoryPanel: All research keys in localStorage:", researchKeys);
         setHistoryItems([]);
       }
     } catch (error) {
-      console.error("Error loading history:", error);
       setHistoryItems([]);
     }
   }, [clientId, refreshTrigger]);

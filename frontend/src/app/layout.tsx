@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import "./globals.css";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import StatusIndicator from "../components/StatusIndicator";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,6 +36,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
+        <StatusIndicator />
         <Suspense fallback={<div className="h-16 bg-background border-b border-border" />}>
           <Header />
         </Suspense>
