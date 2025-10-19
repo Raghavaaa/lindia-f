@@ -21,8 +21,8 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       // Add user data to session
-      if (session.user) {
-        session.user.id = token.sub!
+      if (session.user && token.sub) {
+        session.user.id = token.sub
       }
       return session
     },
