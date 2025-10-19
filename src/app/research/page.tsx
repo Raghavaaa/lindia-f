@@ -4,12 +4,12 @@ import Link from "next/link";
 import { apiFetch, config } from "@/lib/config";
 
 // interface ResearchResult {
-  id: string;
-  query: string;
-  result: string;
-  clientId?: string;
-  createdAt: string;
-}
+//   id: string;
+//   query: string;
+//   result: string;
+//   clientId?: string;
+//   createdAt: string;
+// }
 
 export default function ResearchPage() {
   const [query, setQuery] = useState("");

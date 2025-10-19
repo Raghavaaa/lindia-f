@@ -18,10 +18,6 @@ export default function HistoryPage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    fetchResearch();
-  }, [page, fetchResearch]);
-
   const fetchResearch = async () => {
     try {
       const response = await apiFetch(`${config.endpoints.research}/history?page=${page}&limit=20`);
@@ -40,6 +36,10 @@ export default function HistoryPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchResearch();
+  }, [page]);
 
   const loadMore = () => {
     setPage(prev => prev + 1);
