@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, Home } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,10 +17,8 @@ export default function LoginPage() {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState<{name?: string; phone?: string}>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const router = useRouter();
-  const { data: session, status } = useSession();
 
   // Real Google Sign In
   async function handleGoogleSignIn() {
@@ -37,11 +35,6 @@ export default function LoginPage() {
     }
   }
 
-  // Fallback for manual form
-  function simulateGoogleSignIn() {
-    setStage("form");
-    setName("");
-  }
 
   // Validation functions for international standards
   const validateName = (name: string): boolean => {
@@ -71,7 +64,6 @@ export default function LoginPage() {
   };
 
   async function handleContinue() {
-    setIsSubmitting(true);
     const newErrors: {name?: string; phone?: string} = {};
 
     if (!name.trim()) {
@@ -88,7 +80,6 @@ export default function LoginPage() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      setIsSubmitting(false);
       return;
     }
     
@@ -98,8 +89,6 @@ export default function LoginPage() {
       router.push("/app");
     } catch (error) {
       console.error("Error saving profile:", error);
-    } finally {
-      setIsSubmitting(false);
     }
   }
 

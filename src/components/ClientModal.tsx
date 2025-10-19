@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { AlertCircle, CheckCircle } from "lucide-react";
+import { validateAndFormatPhone, normalizePhoneInput } from "@/lib/phone-utils";
 
 export default function ClientModal({ 
   open, 
@@ -31,11 +32,10 @@ export default function ClientModal({
     }
   }, [open]);
 
-  // Phone number validation for international standards
+  // Phone number validation using libphonenumber
   const validatePhone = (phone: string): boolean => {
-    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
-    return phoneRegex.test(cleanPhone) && cleanPhone.length >= 10 && cleanPhone.length <= 15;
+    const result = validateAndFormatPhone(phone, 'IN');
+    return result.isValid;
   };
 
   const validateName = (name: string): boolean => {
@@ -43,7 +43,7 @@ export default function ClientModal({
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = normalizePhoneInput(e.target.value);
     setPhone(value);
     if (errors.phone) {
       setErrors(prev => ({ ...prev, phone: undefined }));
@@ -110,6 +110,7 @@ export default function ClientModal({
             <div className="relative">
               <Input
                 id="client-name"
+                type="text"
                 value={name}
                 onChange={handleNameChange}
                 placeholder="Enter full client name"
@@ -118,6 +119,7 @@ export default function ClientModal({
                 aria-label="Client name"
                 aria-describedby={errors.name ? "name-error" : undefined}
                 aria-invalid={!!errors.name}
+                inputMode="text"
               />
               {name && validateName(name) && (
                 <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
@@ -146,6 +148,7 @@ export default function ClientModal({
                 aria-label="Phone number"
                 aria-describedby={errors.phone ? "phone-error" : undefined}
                 aria-invalid={!!errors.phone}
+                inputMode="tel"
               />
               {phone && validatePhone(phone) && (
                 <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />

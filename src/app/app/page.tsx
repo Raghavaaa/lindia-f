@@ -48,7 +48,7 @@ function AppPageContent() {
         const clientsData = JSON.parse(raw);
         setClients(clientsData);
       }
-    } catch (error) {
+    } catch {
       // Handle error silently
     }
   }, []);

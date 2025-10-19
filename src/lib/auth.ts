@@ -9,7 +9,7 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn() {
       // Allow sign in
       return true
     },
@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       // Persist user data in JWT
       if (user) {
         token.id = user.id
