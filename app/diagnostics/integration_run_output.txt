@@ -1,0 +1,52 @@
+================================================================================================
+BACKEND INTEGRATION CHECK
+================================================================================================
+Starting: Sun Oct 19 13:51:45 IST 2025
+
+[1/8] Checking environment setup...
+[0;32m✓ PASS[0m: Python found: Python 3.9.6
+[0;32m✓ PASS[0m: Main application file exists
+[0;32m✓ PASS[0m: Minimal requirements file exists
+
+[2/8] Running database smoke test...
+[0;32m✓ PASS[0m: Database connectivity test
+
+[3/8] Testing application startup...
+[0;32m✓ PASS[0m: Application imports successfully
+
+[4/8] Starting application in background...
+[1;33m→[0m Starting uvicorn on port 8000...
+[1;33m→[0m Waiting for application to start (PID: 71172)...
+[0;32m✓ PASS[0m: Application started successfully (PID: 71172)
+
+[5/8] Testing /health endpoint...
+[0;32m✓ PASS[0m: Health endpoint returns HTTP 200
+[0;32m✓ PASS[0m: Health response contains status field
+
+[6/8] Testing /api/v1/research endpoint...
+[1;33m→[0m Research endpoint returned HTTP 307 (may require API key)
+
+[7/8] Testing /api/v1/junior endpoint...
+[1;33m→[0m Junior endpoint returned HTTP 307 (may require API key)
+
+[8/8] Cleaning up...
+[0;32m✓ PASS[0m: Application stopped gracefully
+./run_integration_check.sh: line 209: 71172 Terminated: 15          python3 -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info > diagnostics/integration_app.log 2>&1
+
+================================================================================================
+INTEGRATION CHECK COMPLETE
+================================================================================================
+Passed: [0;32m9[0m
+Failed: [0;31m0[0m
+Duration: 11s
+Timestamp: Sun Oct 19 13:51:55 IST 2025
+
+[0;32m✓ ALL TESTS PASSED[0m
+
+Backend is ready for deployment!
+
+Next steps:
+1. Review diagnostics/ folder for detailed logs
+2. Deploy to Railway with requirements.final.txt
+3. Set required environment variables (DATABASE_URL, AI_ENGINE_URL)
+

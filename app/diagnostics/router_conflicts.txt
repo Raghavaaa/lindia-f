@@ -1,0 +1,58 @@
+ROUTER AND MODULE CONFLICTS ANALYSIS
+====================================
+
+DUPLICATE DIRECTORY STRUCTURE FOUND
+------------------------------------
+
+1. Routes Duplication:
+   - /routes/ (7 files: case.py, client.py, junior.py, property_opinion.py, research.py, test_public.py, upload.py)
+   - /app/routes/ (6 files: __init__.py, auth.py, case.py, junior.py, property_opinion.py, research.py)
+   
+2. Controllers Duplication:
+   - /controllers/ (5 files)
+   - /app/controllers/ (5 files)
+   
+3. Models Duplication:
+   - /models/ (client.py, upload.py)
+   - /app/models/ (client_model.py, user_model.py)
+
+ENTRY POINT INCONSISTENCY
+--------------------------
+- Dockerfile: Uses "main:app" 
+- Procfile: Uses "app.main:app"
+- main.py: Uses imports from "routes" (top-level)
+- main_old.py: Uses imports from "app.routes" (nested)
+- main_fixed.py: Uses imports from "routes" (top-level)
+
+CURRENT WORKING STRUCTURE (based on main.py)
+---------------------------------------------
+Active Routes (in /routes/):
+- junior.py: ✓ WORKING - AI legal junior assistant
+- research.py: ✓ WORKING - AI legal research
+- case.py: ✗ STUB - TODO comment only
+- property_opinion.py: ✗ STUB - TODO comment only
+- client.py: ✓ WORKING - but imports from app.schemas/app.models
+- test_public.py: ? Not checked
+- upload.py: ? Not checked
+
+RESOLUTION STRATEGY
+-------------------
+1. Keep /routes/, /controllers/, /models/ as canonical (since main.py uses them)
+2. Archive /app/ directory to backup branch (it's a duplicate/old structure)
+3. Create proper 501 Not Implemented stub handlers for empty routes
+4. Ensure all imports are consistent
+5. Update Procfile to match Dockerfile (main:app)
+
+EMPTY/STUB ROUTES REQUIRING HANDLERS
+-------------------------------------
+- /routes/case.py: Currently empty with TODO
+- /routes/property_opinion.py: Currently empty with TODO
+
+RECOMMENDATION
+--------------
+Create lightweight placeholder handlers that:
+- Return HTTP 501 Not Implemented
+- Log clear message about unimplemented route
+- Provide structured JSON response
+- Allow application startup to succeed
+

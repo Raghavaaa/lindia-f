@@ -1,0 +1,140 @@
+AI SERVICE WRAPPER IMPLEMENTATION
+==================================
+
+LOCATION: utils/ai_wrapper.py
+
+FEATURES IMPLEMENTED
+--------------------
+1. Connection Timeout: 3 seconds (configurable)
+2. Read Timeout: 10 seconds (configurable)
+3. Retry Logic: 2 retries with exponential backoff (0.5s, 1s)
+4. Circuit Breaker: Opens after 3 consecutive failures, closes after 60s
+5. Fallback Response: Deterministic advisory message when AI unavailable
+6. Error Classification: Different handling for client/server/network errors
+
+CIRCUIT BREAKER PATTERN
+------------------------
+States:
+- CLOSED: Normal operation, all requests allowed
+- OPEN: Service unavailable, requests blocked, fallback used
+- HALF-OPEN: Testing if service recovered, allows one request
+
+Behavior:
+- After 3 consecutive failures → Opens circuit
+- Circuit stays open for 60 seconds
+- After timeout → Transitions to half-open
+- Successful call → Closes circuit
+- Failed call in half-open → Opens circuit again
+
+TIMEOUT CONFIGURATION
+---------------------
+Connection Timeout: 3 seconds
+- Maximum time to establish connection to AI service
+- Prevents hanging on network issues
+
+Read Timeout: 10 seconds
+- Maximum time to receive complete response
+- Allows for longer AI inference times
+- Configurable per endpoint if needed
+
+RETRY STRATEGY
+--------------
+Maximum Retries: 2 (total 3 attempts)
+Backoff: Exponential (0.5s → 1s → 2s)
+Retry Conditions:
+- Server errors (5xx): YES
+- Timeout errors: YES
+- Connection errors: YES
+- Client errors (4xx): NO (immediate failure)
+
+ERROR HANDLING
+--------------
+1. AIServiceUnavailable
+   - Connection failures
+   - Network unreachable
+   - Action: Retry with backoff
+
+2. AIServiceTimeout
+   - Request exceeded timeout
+   - Action: Retry with backoff
+
+3. AIServiceError
+   - Client errors (4xx)
+   - Unexpected errors
+   - Action: No retry, return fallback
+
+FALLBACK RESPONSE
+-----------------
+When AI service is unavailable, returns:
+{
+  "answer": "<Informative message about service interruption>",
+  "model": "fallback",
+  "status": "fallback_response",
+  "confidence": 0.0,
+  "tokens_used": <word_count>,
+  "fallback": true
+}
+
+Fallback message includes:
+- Acknowledgment of the user's query
+- Explanation of service status
+- Guidance on next steps
+- No silent failures
+
+USAGE EXAMPLE
+-------------
+```python
+from utils.ai_wrapper import call_ai_service
+
+# Call AI service with automatic retry and circuit breaker
+response = await call_ai_service(
+    endpoint="/inference",
+    payload={"query": "legal question", "context": "..."},
+    method="POST",
+    connect_timeout=3.0,
+    read_timeout=10.0,
+    max_retries=2
+)
+
+# Response is always valid JSON, either from AI or fallback
+answer = response.get("answer")
+is_fallback = response.get("fallback", False)
+```
+
+MONITORING
+----------
+Circuit breaker status can be queried:
+```python
+from utils.ai_wrapper import get_circuit_breaker_status
+
+status = get_circuit_breaker_status()
+# Returns: {"state": "closed", "failure_count": 0, "last_failure": null}
+```
+
+INTEGRATION WITH ROUTES
+------------------------
+Routes should be updated to use ai_wrapper.call_ai_service() instead of
+direct httpx calls. This ensures consistent:
+- Timeout handling
+- Retry logic
+- Circuit breaker protection
+- Fallback responses
+- Error logging
+
+TESTING
+-------
+Circuit breaker can be manually reset:
+```python
+from utils.ai_wrapper import reset_circuit_breaker
+reset_circuit_breaker()
+```
+
+BENEFITS
+--------
+1. No silent failures - always returns a response
+2. Automatic recovery from transient failures
+3. Prevents overwhelming unavailable AI service
+4. Provides user-friendly error messages
+5. Observable via logging and status endpoints
+6. Configurable timeouts per use case
+

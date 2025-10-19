@@ -1,0 +1,101 @@
+HEAVYWEIGHT DEPENDENCIES REMOVAL
+==================================
+
+IDENTIFIED HEAVYWEIGHT ML/AI PACKAGES (NOT NEEDED IN BACKEND)
+--------------------------------------------------------------
+These packages belong in the AI service, not the backend API:
+
+1. torch==2.2.2 (~2GB)
+   - Reason: PyTorch ML framework - backend only calls AI service via HTTP
+   
+2. torchvision==0.17.2 (~300MB)
+   - Reason: Computer vision library - not needed in API backend
+   
+3. torchaudio==2.2.2 (~100MB)
+   - Reason: Audio processing - not needed in API backend
+   
+4. transformers==4.56.2 (~500MB with models)
+   - Reason: HuggingFace transformers - backend calls AI service
+   
+5. sentence-transformers==2.2.2 (~200MB)
+   - Reason: Sentence embeddings - AI service responsibility
+   
+6. faiss-cpu==1.7.4 (~50MB)
+   - Reason: Vector similarity search - AI service responsibility
+   
+7. python-doctr==0.10.0 (~100MB)
+   - Reason: OCR library - not core backend functionality
+   
+8. opencv-python==4.12.0.88 (~80MB)
+   - Reason: Computer vision - not needed in API backend
+   
+9. datasets==4.1.1 (~50MB)
+   - Reason: HuggingFace datasets - AI service responsibility
+   
+10. scikit-learn==1.6.1 (~30MB)
+    - Reason: ML algorithms - backend only calls AI service
+    
+11. scipy==1.13.1 (~50MB)
+    - Reason: Scientific computing - not needed in API backend
+    
+12. numpy==1.24.3 (~20MB)
+    - Reason: Only needed if doing math operations (none in backend)
+    
+13. pandas==2.3.3 (~40MB)
+    - Reason: Data analysis - not needed in API backend
+    
+14. nltk==3.9.2 (~10MB)
+    - Reason: NLP library - AI service responsibility
+    
+15. tokenizers==0.22.1 (~10MB)
+    - Reason: Text tokenization - AI service responsibility
+    
+16. safetensors==0.6.2
+    - Reason: Model weight format - AI service responsibility
+    
+17. huggingface-hub==0.35.3
+    - Reason: Model downloads - AI service responsibility
+    
+18. sympy==1.14.0
+    - Reason: Symbolic math - not needed
+    
+19. h5py==3.14.0
+    - Reason: HDF5 files - not needed
+    
+20. pillow==11.3.0
+    - Reason: Image processing - not core backend (could keep if needed for upload processing)
+    
+21. pdf2image==1.17.0
+    - Reason: PDF processing - depends on use case
+    
+22. PyPDF2==3.0.1
+    - Reason: PDF processing - depends on use case
+    
+23. pytesseract==0.3.13
+    - Reason: OCR - not core backend
+
+PACKAGES TO POTENTIALLY KEEP
+-----------------------------
+May be needed for document processing if backend handles uploads:
+- pillow (if image uploads)
+- PyPDF2 (if PDF parsing in backend)
+- pdf2image (if PDF preview generation)
+
+Decision: Remove all unless explicitly needed for backend-specific document handling.
+
+ESTIMATED SIZE REDUCTION
+------------------------
+Before: ~3.5GB+ (with all ML packages)
+After: ~200MB (minimal backend dependencies)
+Reduction: ~95% smaller Docker image
+
+REPLACEMENT STRATEGY
+--------------------
+All AI/ML operations are delegated to AI_ENGINE_URL via HTTP API calls.
+Backend focuses on:
+- API routing and request handling
+- Database operations
+- Authentication/authorization
+- Business logic
+- API response formatting
+

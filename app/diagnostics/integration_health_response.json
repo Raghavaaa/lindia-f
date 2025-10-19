@@ -1,0 +1,17 @@
+{
+    "status": "ok",
+    "version": "2.0.0",
+    "timestamp": 1760862112.855516,
+    "uptime": 4.3086371421813965,
+    "subsystems": {
+        "database": {
+            "status": "ok",
+            "message": "Connected"
+        },
+        "ai": {
+            "status": "ok",
+            "message": "Connected"
+        }
+    },
+    "response_time_ms": 339.05
+}

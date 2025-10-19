@@ -1,0 +1,44 @@
+REQUIRED ENVIRONMENT VARIABLES FOR BACKEND
+===========================================
+
+1. DATABASE_URL
+   Purpose: PostgreSQL/SQLite database connection string
+   Used in: database.py
+   Example: postgresql://user:pass@host:port/dbname
+   Default: sqlite:///tmp/legalindia.db (production) or ./legalindia.db (dev)
+   
+2. AI_ENGINE_URL
+   Purpose: URL of the AI inference service
+   Used in: routes/junior.py, routes/research.py, services/ai_service.py
+   Example: https://ai.legalindia.ai
+   Current Issue: HARDCODED in routes/junior.py and routes/research.py
+   
+3. RAILWAY_ENVIRONMENT
+   Purpose: Detect Railway deployment environment
+   Used in: database.py (to determine database path)
+   Example: production
+   
+4. API_KEY_SECRET (implied from code)
+   Purpose: Secret for API key authentication
+   Used in: utils/api_key_auth.py
+   
+5. JWT_SECRET (implied from documentation)
+   Purpose: Secret for JWT token generation
+   Used in: Authentication middleware
+
+HARDCODED VALUES FOUND
+=======================
+Location: routes/junior.py:16
+Value: AI_ENGINE_URL = "https://lindia-ai-production.up.railway.app"
+Status: MUST BE REPLACED with os.getenv("AI_ENGINE_URL")
+
+Location: routes/research.py:16
+Value: AI_ENGINE_URL = "https://lindia-ai-production.up.railway.app"
+Status: MUST BE REPLACED with os.getenv("AI_ENGINE_URL")
+
+RECOMMENDATIONS
+===============
+1. Replace all hardcoded AI_ENGINE_URL with environment variable reads
+2. Add validation at startup to ensure all required variables are set
+3. Document all environment variables in a .env.example file
+

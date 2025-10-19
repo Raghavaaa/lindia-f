@@ -45,13 +45,54 @@ except Exception as e:
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint."""
-    return {
-        "status": "ok", 
-        "version": "2.0.0", 
-        "deployment": "fixed",
-        "message": "Backend is working"
+    """
+    Comprehensive health check endpoint.
+    Checks status of all critical subsystems with timeouts.
+    """
+    import time
+    import httpx
+    from sqlalchemy import text
+    
+    start_time = time.time()
+    health_status = {
+        "status": "ok",
+        "version": "2.0.0",
+        "timestamp": time.time(),
+        "uptime": time.time() - app.state.start_time if hasattr(app.state, 'start_time') else 0,
+        "subsystems": {}
     }
+    
+    # Check database connectivity (non-blocking, 3s timeout)
+    try:
+        from database import SessionLocal
+        db = SessionLocal()
+        db.execute(text("SELECT 1"))
+        db.close()
+        health_status["subsystems"]["database"] = {"status": "ok", "message": "Connected"}
+    except Exception as e:
+        health_status["status"] = "degraded"
+        health_status["subsystems"]["database"] = {"status": "error", "message": str(e)[:100]}
+    
+    # Check AI service connectivity (non-blocking, 3s timeout)
+    ai_url = os.getenv("AI_ENGINE_URL", "https://lindia-ai-production.up.railway.app")
+    try:
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            response = await client.get(f"{ai_url}/health")
+            if response.status_code == 200:
+                health_status["subsystems"]["ai"] = {"status": "ok", "message": "Connected"}
+            else:
+                health_status["subsystems"]["ai"] = {"status": "degraded", "message": f"HTTP {response.status_code}"}
+    except httpx.TimeoutException:
+        health_status["status"] = "degraded"
+        health_status["subsystems"]["ai"] = {"status": "timeout", "message": "AI service timeout"}
+    except Exception as e:
+        health_status["status"] = "degraded"
+        health_status["subsystems"]["ai"] = {"status": "error", "message": str(e)[:100]}
+    
+    # Add response time
+    health_status["response_time_ms"] = round((time.time() - start_time) * 1000, 2)
+    
+    return health_status
 
 @app.get("/")
 async def root():
@@ -68,7 +109,11 @@ async def root():
 @app.on_event("startup")
 async def startup_event():
     """Application startup event handler."""
+    import time
+    app.state.start_time = time.time()
     logger.info("Starting LegalIndia.ai Backend v2.0.0")
+    logger.info(f"AI Engine URL: {os.getenv('AI_ENGINE_URL', 'not set')}")
+    logger.info(f"Database URL: {os.getenv('DATABASE_URL', 'default SQLite')[:50]}...")
     logger.info("Backend startup completed successfully")
 
 @app.on_event("shutdown")

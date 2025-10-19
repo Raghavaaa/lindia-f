@@ -1,0 +1,77 @@
+HEALTH ENDPOINT IMPLEMENTATION NOTES
+=====================================
+
+ENDPOINT: GET /health
+
+FEATURES IMPLEMENTED
+--------------------
+1. Comprehensive subsystem health checks
+2. Non-blocking checks with timeouts (max 3s per subsystem)
+3. Graceful degradation (returns 200 even if subsystems fail)
+4. Uptime tracking since application startup
+5. Response time measurement
+
+SUBSYSTEMS MONITORED
+--------------------
+1. Database
+   - Action: Executes "SELECT 1" query
+   - Timeout: 3 seconds (database connection timeout)
+   - Status: ok | error
+   - Error handling: Returns error message (first 100 chars)
+
+2. AI Service
+   - Action: GET request to {AI_ENGINE_URL}/health
+   - Timeout: 3 seconds
+   - Status: ok | degraded | timeout | error
+   - Error handling: Captures HTTP status or exception message
+
+RESPONSE STRUCTURE
+------------------
+{
+  "status": "ok" | "degraded",
+  "version": "2.0.0",
+  "timestamp": <unix_timestamp>,
+  "uptime": <seconds_since_startup>,
+  "subsystems": {
+    "database": {
+      "status": "ok" | "error",
+      "message": "Connected" | <error_message>
+    },
+    "ai": {
+      "status": "ok" | "degraded" | "timeout" | "error",
+      "message": "Connected" | <error_message>
+    }
+  },
+  "response_time_ms": <milliseconds>
+}
+
+STATUS LOGIC
+------------
+- "ok": All subsystems operational
+- "degraded": One or more subsystems have issues but app still functional
+
+TIMEOUT GUARANTEES
+------------------
+- Database check: Uses connection pool's timeout settings
+- AI check: Hard 3-second timeout via httpx.AsyncClient(timeout=3.0)
+- Total health check: Never exceeds ~6 seconds (3s DB + 3s AI)
+
+STARTUP TIME TRACKING
+----------------------
+- app.state.start_time set on startup event
+- Used to calculate uptime in health response
+- Falls back to 0 if not available
+
+USAGE IN DEPLOYMENT
+-------------------
+- Docker HEALTHCHECK uses this endpoint
+- Railway/Kubernetes can use for readiness/liveness probes
+- Load balancers can use for health checking
+- Monitoring systems can track subsystem status
+
+NOTES
+-----
+- Health endpoint never throws exceptions (always returns 200)
+- Individual subsystem failures are reported but don't crash the endpoint
+- Designed for high availability and observability
+

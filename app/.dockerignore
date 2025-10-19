@@ -4,31 +4,19 @@ __pycache__/
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+dist/
+build/
 
 # Virtual environments
-.env
-.venv
-env/
 venv/
+env/
 ENV/
-env.bak/
-venv.bak/
+
+# Git
+.git/
+.gitignore
+.gitattributes
 
 # IDE
 .vscode/
@@ -37,44 +25,53 @@ venv.bak/
 *.swo
 *~
 
-# OS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Git
-.git/
-.gitignore
+# Testing
+tests/
+test_*.py
+*_test.py
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Documentation
-README.md
 *.md
+!README.md
+docs/
 
 # Logs
 logs/
 *.log
 
-# Database files
+# Diagnostics (created during this cleanup)
+diagnostics/
+
+# Database files (should be external)
 *.db
 *.sqlite
 *.sqlite3
 
 # Temporary files
-*.tmp
-*.temp
+tmp/
+temp/
+.tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (secrets)
+.env
+.env.local
+.env.*.local
+
+# Backup files
 *.bak
+*.backup
+*~
 
-# Test files
-tests/
-*_test.py
-test_*.py
-pytest.ini
-.coverage
+# Node modules (if any frontend artifacts)
+node_modules/
 
-# Development files
-setup.sh
-verify.py
+# Build artifacts
+*.tar.gz
+*.zip

@@ -2,6 +2,7 @@
 Junior Assistant Routes - AI-powered legal junior assistant endpoints.
 """
 import logging
+import os
 import httpx
 from typing import Dict, Any, Optional
 from fastapi import APIRouter, HTTPException, Depends
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/junior", tags=["AI Legal Junior"])
 
 # AI Engine URL from environment
-AI_ENGINE_URL = "https://lindia-ai-production.up.railway.app"
+AI_ENGINE_URL = os.getenv("AI_ENGINE_URL", "https://lindia-ai-production.up.railway.app")
 
 
 class JuniorRequest(BaseModel):

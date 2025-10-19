@@ -1,0 +1,41 @@
+# Production Backend Dependencies - Final Minimal Set
+# ====================================================
+# This is the absolute minimal set needed for the backend API to function.
+# All AI/ML operations are delegated to the AI service via HTTP.
+
+# Core FastAPI framework and ASGI server
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+gunicorn==23.0.0
+
+# Data validation and settings management
+pydantic[email]==2.9.2
+pydantic-settings==2.6.0
+python-dotenv==1.0.1
+
+# Database ORM and migrations
+sqlmodel==0.0.22
+psycopg2-binary==2.9.11
+alembic==1.16.5
+
+# HTTP client for AI service communication
+httpx==0.27.2
+requests==2.32.3
+
+# Authentication and security
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+
+# Pagination support
+fastapi-pagination==0.12.30
+
+# Logging and monitoring
+loguru==0.7.2
+sentry-sdk==2.17.0
+
+# NOTES:
+# - All heavyweight ML/AI packages have been removed
+# - Backend calls AI service via AI_ENGINE_URL environment variable
+# - Expected Docker image size: ~200-300MB (vs 3.5GB+ with ML packages)
+# - Use this file to rebuild requirements.txt for production deployment
+
