@@ -32,9 +32,7 @@ export default function ClientModal({
 
   // Phone number validation for international standards
   const validatePhone = (phone: string): boolean => {
-    // International phone number regex (supports various formats)
     const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-    // Remove spaces, dashes, parentheses for validation
     const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
     return phoneRegex.test(cleanPhone) && cleanPhone.length >= 10 && cleanPhone.length <= 15;
   };
@@ -46,11 +44,6 @@ export default function ClientModal({
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPhone(value);
-<<<<<<< HEAD
-=======
-    
-    // Clear error when user starts typing
->>>>>>> senior_qa_integration_ready_20251019
     if (errors.phone) {
       setErrors(prev => ({ ...prev, phone: undefined }));
     }
@@ -59,11 +52,6 @@ export default function ClientModal({
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setName(value);
-<<<<<<< HEAD
-=======
-    
-    // Clear error when user starts typing
->>>>>>> senior_qa_integration_ready_20251019
     if (errors.name) {
       setErrors(prev => ({ ...prev, name: undefined }));
     }
@@ -73,18 +61,10 @@ export default function ClientModal({
     setIsSubmitting(true);
     const newErrors: {name?: string; phone?: string} = {};
 
-<<<<<<< HEAD
-=======
-    // Validate name
->>>>>>> senior_qa_integration_ready_20251019
     if (!validateName(name)) {
       newErrors.name = "Name must be 2-100 characters long";
     }
 
-<<<<<<< HEAD
-=======
-    // Validate phone
->>>>>>> senior_qa_integration_ready_20251019
     if (!phone.trim()) {
       newErrors.phone = "Phone number is required";
     } else if (!validatePhone(phone)) {
@@ -181,24 +161,15 @@ export default function ClientModal({
         </motion.div>
 
         <DialogFooter className="flex flex-col sm:flex-row gap-3 sm:gap-2">
-<<<<<<< HEAD
           <Button
             variant="outline"
-=======
-          <Button 
-            variant="outline" 
->>>>>>> senior_qa_integration_ready_20251019
             onClick={onClose}
             className="w-full sm:w-auto"
             disabled={isSubmitting}
           >
             Cancel
           </Button>
-<<<<<<< HEAD
           <Button
-=======
-          <Button 
->>>>>>> senior_qa_integration_ready_20251019
             onClick={handleCreate}
             disabled={isSubmitting || !name.trim() || !phone.trim()}
             className="w-full sm:w-auto"
