@@ -1,0 +1,386 @@
+================================================================================
+AI TESTING INVENTORY - LegalIndia.ai Backend
+================================================================================
+Generated: 2025-10-19
+Branch: ai_testing_ready_20251019
+System: Backend v2.0 with Provider Abstraction
+
+================================================================================
+SECTION 1: ENTRYPOINTS & MAIN APPLICATION
+================================================================================
+
+Primary Entrypoint:
+  - main_v2.py (Production-ready with provider abstraction)
+  
+Legacy Entrypoints (available but not primary):
+  - main.py (Original version)
+  - main_fixed.py (Intermediate version)
+  - main_old.py (Backup)
+
+Active Entrypoint Routes Registered:
+  - routes_v2/inference.py
+  - routes_v2/management.py
+  - routes_v2/health.py
+
+================================================================================
+SECTION 2: API ROUTES & ENDPOINTS
+================================================================================
+
+CORE INFERENCE:
+  POST /api/v2/inference
+    - Main inference endpoint
+    - Supports provider override, model selection
+    - Structured response with citations
+    - Rate limiting & caching enabled
+    
+  POST /api/v2/inference/simple
+    - Simplified inference endpoint
+    - Minimal response format
+
+HEALTH & MONITORING:
+  GET /health
+    - Comprehensive health check
+    - Returns subsystem status (providers, cache, database)
+  
+  GET /metrics
+    - Full metrics JSON
+    - Request stats, provider performance, cache hit rates
+  
+  GET /status
+    - Simplified status check
+    - Quick operational status
+  
+  GET /ready
+    - Kubernetes readiness probe
+    
+  GET /live
+    - Kubernetes liveness probe
+
+PROVIDER MANAGEMENT:
+  GET  /api/v2/management/providers
+    - List all providers with status
+  
+  POST /api/v2/management/providers/switch
+    - Switch active provider at runtime
+  
+  POST /api/v2/management/providers/toggle
+    - Enable/disable specific provider
+
+CACHE MANAGEMENT:
+  GET  /api/v2/management/cache/stats
+    - Cache statistics
+  
+  POST /api/v2/management/cache/clear
+    - Clear all cache
+
+RATE LIMITING:
+  GET /api/v2/management/rate-limits
+    - All tenant rate limits
+  
+  GET /api/v2/management/rate-limits/{tenant_id}
+    - Specific tenant limits
+
+CONFIGURATION:
+  GET /api/v2/management/config
+    - Current configuration (secrets redacted)
+
+ROOT ENDPOINT:
+  GET /
+    - API information and available endpoints
+
+LEGACY ROUTES (routes/):
+  - routes/junior.py (older implementation)
+  - routes/research.py (older implementation)
+  - routes/case.py
+  - routes/property_opinion.py
+  - routes/client.py
+  - routes/upload.py
+  - routes/test_public.py
+
+================================================================================
+SECTION 3: PROVIDER ADAPTERS AVAILABLE
+================================================================================
+
+IMPLEMENTED PROVIDERS:
+
+1. AI Engine Provider (ai_engine_provider.py)
+   Type: External HTTP service
+   Status: Implemented
+   Features: Full inference, fallback support
+   Configuration: AI_ENGINE_URL
+   Priority: 1 (highest)
+
+2. DeepSeek Provider (deepseek_provider.py)
+   Type: DeepSeek API
+   Status: Implemented
+   Features: Fast inference, 32K context
+   Configuration: DEEPSEEK_API_KEY
+   Priority: 3
+   
+3. OpenAI Provider (openai_provider.py)
+   Type: OpenAI API
+   Status: Implemented
+   Features: GPT-4, streaming, embeddings, vision
+   Configuration: OPENAI_API_KEY
+   Priority: 2
+
+4. Groq Provider (groq_provider.py)
+   Type: Groq API (Llama, Mixtral)
+   Status: Implemented
+   Features: Ultra-fast inference
+   Configuration: GROQ_API_KEY
+   Priority: 4
+
+5. Mock Provider (mock_provider.py)
+   Type: Testing/Development
+   Status: Implemented
+   Features: Deterministic responses, no external calls
+   Configuration: None (enabled in LOCAL mode)
+   Priority: 10
+
+PROVIDER MANAGER:
+  - provider_manager.py
+  - Handles failover, circuit breakers, priority-based selection
+  - Runtime provider switching
+  - Health monitoring
+  - Metrics collection per provider
+
+NOTE: InLegalBERT Provider
+  - NOT FOUND in current codebase
+  - Research route mentions InLegalBERT query enhancement
+  - Implementation appears to be in external AI Engine service
+  - Not a standalone provider in this backend
+
+================================================================================
+SECTION 4: ENVIRONMENT VARIABLES REQUIRED
+================================================================================
+
+RUNTIME CONFIGURATION:
+  RUNTIME_MODE - "LOCAL" or "PROD" (default: LOCAL)
+  LOG_LEVEL - Logging level (default: INFO)
+
+AUTHENTICATION:
+  API_SECRET_KEY - API key for endpoint authentication (optional in LOCAL)
+  JWT_SECRET - JWT token secret (optional)
+
+AI PROVIDER CREDENTIALS (at least one required in PROD mode):
+  AI_ENGINE_URL - External AI service URL
+  OPENAI_API_KEY - OpenAI API key
+  DEEPSEEK_API_KEY - DeepSeek API key
+  GROQ_API_KEY - Groq API key
+  ANTHROPIC_API_KEY - Anthropic key (provider implemented but not active)
+  HUGGINGFACE_API_KEY - HF key (provider implemented but not active)
+
+DATABASE:
+  DATABASE_URL - Database connection string (default: SQLite)
+  RAILWAY_ENVIRONMENT - Railway deployment detection
+
+CACHING:
+  CACHE_BACKEND - "memory" or "redis" (default: memory)
+  CACHE_TTL_SECONDS - Cache TTL (default: 300)
+  REDIS_URL - Redis connection string (if using Redis)
+  ENABLE_CACHING - Enable/disable caching (default: true)
+
+RATE LIMITING:
+  RATE_LIMIT_ENABLED - Enable rate limiting (default: true)
+  RATE_LIMIT_REQUESTS - Max requests per window (default: 100)
+  RATE_LIMIT_WINDOW_SECONDS - Time window (default: 60)
+
+FEATURE FLAGS:
+  ENABLE_LOCAL_MODEL - Enable local model inference (default: false)
+  ENABLE_RAG - Enable RAG pipeline (default: false)
+
+OBSERVABILITY:
+  SENTRY_DSN - Sentry error tracking (optional)
+
+SERVER:
+  HOST - Server host (default: 0.0.0.0)
+  PORT - Server port (default: 8000)
+  WEB_CONCURRENCY - Worker count for gunicorn
+
+================================================================================
+SECTION 5: RUNTIME MODES SUPPORTED
+================================================================================
+
+LOCAL MODE (Development/Testing):
+  Configuration: RUNTIME_MODE=LOCAL
+  Behavior:
+    - Mock provider enabled by default
+    - No external API keys required
+    - Deterministic responses for testing
+    - All pipeline stages active
+    - Caching and rate limiting functional
+    - Perfect for development and integration tests
+  
+  Providers Available:
+    - Mock provider (always available)
+    - Any configured providers with valid credentials
+
+PROD MODE (Production):
+  Configuration: RUNTIME_MODE=PROD
+  Behavior:
+    - Real providers configured from environment
+    - Requires at least one provider credential
+    - Full failover and circuit breaker logic
+    - Production logging and metrics
+    - Optimized for performance and reliability
+  
+  Providers Available:
+    - All providers with valid credentials
+    - AI Engine, OpenAI, DeepSeek, Groq, etc.
+    - Mock provider NOT available in PROD mode
+
+================================================================================
+SECTION 6: PIPELINE ARCHITECTURE
+================================================================================
+
+5-STAGE STRUCTURED PIPELINE (pipeline/):
+
+Stage A: Input Sanitization & Normalization
+  File: pipeline/sanitization.py
+  Features:
+    - Prompt injection detection (15+ patterns)
+    - Suspicious pattern detection
+    - Length validation and truncation
+    - Control character removal
+    - Tenant-level logging
+
+Stage B: Retrieval (Optional RAG)
+  Status: Placeholder implemented
+  Can be enabled via: ENABLE_RAG=true
+  Features:
+    - Support for pluggable vector stores
+    - Context retrieval for RAG workflows
+
+Stage C: Model Inference
+  Features:
+    - Provider manager integration
+    - Automatic failover on provider failure
+    - Per-request provider/model override
+    - Circuit breaker protection
+
+Stage D: Response Processing & Structuring
+  File: pipeline/response_processor.py
+  Features:
+    - Citation extraction (5+ legal patterns)
+    - Summary generation (executive, detailed)
+    - Legal citation categorization
+    - Confidence indicator detection
+    - Quality score calculation
+
+Stage E: Output Validation
+  Features:
+    - Length validation
+    - Content quality checks
+    - Error pattern detection
+    - Schema validation
+
+================================================================================
+SECTION 7: SUPPORTING SYSTEMS
+================================================================================
+
+CACHING SYSTEM (cache/):
+  - cache_manager.py
+  - In-memory cache with TTL
+  - Optional Redis backend
+  - Query-based cache key generation
+  - Cache statistics and management APIs
+
+RATE LIMITING (rate_limiter/):
+  - rate_limiter.py
+  - Sliding window per tenant
+  - Configurable limits per tenant
+  - Automatic window cleanup
+  - Statistics and monitoring
+
+OBSERVABILITY (observability/):
+  - structured_logger.py - JSON logging
+  - metrics.py - Metrics collection
+  - Request/provider/cache metrics
+  - Health monitoring
+
+CONFIGURATION (config/):
+  - app_config.py
+  - Environment-based configuration
+  - Provider configuration builder
+  - Pipeline configuration
+
+================================================================================
+SECTION 8: TEST INFRASTRUCTURE
+================================================================================
+
+EXISTING TESTS (tests/):
+  - test_providers.py - Provider abstraction tests
+  - test_pipeline.py - Pipeline tests
+  - test_cache.py - Caching tests
+  - test_rate_limiter.py - Rate limiting tests
+
+PRE-DEPLOY VALIDATION:
+  - pre_deploy_check.py
+  - Validates configuration, providers, pipeline
+  - Runs sample inference
+  - Checks database connectivity
+
+================================================================================
+SECTION 9: CRITICAL FINDINGS
+================================================================================
+
+OBSERVATIONS:
+
+1. InLegalBERT Integration:
+   - NOT found as standalone provider in backend
+   - Appears to be part of external AI Engine service
+   - Research route (routes/research.py) mentions InLegalBERT enhancement
+   - May require testing external service for InLegalBERT functionality
+
+2. Provider Availability:
+   - 5 providers implemented (AI Engine, OpenAI, DeepSeek, Groq, Mock)
+   - Anthropic and HuggingFace providers exist but not fully integrated
+   - Mock provider excellent for testing without credentials
+
+3. RAG Pipeline:
+   - Stage B (retrieval) is placeholder only
+   - Not currently functional
+   - Can be enabled but requires implementation
+
+4. Legacy Code:
+   - Multiple main.py versions present
+   - Old routes still exist in routes/ directory
+   - v2 routes are production-ready
+
+5. Testing Readiness:
+   - Comprehensive test suite exists
+   - Mock provider allows testing without credentials
+   - Pre-deploy checks implemented
+   - Health endpoints available for baseline testing
+
+================================================================================
+SECTION 10: RECOMMENDED TEST STRATEGY
+================================================================================
+
+For DeepSeek + InLegalBERT Testing:
+
+1. If InLegalBERT is in AI Engine:
+   - Test AI_ENGINE_URL provider
+   - Verify RAG/enhancement behavior through AI Engine
+   - Check for enhanced query in responses
+
+2. If InLegalBERT should be separate:
+   - DECISION REQUIRED: Need clarification on InLegalBERT integration
+   - May need to implement InLegalBERT provider
+   - Or configure external service
+
+3. DeepSeek Testing:
+   - Use DeepSeek provider directly
+   - Test with DEEPSEEK_API_KEY
+   - Measure latency, accuracy, failover
+
+Immediate Testing Approach:
+- Start with LOCAL mode + Mock provider (no credentials needed)
+- Test all functional aspects
+- Then test with real providers if credentials available
+
+================================================================================
+END OF INVENTORY
+================================================================================
+
