@@ -4,13 +4,13 @@ export type QueuedRequest = {
   id: string;
   endpoint: string;
   method: string;
-  body: any;
+  body: unknown;
   timestamp: number;
 };
 
 const QUEUE_KEY = 'legalindia::offline_queue';
 
-export const addToQueue = (endpoint: string, method: string, body: any): void => {
+export const addToQueue = (endpoint: string, method: string, body: unknown): void => {
   try {
     const queue = getQueue();
     const request: QueuedRequest = {

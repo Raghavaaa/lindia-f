@@ -12,9 +12,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   output: 'standalone',
-  turbopack: {
-    root: '/Users/raghavankarthik/ai-law-junior/frontend',
-  },
 };
 
 export default nextConfig;
