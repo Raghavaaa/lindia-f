@@ -157,7 +157,7 @@ Your query will be processed when backend connection is restored.
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-[calc(100vh-16rem)]">
+    <div className="max-w-4xl mx-auto h-full flex flex-col">
       <AnimatePresence>
         {error && (
           <motion.div
@@ -173,8 +173,8 @@ Your query will be processed when backend connection is restored.
       </AnimatePresence>
 
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="h-full flex flex-col">
-        <Card className="flex-1 flex flex-col">
-          <CardHeader>
+        <Card className="flex-1 flex flex-col min-h-0">
+          <CardHeader className="flex-shrink-0">
             <CardTitle className="flex items-center gap-2">
               <Bot className="w-5 h-5 text-primary" />
               AI Legal Junior
@@ -183,8 +183,8 @@ Your query will be processed when backend connection is restored.
               Your AI assistant for legal research, drafting, and analysis
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex-1 flex flex-col space-y-4">
-            <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-muted/20 rounded-lg">
+          <CardContent className="flex-1 flex flex-col space-y-4 min-h-0">
+            <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-muted/20 rounded-lg min-h-0">
               {messages.length === 0 && (
                 <div className="text-center text-muted-foreground py-12">
                   <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -226,7 +226,7 @@ Your query will be processed when backend connection is restored.
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 flex-shrink-0">
               <div className="flex gap-2">
                 <Textarea
                   ref={textareaRef}

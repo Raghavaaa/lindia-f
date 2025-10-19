@@ -314,15 +314,15 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
         )}
       </AnimatePresence>
 
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <Card>
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="h-full flex flex-col">
+        <Card className="flex-1 flex flex-col min-h-0">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Play className="w-5 h-5 text-primary" />
               Legal Research
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="flex-1 flex flex-col space-y-6 min-h-0">
         <div className="space-y-2">
           <Textarea
             ref={textareaRef}

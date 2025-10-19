@@ -158,7 +158,7 @@ function AppPageContent() {
       </motion.aside>
 
       {/* Center: Module Workspace */}
-      <main className="flex-1 bg-background min-w-0 md:ml-[220px] md:mr-[320px] p-4 md:p-6">
+      <main className="flex-1 bg-background min-w-0 md:ml-[220px] md:mr-[320px] p-4 md:p-6 overflow-hidden">
         {/* Mobile Menu Button */}
         <div className="md:hidden mb-4">
           <Button
