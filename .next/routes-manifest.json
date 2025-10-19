@@ -19,38 +19,7 @@
     "fallback": []
   },
   "dynamicRoutes": [],
-  "staticRoutes": [
-    {
-      "page": "/",
-      "regex": "^/(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/(?:/)?$"
-    },
-    {
-      "page": "/_not-found",
-      "regex": "^/_not\\-found(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/_not\\-found(?:/)?$"
-    },
-    {
-      "page": "/favicon.ico",
-      "regex": "^/favicon\\.ico(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/favicon\\.ico(?:/)?$"
-    },
-    {
-      "page": "/history",
-      "regex": "^/history(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/history(?:/)?$"
-    },
-    {
-      "page": "/research",
-      "regex": "^/research(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/research(?:/)?$"
-    }
-  ],
+  "staticRoutes": [],
   "dataRoutes": [],
   "rsc": {
     "header": "rsc",

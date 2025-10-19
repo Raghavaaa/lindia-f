@@ -54,7 +54,7 @@ export default function ResearchPage() {
     setStreaming(true);
 
     try {
-      const response = await apiFetch(config.endpoints.research.run, {
+      const response = await apiFetch(config.endpoints.research, {
         method: "POST",
         body: JSON.stringify({ query }),
       });
@@ -112,7 +112,7 @@ export default function ResearchPage() {
 
     setSaving(true);
     try {
-      const response = await apiFetch(config.endpoints.research.save, {
+      const response = await apiFetch(config.endpoints.research, {
         method: "POST",
         body: JSON.stringify({
           query,

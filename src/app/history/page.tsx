@@ -24,7 +24,7 @@ export default function HistoryPage() {
 
   const fetchResearch = async () => {
     try {
-      const response = await apiFetch(`${config.endpoints.research.history}?page=${page}&limit=20`);
+      const response = await apiFetch(`${config.endpoints.research}/history?page=${page}&limit=20`);
       const data = await response.json();
       
       if (page === 1) {
