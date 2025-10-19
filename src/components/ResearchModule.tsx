@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch, config, checkBackendHealth } from "@/lib/config";
 import { addToQueue } from "@/lib/offline-queue";
+import ResearchResultsModal from "./ResearchResultsModal";
 
 type ResearchItem = {
   id: string;
@@ -35,6 +36,7 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
   const [researchResults, setResearchResults] = useState<ResearchItem[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [currentResult, setCurrentResult] = useState<ResearchItem | null>(null);
+  const [showResultsModal, setShowResultsModal] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -100,6 +102,7 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
       setResearchResults(updatedItems);
       setCurrentResult(item);
       setShowResults(true);
+      setShowResultsModal(true);
     } catch (error) {
       // Try to recover from localStorage quota error
       try {
@@ -109,6 +112,7 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
         setResearchResults([item]);
         setCurrentResult(item);
         setShowResults(true);
+        setShowResultsModal(true);
       } catch (retryError) {
         setError("Unable to save locally. Storage may be full.");
       }
@@ -460,6 +464,13 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
           </Card>
         </motion.div>
       )}
+
+      {/* Research Results Modal */}
+      <ResearchResultsModal
+        open={showResultsModal}
+        onClose={() => setShowResultsModal(false)}
+        result={currentResult}
+      />
       
     </div>
   );

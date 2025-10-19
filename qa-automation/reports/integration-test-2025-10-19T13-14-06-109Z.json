@@ -1,0 +1,324 @@
+{
+  "timestamp": "2025-10-19T13:14:06.098Z",
+  "tests": [
+    {
+      "category": "phone-validation",
+      "description": "Valid 10-digit number",
+      "passed": true,
+      "severity": "critical",
+      "details": {
+        "input": "1234567890",
+        "expected": true,
+        "actual": true
+      },
+      "timestamp": "2025-10-19T13:14:06.106Z"
+    },
+    {
+      "category": "phone-validation",
+      "description": "Valid with country code",
+      "passed": true,
+      "severity": "critical",
+      "details": {
+        "input": "+1234567890",
+        "expected": true,
+        "actual": true
+      },
+      "timestamp": "2025-10-19T13:14:06.106Z"
+    },
+    {
+      "category": "phone-validation",
+      "description": "Valid with dashes",
+      "passed": true,
+      "severity": "critical",
+      "details": {
+        "input": "123-456-7890",
+        "expected": true,
+        "actual": true
+      },
+      "timestamp": "2025-10-19T13:14:06.106Z"
+    },
+    {
+      "category": "phone-validation",
+      "description": "Valid with parentheses",
+      "passed": true,
+      "severity": "critical",
+      "details": {
+        "input": "(123) 456-7890",
+        "expected": true,
+        "actual": true
+      },
+      "timestamp": "2025-10-19T13:14:06.106Z"
+    },
+    {
+      "category": "phone-validation",
+      "description": "Too short",
+      "passed": true,
+      "severity": "critical",
+      "details": {
+        "input": "123",
+        "expected": false,
+        "actual": false
+      },
+      "timestamp": "2025-10-19T13:14:06.106Z"
+    },
+    {
+      "category": "phone-validation",
+      "description": "Starts with 0",
+      "passed": true,
+      "severity": "critical",
+      "details": {
+        "input": "0123456789",
+        "expected": false,
+        "actual": false
+      },
+      "timestamp": "2025-10-19T13:14:06.106Z"
+    },
+    {
+      "category": "phone-validation",
+      "description": "Contains letters",
+      "passed": true,
+      "severity": "critical",
+      "details": {
+        "input": "abc1234567",
+        "expected": false,
+        "actual": false
+      },
+      "timestamp": "2025-10-19T13:14:06.106Z"
+    },
+    {
+      "category": "research-modal",
+      "description": "ResearchResultsModal component exists",
+      "passed": true,
+      "severity": "critical",
+      "details": {
+        "path": "/Users/raghavankarthik/lindia-f-work/src/components/ResearchResultsModal.tsx"
+      },
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "research-modal",
+      "description": "Modal has Dialog component",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "research-modal",
+      "description": "Modal has copy functionality",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "research-modal",
+      "description": "Modal has download functionality",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "research-modal",
+      "description": "Modal has close functionality",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "research-modal",
+      "description": "ResearchModule imports modal",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "research-modal",
+      "description": "ResearchModule uses modal state",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "file-upload",
+      "description": "Has file input element",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "file-upload",
+      "description": "Has file selection handler",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "file-upload",
+      "description": "Has drag and drop support",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "file-upload",
+      "description": "Has file display functionality",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "file-upload",
+      "description": "Has upload progress",
+      "passed": true,
+      "severity": "critical",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "mobile-sidebar",
+      "description": "Has mobile sidebar state",
+      "passed": true,
+      "severity": "high",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "mobile-sidebar",
+      "description": "Has mobile menu button",
+      "passed": true,
+      "severity": "high",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "mobile-sidebar",
+      "description": "Has mobile overlay",
+      "passed": true,
+      "severity": "high",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "mobile-sidebar",
+      "description": "Has mobile animation",
+      "passed": true,
+      "severity": "high",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.107Z"
+    },
+    {
+      "category": "button-contrast",
+      "description": "Has improved primary color",
+      "passed": true,
+      "severity": "high",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.108Z"
+    },
+    {
+      "category": "button-contrast",
+      "description": "Has white foreground",
+      "passed": true,
+      "severity": "high",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.108Z"
+    },
+    {
+      "category": "performance",
+      "description": "Has build optimizations",
+      "passed": true,
+      "severity": "medium",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.108Z"
+    },
+    {
+      "category": "performance",
+      "description": "Has optimized dependencies",
+      "passed": true,
+      "severity": "medium",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.109Z"
+    },
+    {
+      "category": "accessibility",
+      "description": "Has ARIA labels",
+      "passed": false,
+      "severity": "medium",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.109Z"
+    },
+    {
+      "category": "accessibility",
+      "description": "Has ARIA describedby",
+      "passed": true,
+      "severity": "medium",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.109Z"
+    },
+    {
+      "category": "accessibility",
+      "description": "Has ARIA invalid",
+      "passed": true,
+      "severity": "medium",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.109Z"
+    },
+    {
+      "category": "build-integrity",
+      "description": "Build artifacts exist",
+      "passed": true,
+      "severity": "low",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.109Z"
+    },
+    {
+      "category": "build-integrity",
+      "description": "Critical file exists: src/components/ResearchResultsModal.tsx",
+      "passed": true,
+      "severity": "low",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.109Z"
+    },
+    {
+      "category": "build-integrity",
+      "description": "Critical file exists: src/components/PropertyOpinionModule.tsx",
+      "passed": true,
+      "severity": "low",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.109Z"
+    },
+    {
+      "category": "build-integrity",
+      "description": "Critical file exists: src/app/app/page.tsx",
+      "passed": true,
+      "severity": "low",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.109Z"
+    },
+    {
+      "category": "build-integrity",
+      "description": "Critical file exists: src/app/globals.css",
+      "passed": true,
+      "severity": "low",
+      "details": {},
+      "timestamp": "2025-10-19T13:14:06.109Z"
+    }
+  ],
+  "summary": {
+    "total": 35,
+    "passed": 34,
+    "failed": 1,
+    "critical": 19,
+    "high": 6,
+    "medium": 5,
+    "low": 5
+  }
+}

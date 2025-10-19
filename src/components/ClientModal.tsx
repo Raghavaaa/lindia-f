@@ -114,6 +114,7 @@ export default function ClientModal({
                 placeholder="Enter full client name"
                 autoFocus
                 className={`pr-10 ${errors.name ? 'border-destructive focus:border-destructive' : ''}`}
+                aria-label="Client name"
                 aria-describedby={errors.name ? "name-error" : undefined}
                 aria-invalid={!!errors.name}
               />
@@ -141,6 +142,7 @@ export default function ClientModal({
                 onChange={handlePhoneChange}
                 placeholder="+1 234 567 8900"
                 className={`pr-10 ${errors.phone ? 'border-destructive focus:border-destructive' : ''}`}
+                aria-label="Phone number"
                 aria-describedby={errors.phone ? "phone-error" : undefined}
                 aria-invalid={!!errors.phone}
               />
