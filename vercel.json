@@ -1,8 +1,8 @@
 {
-  "buildCommand": "next build",
-  "installCommand": "npm install",
+  "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "rootDir": ".",
+  "framework": "nextjs",
+  "installCommand": "npm ci",
   "env": {
     "NEXT_PUBLIC_BACKEND_URL": "https://legalindia-backend-production.up.railway.app",
     "NEXT_PUBLIC_ENV": "production"
