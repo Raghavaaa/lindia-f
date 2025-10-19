@@ -3,11 +3,6 @@
   "outputDirectory": ".next",
   "installCommand": "npm ci",
   "framework": "nextjs",
-  "functions": {
-    "app/**": {
-      "runtime": "nodejs22.x"
-    }
-  },
   "build": {
     "env": {
       "NODE_ENV": "production",
