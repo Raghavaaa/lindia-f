@@ -20,7 +20,7 @@ export default function HistoryPage() {
 
   useEffect(() => {
     fetchResearch();
-  }, [page]);
+  }, [page, fetchResearch]);
 
   const fetchResearch = async () => {
     try {
@@ -34,7 +34,7 @@ export default function HistoryPage() {
       }
       
       setHasMore(data.hasMore || false);
-    } catch (error) {
+    } catch {
       // Handle error silently
     } finally {
       setLoading(false);

@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { apiFetch, config } from "@/lib/config";
 
-interface ResearchResult {
+// interface ResearchResult {
   id: string;
   query: string;
   result: string;
