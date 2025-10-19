@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Loader2, Check, AlertCircle } from "lucide-react";
+import { Play, Loader2, Check, AlertCircle, Building2 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -332,9 +332,22 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
             className="min-h-[120px] resize-y"
             aria-label="Research query input"
           />
-          <p className="text-xs text-muted-foreground">
-            Press Enter to run research
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted-foreground">
+              Press Enter to run research
+            </p>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="h-8 px-3 text-xs"
+            >
+              <a href="/app?module=property">
+                <Building2 className="w-3 h-3 mr-1" />
+                Property Opinion
+              </a>
+            </Button>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">

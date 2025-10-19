@@ -51,64 +51,22 @@
     border-color: hsl(var(--border));
   }
 
-  /* Global rounded corners and shadows for UI elements */
-  .btn, .card, .dialog, .popover, .dropdown, .list, .modal {
-    border-radius: 1rem !important; /* 2xl = 1rem */
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important; /* soft shadow */
+  /* Clean, minimal button styling without conflicts */
+  button {
+    transition: all 0.2s ease-in-out;
   }
 
-  /* Ensure all buttons have rounded corners and hover effects */
-  button, .btn, [role="button"] {
-    border-radius: 1rem !important; /* 2xl = 1rem */
-    transition: all 0.2s ease-in-out !important;
-    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1) !important;
-    cursor: pointer !important;
+  button:hover {
+    transform: translateY(-1px);
   }
 
-  button:hover, .btn:hover, [role="button"]:hover {
-    transform: translateY(-1px) scale(1.02) !important;
-    box-shadow: 0 4px 8px -2px rgb(0 0 0 / 0.15) !important;
-    cursor: pointer !important;
-  }
-
-  /* Special styling for icon buttons */
-  button[data-size="icon"]:hover,
-  button.size-icon:hover,
-  .w-16.h-16:hover {
-    transform: scale(1.1) !important;
-    box-shadow: 0 6px 12px -3px rgb(0 0 0 / 0.2) !important;
-    cursor: pointer !important;
-  }
-
-  /* Ensure all circular action buttons are visible and highlighted */
+  /* Specific styling for action buttons */
   .w-16.h-16.rounded-full {
-    cursor: pointer !important;
-    transition: all 0.2s ease-in-out !important;
+    transition: all 0.2s ease-in-out;
   }
 
   .w-16.h-16.rounded-full:hover {
-    transform: scale(1.1) !important;
-    box-shadow: 0 6px 12px -3px rgb(0 0 0 / 0.2) !important;
-    cursor: pointer !important;
-  }
-
-  /* Specific button variants */
-  button[data-variant="default"]:hover,
-  button[data-variant="primary"]:hover {
-    background-color: hsl(var(--primary) / 0.9) !important;
-  }
-
-  button[data-variant="secondary"]:hover {
-    background-color: hsl(var(--secondary) / 0.8) !important;
-  }
-
-  button[data-variant="outline"]:hover {
-    background-color: hsl(var(--accent)) !important;
-    border-color: hsl(var(--primary)) !important;
-  }
-
-  button[data-variant="ghost"]:hover {
-    background-color: hsl(var(--accent)) !important;
+    transform: scale(1.05);
   }
   
   body {
