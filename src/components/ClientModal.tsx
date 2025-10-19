@@ -90,7 +90,7 @@ export default function ClientModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md mx-4">
+      <DialogContent className="sm:max-w-md mx-4 bg-background border border-border shadow-lg">
         <DialogHeader className="space-y-3">
           <DialogTitle className="font-heading text-xl">Create New Client</DialogTitle>
           <DialogDescription className="text-muted-foreground">
