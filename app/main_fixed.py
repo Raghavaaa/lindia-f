@@ -30,15 +30,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Import and include working routers only
+# Import and include routers with error handling
 try:
     from routes.junior import router as junior_router
     from routes.research import router as research_router
+    from routes.case import router as case_router
+    from routes.property_opinion import router as property_router
     
     app.include_router(junior_router, prefix="/api/v1")
     app.include_router(research_router, prefix="/api/v1")
+    app.include_router(case_router, prefix="/api/v1")
+    app.include_router(property_router, prefix="/api/v1")
     
-    logger.info("Working routers loaded successfully")
+    logger.info("All routers loaded successfully")
 except Exception as e:
     logger.error(f"Error loading routers: {e}")
     # Continue without routers for basic functionality

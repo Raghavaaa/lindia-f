@@ -12,8 +12,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: undefined,
+  turbopack: {
+    root: '/Users/raghavankarthik/ai-law-junior/frontend',
   },
 };
 

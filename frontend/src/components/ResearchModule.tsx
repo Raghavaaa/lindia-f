@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Loader2, Check } from "lucide-react";
+import { Play, Loader2, Check, AlertCircle } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
+import { apiFetch, config, checkBackendHealth } from "@/lib/config";
+import { addToQueue } from "@/lib/offline-queue";
 
 type ResearchItem = {
   id: string;
@@ -28,13 +30,13 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
   const [adminPrompt, setAdminPrompt] = useState("Use Indian case law & statutes where relevant. Summarize in 5 bullet points.");
   const [showAdmin, setShowAdmin] = useState(false);
   const [running, setRunning] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [showSavedToast, setShowSavedToast] = useState(false);
   const [researchResults, setResearchResults] = useState<ResearchItem[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [currentResult, setCurrentResult] = useState<ResearchItem | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load research results from localStorage
   useEffect(() => {
     try {
       const key = `legalindia::client::${clientId}::research`;
@@ -44,11 +46,10 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
         setResearchResults(items);
       }
     } catch (error) {
-      console.error("Error loading research results:", error);
+      // Ignore localStorage errors
     }
   }, [clientId]);
 
-  // Cleanup old localStorage data on component mount
   useEffect(() => {
     try {
       const keys = Object.keys(localStorage);
@@ -64,11 +65,10 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
         }
       });
     } catch (error) {
-      console.error("Error cleaning up localStorage:", error);
+      // Ignore cleanup errors
     }
   }, []);
 
-  // Handle Enter key to run research
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter" && textareaRef.current === document.activeElement) {
@@ -81,21 +81,88 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [query, adminPrompt, showAdmin]);
 
+  const saveToLocal = (item: ResearchItem) => {
+    try {
+      const key = `legalindia::client::${clientId}::research`;
+      const existing = localStorage.getItem(key);
+      const items: ResearchItem[] = existing ? JSON.parse(existing) : [];
+      
+      const updatedItems = [item, ...items].slice(0, 50);
+      
+      const dataSize = JSON.stringify(updatedItems).length;
+      if (dataSize > 50000) {
+        const trimmedItems = updatedItems.slice(0, 25);
+        localStorage.setItem(key, JSON.stringify(trimmedItems));
+      } else {
+        localStorage.setItem(key, JSON.stringify(updatedItems));
+      }
+      
+      setResearchResults(updatedItems);
+      setCurrentResult(item);
+      setShowResults(true);
+    } catch (error) {
+      // Try to recover from localStorage quota error
+      try {
+        const key = `legalindia::client::${clientId}::research`;
+        localStorage.removeItem(key);
+        localStorage.setItem(key, JSON.stringify([item]));
+        setResearchResults([item]);
+        setCurrentResult(item);
+        setShowResults(true);
+      } catch (retryError) {
+        setError("Unable to save locally. Storage may be full.");
+      }
+    }
+  };
+
+  const saveToBackend = async (item: ResearchItem) => {
+    try {
+      const isOnline = await checkBackendHealth();
+      if (!isOnline) {
+        addToQueue(config.endpoints.storage, 'POST', {
+          clientId,
+          type: 'research',
+          data: item,
+        });
+        return;
+      }
+
+      await apiFetch(config.endpoints.storage, {
+        method: 'POST',
+        body: JSON.stringify({
+          clientId,
+          type: 'research',
+          data: item,
+        }),
+      });
+    } catch (error) {
+      addToQueue(config.endpoints.storage, 'POST', {
+        clientId,
+        type: 'research',
+        data: item,
+      });
+    }
+  };
+
   async function runResearch() {
     if (!query.trim()) {
-      alert("Enter a research query.");
+      setError("Please enter a research query.");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
     setRunning(true);
+    setError(null);
 
     try {
-      // Call the AI engine directly - working solution
-      const response = await fetch('https://lindia-ai-production.up.railway.app/inference', {
+      const isOnline = await checkBackendHealth();
+      
+      if (!isOnline) {
+        throw new Error("Backend is offline. Working in offline mode.");
+      }
+
+      const response = await apiFetch(config.endpoints.research, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           query: query.trim(),
           context: showAdmin && adminPrompt ? adminPrompt : 'Legal research query',
@@ -107,46 +174,9 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
 
       if (response.ok) {
         const data = await response.json();
-        resultText = data.ai_response || data.answer || `Research completed for: "${query}"`;
+        resultText = data.answer || data.ai_response || data.result || `Research completed for: "${query}"`;
       } else {
-        // Fallback comprehensive research response
-        resultText = `Research Summary for: "${query}"
-
-**Legal Analysis Framework:**
-
-**Relevant Legal Provisions:**
-- Indian Penal Code (IPC) sections related to the matter
-- Criminal Procedure Code (CrPC) procedures
-- Constitutional provisions and fundamental rights
-- Relevant case law and precedents
-
-**Case Law Research:**
-- Supreme Court judgments and interpretations
-- High Court decisions and their implications
-- Legal precedents and their applicability
-- Recent developments in Indian law
-
-**Practical Implications:**
-- Legal procedures and requirements
-- Documentation and evidence requirements
-- Court processes and timelines
-- Compliance and regulatory aspects
-
-**Recommendations:**
-- Next steps for legal action
-- Documentation requirements
-- Timeline considerations
-- Risk assessment and mitigation
-
-**Sources and References:**
-- Relevant statutory provisions
-- Case law citations
-- Legal commentary and analysis
-- Practical guidance materials
-
-${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})` : ""}
-
-[Generated by AI Legal Research Assistant]`;
+        throw new Error(`Backend returned ${response.status}`);
       }
 
       const queryText = query.trim();
@@ -159,62 +189,29 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
         ts: Date.now()
       };
 
-      try {
-        const key = `legalindia::client::${clientId}::research`;
-        const existing = localStorage.getItem(key);
-        const items: ResearchItem[] = existing ? JSON.parse(existing) : [];
-        
-        const updatedItems = [newItem, ...items].slice(0, 50);
-        
-        const dataSize = JSON.stringify(updatedItems).length;
-        if (dataSize > 50000) {
-          const trimmedItems = updatedItems.slice(0, 25);
-          localStorage.setItem(key, JSON.stringify(trimmedItems));
-        } else {
-          localStorage.setItem(key, JSON.stringify(updatedItems));
-        }
-        
-        console.log("ResearchModule: Saved to key", key, "items:", updatedItems);
-        setResearchResults(updatedItems);
-        setCurrentResult(newItem);
-        setShowResults(true);
-        setQuery("");
-        
-        if (onResearchComplete) {
-          onResearchComplete();
-        }
-        
-        setShowSavedToast(true);
-        setTimeout(() => setShowSavedToast(false), 3000);
-      } catch (error) {
-        console.error("Error saving research:", error);
-        try {
-          const key = `legalindia::client::${clientId}::research`;
-          localStorage.removeItem(key);
-          localStorage.setItem(key, JSON.stringify([newItem]));
-          setResearchResults(updatedItems);
-        setCurrentResult(newItem);
-        setShowResults(true);
-        setQuery("");
-          setShowSavedToast(true);
-          setTimeout(() => setShowSavedToast(false), 3000);
-        } catch (retryError) {
-          console.error("Failed to save even after cleanup:", retryError);
-          alert("Saving disabled - localStorage is full. Please clear browser data or use incognito mode.");
-        }
+      saveToLocal(newItem);
+      await saveToBackend(newItem);
+      
+      setQuery("");
+      
+      if (onResearchComplete) {
+        onResearchComplete();
       }
+      
+      setShowSavedToast(true);
+      setTimeout(() => setShowSavedToast(false), 3000);
 
     } catch (error) {
-      console.error('Error calling research API:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       
-      // Fallback response
-      const resultText = `Research Summary for: "${query}"
+      if (errorMessage.includes('NETWORK_ERROR') || errorMessage.includes('offline')) {
+        const fallbackResult = `Research Summary for: "${query}"
+
+**Offline Mode - Limited Functionality**
+
+This query relates to Indian legal provisions and procedures. Since the backend is currently unreachable, here's a basic research framework:
 
 **Legal Analysis Framework:**
-
-This query relates to Indian legal provisions and procedures. Here's a comprehensive analysis:
-
-**Legal Research Areas:**
 - Statutory provisions and amendments
 - Case law analysis and precedents
 - Legal procedures and requirements
@@ -240,61 +237,36 @@ This query relates to Indian legal provisions and procedures. Here's a comprehen
 
 ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})` : ""}
 
-[AI Legal Research Assistant - Comprehensive Analysis]`;
+[Offline Mode - Full research available when backend connection is restored]`;
 
-      const queryText = query.trim();
-      const newItem: ResearchItem = {
-        id: uuidv4(),
-        title: queryText.substring(0, 60) + (queryText.length > 60 ? "..." : ""),
-        query: queryText,
-        adminPrompt: showAdmin ? adminPrompt.trim() : null,
-        resultText,
-        ts: Date.now()
-      };
+        const queryText = query.trim();
+        const newItem: ResearchItem = {
+          id: uuidv4(),
+          title: queryText.substring(0, 60) + (queryText.length > 60 ? "..." : ""),
+          query: queryText,
+          adminPrompt: showAdmin ? adminPrompt.trim() : null,
+          resultText: fallbackResult,
+          ts: Date.now()
+        };
 
-      try {
-        const key = `legalindia::client::${clientId}::research`;
-        const existing = localStorage.getItem(key);
-        const items: ResearchItem[] = existing ? JSON.parse(existing) : [];
-        
-        const updatedItems = [newItem, ...items].slice(0, 50);
-        
-        const dataSize = JSON.stringify(updatedItems).length;
-        if (dataSize > 50000) {
-          const trimmedItems = updatedItems.slice(0, 25);
-          localStorage.setItem(key, JSON.stringify(trimmedItems));
-        } else {
-          localStorage.setItem(key, JSON.stringify(updatedItems));
-        }
-        
-        console.log("ResearchModule: Saved to key", key, "items:", updatedItems);
-        setResearchResults(updatedItems);
-        setCurrentResult(newItem);
-        setShowResults(true);
+        saveToLocal(newItem);
+        addToQueue(config.endpoints.research, 'POST', {
+          query: queryText,
+          context: showAdmin && adminPrompt ? adminPrompt : 'Legal research query',
+          tenant_id: clientId || 'demo'
+        });
+
         setQuery("");
         
         if (onResearchComplete) {
           onResearchComplete();
         }
         
-        setShowSavedToast(true);
-        setTimeout(() => setShowSavedToast(false), 3000);
-      } catch (error) {
-        console.error("Error saving research:", error);
-        try {
-          const key = `legalindia::client::${clientId}::research`;
-          localStorage.removeItem(key);
-          localStorage.setItem(key, JSON.stringify([newItem]));
-          setResearchResults(updatedItems);
-        setCurrentResult(newItem);
-        setShowResults(true);
-        setQuery("");
-          setShowSavedToast(true);
-          setTimeout(() => setShowSavedToast(false), 3000);
-        } catch (retryError) {
-          console.error("Failed to save even after cleanup:", retryError);
-          alert("Saving disabled - localStorage is full. Please clear browser data or use incognito mode.");
-        }
+        setError("Working offline. Results will sync when connection is restored.");
+        setTimeout(() => setError(null), 5000);
+      } else {
+        setError(errorMessage);
+        setTimeout(() => setError(null), 5000);
       }
     }
 
@@ -310,7 +282,6 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Saved Toast */}
       <AnimatePresence>
         {showSavedToast && (
           <motion.div
@@ -323,6 +294,18 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
             <span className="text-sm font-medium">
               Saved • {formatTime(Date.now())}
             </span>
+          </motion.div>
+        )}
+
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 max-w-md"
+          >
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm font-medium">{error}</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -350,7 +333,6 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
           </p>
         </div>
 
-        {/* Admin Prompt Toggle */}
         <div className="flex items-center gap-3">
           <Switch
             id="showAdmin"
@@ -362,7 +344,6 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
           </label>
         </div>
 
-        {/* Admin Prompt Textarea */}
         <AnimatePresence>
           {showAdmin && (
             <motion.div
@@ -382,7 +363,6 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
           )}
         </AnimatePresence>
 
-        {/* Run Button */}
         <div className="flex justify-center mt-8">
           <div className="text-center">
             <Button
@@ -393,7 +373,7 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
               title={running ? "Running..." : "Run Research"}
             >
               {running ? (
-                <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin" />
+                <Loader2 className="w-10 h-10 animate-spin" />
               ) : (
                 <Play className="w-10 h-10" />
               )}
@@ -407,7 +387,6 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
         </Card>
       </motion.div>
 
-      {/* Research Results Window */}
       {researchResults.length > 0 && (
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -432,7 +411,6 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
             </CardHeader>
             {showResults && (
               <CardContent className="space-y-4">
-                {/* Results List */}
                 <div className="space-y-2 max-h-96 overflow-y-auto">
                   {researchResults.map((result, index) => (
                     <div
@@ -459,7 +437,6 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
                   ))}
                 </div>
 
-                {/* Current Result Display */}
                 {currentResult && (
                   <div className="mt-6 p-4 bg-muted/30 rounded-lg">
                     <h3 className="font-semibold mb-3 text-primary">
