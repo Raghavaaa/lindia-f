@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import StatusIndicator from "../components/StatusIndicator";
+import SessionProvider from "../components/SessionProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,14 +37,16 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="min-h-screen flex flex-col antialiased bg-background text-foreground">
-        <StatusIndicator />
-        <Suspense fallback={<div className="h-16 bg-background border-b border-border" />}>
-          <Header />
-        </Suspense>
-        <main className="flex-1 flex flex-col">
-          {children}
-        </main>
-        <Footer />
+        <SessionProvider>
+          <StatusIndicator />
+          <Suspense fallback={<div className="h-16 bg-background border-b border-border" />}>
+            <Header />
+          </Suspense>
+          <main className="flex-1 flex flex-col">
+            {children}
+          </main>
+          <Footer />
+        </SessionProvider>
       </body>
     </html>
   );

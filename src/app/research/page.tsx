@@ -141,7 +141,7 @@ export default function ResearchPage() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-6">
+    <div className="mx-auto max-w-7xl px-6 py-6 bg-background min-h-screen">
       {/* Navigation */}
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center space-x-4">

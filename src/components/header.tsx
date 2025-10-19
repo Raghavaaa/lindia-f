@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Settings, Info, Building2, Search, FileText, Bot } from "lucide-react";
+import { Settings, Info, Building2, Search, FileText, Bot, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useAuth } from "@/hooks/useAuth";
 
 const modules = [
   { id: "property", label: "Property Opinion", icon: Building2, path: "/app?module=property" },
@@ -18,6 +19,25 @@ export default function Header() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isAppPage = pathname === "/app";
+  const { user, isAuthenticated, logout } = useAuth();
+  const [lawyerProfile, setLawyerProfile] = useState<{name?: string; email?: string} | null>(null);
+
+  // Get lawyer profile from localStorage (for manual login)
+  useEffect(() => {
+    try {
+      const profile = localStorage.getItem("legalindia_profile");
+      if (profile) {
+        const parsedProfile = JSON.parse(profile);
+        setLawyerProfile(parsedProfile);
+      }
+    } catch (error) {
+      // Handle error silently
+    }
+  }, []);
+
+  // Get display name (Google Auth user or localStorage profile)
+  const displayName = user?.name || user?.email || lawyerProfile?.name || lawyerProfile?.email;
+  const isLoggedIn = isAuthenticated || lawyerProfile;
   const currentModule = searchParams.get("module") || "research";
 
   return (
@@ -44,8 +64,45 @@ export default function Header() {
               </span>
             </Link>
 
-            {/* Right side: About and Settings */}
+            {/* Right side: Lawyer name, About and Settings */}
             <div className="flex items-center gap-3">
+              {isLoggedIn && displayName ? (
+                <>
+                  {/* Lawyer Name Display */}
+                  <div className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full">
+                    <User className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium text-foreground">
+                      {displayName}
+                    </span>
+                  </div>
+                  
+                  {/* Logout Button (only for Google Auth) */}
+                  {isAuthenticated && (
+                    <Button
+                      onClick={logout}
+                      variant="ghost"
+                      size="sm"
+                      className="gap-2"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span className="hidden sm:inline">Logout</span>
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <Button
+                  asChild
+                  variant="default"
+                  size="sm"
+                  className="gap-2"
+                >
+                  <Link href="/login">
+                    <User className="h-4 w-4" />
+                    <span className="hidden sm:inline">Login</span>
+                  </Link>
+                </Button>
+              )}
+
               <Button
                 asChild
                 variant="ghost"

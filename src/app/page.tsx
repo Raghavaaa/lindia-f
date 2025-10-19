@@ -58,7 +58,7 @@ const itemVariants = {
 
 export default function Page() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* Module Navigation */}
       <motion.nav
         initial={{ opacity: 0, y: -20 }}

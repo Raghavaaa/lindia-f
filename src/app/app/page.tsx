@@ -101,7 +101,7 @@ function AppPageContent() {
   };
 
   return (
-    <div className="min-h-screen flex relative pt-16 md:pt-[120px]">
+    <div className="min-h-screen flex relative pt-16 md:pt-[120px] bg-background">
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 
