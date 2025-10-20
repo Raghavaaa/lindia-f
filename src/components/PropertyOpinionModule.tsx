@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
+import { useUploadDocument, useRequestPropertyOpinion } from "@/hooks/api";
+import { useApiToast } from "@/hooks/use-api-toast";
 
 type Props = {
   clientId: string;
@@ -20,6 +22,11 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
   const [showError, setShowError] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
+  
+  // Backend integration hooks
+  const uploadDocument = useUploadDocument();
+  const requestOpinion = useRequestPropertyOpinion();
+  const apiToast = useApiToast();
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
@@ -40,24 +47,53 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
     setSelectedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
+    if (selectedFiles.length === 0) {
+      apiToast.warning('No Files', 'Please upload at least one document');
+      return;
+    }
+
     setRunning(true);
     setUploadProgress(0);
-    
-    // Simulate upload progress
-    const progressInterval = setInterval(() => {
-      setUploadProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          setRunning(false);
-          setShowSuccess(true);
-          setTimeout(() => setShowSuccess(false), 3000);
-          if (onComplete) onComplete();
-          return 100;
-        }
-        return prev + 10;
+
+    try {
+      // Upload all files to backend
+      const uploadPromises = selectedFiles.map(async (file, index) => {
+        const doc = await uploadDocument.mutateAsync({
+          file,
+          caseId: clientId,
+          metadata: { type: 'property_document', clientId }
+        });
+        setUploadProgress(((index + 1) / selectedFiles.length) * 50); // 50% for uploads
+        return doc.id;
       });
-    }, 200);
+
+      const docIds = await Promise.all(uploadPromises);
+      
+      // Request property opinion from backend
+      await requestOpinion.mutateAsync({
+        propertyId: clientId,
+        address: specificConcerns,
+        documents: docIds,
+        checkType: 'full'
+      });
+
+      setUploadProgress(100);
+      setRunning(false);
+      setShowSuccess(true);
+      apiToast.success('Analysis Complete', 'Property opinion generated successfully');
+      
+      setTimeout(() => setShowSuccess(false), 3000);
+      if (onComplete) onComplete();
+      
+      // Reset
+      setSelectedFiles([]);
+      setSpecificConcerns("");
+    } catch (error) {
+      setRunning(false);
+      apiToast.error(error, 'Failed to analyze documents');
+      setUploadProgress(0);
+    }
   };
 
   return (

@@ -11,6 +11,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch, config, checkBackendHealth } from "@/lib/config";
 import { addToQueue } from "@/lib/offline-queue";
 import ResearchResultsModal from "./ResearchResultsModal";
+import { useResearch } from "@/hooks/api";
+import { useApiToast } from "@/hooks/use-api-toast";
 
 type ResearchItem = {
   id: string;
@@ -38,6 +40,10 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
   const [currentResult, setCurrentResult] = useState<ResearchItem | null>(null);
   const [showResultsModal, setShowResultsModal] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  // Backend integration hooks
+  const { mutate: performResearch, isPending } = useResearch();
+  const apiToast = useApiToast();
 
   useEffect(() => {
     try {
@@ -150,66 +156,64 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
 
   async function runResearch() {
     if (!query.trim()) {
-      setError("Please enter a research query.");
-      setTimeout(() => setError(null), 3000);
+      apiToast.warning("Empty Query", "Please enter a research query.");
       return;
     }
 
     setRunning(true);
     setError(null);
 
+    // Call backend research endpoint via React Query
+    performResearch(
+      {
+        query: query.trim(),
+        context: showAdmin && adminPrompt ? adminPrompt : 'Legal research query',
+        jurisdiction: 'India',
+        caseType: 'general'
+      },
+      {
+        onSuccess: (data) => {
+          // Extract result from backend response
+          const resultText = data.results?.[0]?.summary || 'Research completed successfully';
+          
+          const queryText = query.trim();
+          const newItem: ResearchItem = {
+            id: uuidv4(),
+            title: queryText.substring(0, 60) + (queryText.length > 60 ? "..." : ""),
+            query: queryText,
+            adminPrompt: showAdmin ? adminPrompt.trim() : null,
+            resultText,
+            ts: Date.now()
+          };
+
+          // Save locally and to backend
+          saveToLocal(newItem);
+          saveToBackend(newItem);
+          
+          setQuery("");
+          setRunning(false);
+          
+          if (onResearchComplete) {
+            onResearchComplete();
+          }
+          
+          apiToast.success("Research Complete", "Your legal research has been completed");
+          setShowSavedToast(true);
+          setTimeout(() => setShowSavedToast(false), 3000);
+        },
+        onError: (error) => {
+          setRunning(false);
+          // Fallback to offline mode
+          handleOfflineResearch();
+          apiToast.error(error, "Using offline mode");
+        }
+      }
+    );
+  }
+
+  function handleOfflineResearch() {
     try {
-      const isOnline = await checkBackendHealth();
-      
-      if (!isOnline) {
-        throw new Error("Backend is offline. Working in offline mode.");
-      }
-
-      const response = await apiFetch(config.endpoints.research, {
-        method: 'POST',
-        body: JSON.stringify({
-          query: query.trim(),
-          context: showAdmin && adminPrompt ? adminPrompt : 'Legal research query',
-          tenant_id: clientId || 'demo'
-        })
-      });
-
-      let resultText: string;
-
-      if (response.ok) {
-        const data = await response.json();
-        resultText = data.answer || data.ai_response || data.result || `Research completed for: "${query}"`;
-      } else {
-        throw new Error(`Backend returned ${response.status}`);
-      }
-
-      const queryText = query.trim();
-      const newItem: ResearchItem = {
-        id: uuidv4(),
-        title: queryText.substring(0, 60) + (queryText.length > 60 ? "..." : ""),
-        query: queryText,
-        adminPrompt: showAdmin ? adminPrompt.trim() : null,
-        resultText,
-        ts: Date.now()
-      };
-
-      saveToLocal(newItem);
-      await saveToBackend(newItem);
-      
-      setQuery("");
-      
-      if (onResearchComplete) {
-        onResearchComplete();
-      }
-      
-      setShowSavedToast(true);
-      setTimeout(() => setShowSavedToast(false), 3000);
-
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      
-      if (errorMessage.includes('NETWORK_ERROR') || errorMessage.includes('offline')) {
-        const fallbackResult = `Research Summary for: "${query}"
+      const fallbackResult = `Research Summary for: "${query}"
 
 **Offline Mode - Limited Functionality**
 
@@ -268,10 +272,9 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
         
         setError("Working offline. Results will sync when connection is restored.");
         setTimeout(() => setError(null), 5000);
-      } else {
-        setError(errorMessage);
-        setTimeout(() => setError(null), 5000);
-      }
+    } catch (saveError) {
+      setError("Failed to save research offline");
+      setTimeout(() => setError(null), 5000);
     }
 
     setRunning(false);
