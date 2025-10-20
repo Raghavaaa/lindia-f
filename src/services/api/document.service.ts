@@ -48,10 +48,10 @@ export const documentService = {
 
   // Download document
   download: async (id: string): Promise<Blob> => {
-    const response = await api.get(`${DOCUMENT_ENDPOINT}/${id}/download`, {
+    const response = await api.get<Blob>(`${DOCUMENT_ENDPOINT}/${id}/download`, {
       responseType: 'blob',
     });
-    return response.data;
+    return response.data as Blob;
   },
 
   // Delete document
