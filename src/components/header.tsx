@@ -130,7 +130,7 @@ export default function Header() {
           className="fixed top-16 left-0 right-0 z-40 bg-background border-b border-border"
         >
           <div className="container mx-auto max-w-7xl">
-            <div className="flex items-center justify-end h-14 px-4 gap-2">
+            <div className="flex items-center justify-center h-14 px-4 gap-2">
               {modules.map((module, index) => {
                 const Icon = module.icon;
                 return (
