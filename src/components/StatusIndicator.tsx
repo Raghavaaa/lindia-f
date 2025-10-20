@@ -11,8 +11,9 @@ export default function StatusIndicator() {
 
   useEffect(() => {
     const checkStatus = async () => {
+      // Only show status if backend is configured and returns actual health errors
       if (!isBackendConfigured()) {
-        setStatus("unconfigured");
+        setStatus("offline"); // Hide unconfigured state from users
         setChecking(false);
         return;
       }
@@ -51,12 +52,7 @@ export default function StatusIndicator() {
             <span>OFFLINE MODE</span>
           </div>
         )}
-        {status === "unconfigured" && (
-          <div className="flex items-center gap-2 bg-red-500 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-lg">
-            <AlertCircle className="w-3 h-3" />
-            <span>BACKEND NOT CONFIGURED</span>
-          </div>
-        )}
+        {/* Hide unconfigured state from users - only show actual health status */}
       </motion.div>
     </AnimatePresence>
   );

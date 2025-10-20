@@ -96,7 +96,11 @@ function AppPageContent() {
         return <JuniorModule clientId={clientId} onComplete={() => setRefreshTrigger(prev => prev + 1)} />;
       case "research":
       default:
-        return <ResearchModule clientId={clientId} onResearchComplete={() => setRefreshTrigger(prev => prev + 1)} />;
+        return <ResearchModule 
+          clientId={clientId} 
+          onResearchComplete={() => setRefreshTrigger(prev => prev + 1)}
+          onOpenClientSelector={() => setShowMobileSidebar(true)}
+        />;
     }
   };
 
@@ -172,6 +176,7 @@ function AppPageContent() {
           </Button>
         </div>
 
+        {/* Client name only shows after login and client selection */}
         {selectedClient && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}

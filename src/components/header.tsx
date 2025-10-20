@@ -38,6 +38,30 @@ export default function Header() {
     }
   }, [isAuthenticated]);
 
+  // Enhanced logout function that clears all client data
+  const handleLogout = async () => {
+    try {
+      // Clear all client-related data
+      localStorage.removeItem("legalindia_clients");
+      localStorage.removeItem("legalindia_profile");
+      
+      // Clear any client-specific research data
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('legalindia::client::') || key.startsWith('legalindia_clients_')) {
+          localStorage.removeItem(key);
+        }
+      });
+      
+      // Call the original logout function
+      await logout();
+    } catch (error) {
+      console.error("Error during logout:", error);
+      // Still call logout even if cleanup fails
+      await logout();
+    }
+  };
+
   // Get display name (prioritize Google Auth over localStorage)
   const displayName = isAuthenticated 
     ? (user?.name || user?.email) 
@@ -84,13 +108,13 @@ export default function Header() {
                   {/* Logout Button (only for Google Auth) */}
                   {isAuthenticated && (
                     <Button
-                      onClick={logout}
+                      onClick={handleLogout}
                       variant="ghost"
                       size="sm"
                       className="gap-2"
                     >
                       <LogOut className="h-4 w-4" />
-                      <span className="hidden sm:inline">Logout</span>
+                      <span className="hidden sm:inline">Sign Out</span>
                     </Button>
                   )}
                 </>

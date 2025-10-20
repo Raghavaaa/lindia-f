@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Loader2, Check, AlertCircle, Building2 } from "lucide-react";
+import { Play, Loader2, Check, AlertCircle, Building2, Search } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,9 +26,10 @@ type ResearchItem = {
 type Props = {
   clientId: string;
   onResearchComplete?: () => void;
+  onOpenClientSelector?: () => void;
 };
 
-export default function ResearchModule({ clientId, onResearchComplete }: Props) {
+export default function ResearchModule({ clientId, onResearchComplete, onOpenClientSelector }: Props) {
   const [query, setQuery] = useState("");
   const [adminPrompt, setAdminPrompt] = useState("Use Indian case law & statutes where relevant. Summarize in 5 bullet points.");
   const [showAdmin, setShowAdmin] = useState(false);
@@ -155,6 +156,14 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
   };
 
   async function runResearch() {
+    if (!clientId) {
+      apiToast.warning("No Client Selected", "Please select a client to run research.");
+      if (onOpenClientSelector) {
+        onOpenClientSelector();
+      }
+      return;
+    }
+
     if (!query.trim()) {
       apiToast.warning("Empty Query", "Please enter a research query.");
       return;
@@ -327,17 +336,39 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
           </CardHeader>
           <CardContent className="flex-1 flex flex-col space-y-6 min-h-0">
         <div className="space-y-2">
-          <Textarea
-            ref={textareaRef}
-            placeholder="Enter your legal research question (e.g., 'What are the requirements for adverse possession in urban properties under Indian law?')"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="min-h-[120px] resize-y"
-            aria-label="Research query input"
-          />
+          {!clientId ? (
+            <div className="min-h-[120px] border-2 border-dashed border-muted-foreground/25 rounded-lg flex flex-col items-center justify-center p-6 text-center">
+              <div className="text-muted-foreground mb-3">
+                <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p className="text-sm font-medium">Select a client to run Research</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Choose a client from the left panel to start your legal research
+                </p>
+              </div>
+              {onOpenClientSelector && (
+                <Button
+                  onClick={onOpenClientSelector}
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                >
+                  Select Client
+                </Button>
+              )}
+            </div>
+          ) : (
+            <Textarea
+              ref={textareaRef}
+              placeholder="Enter your legal research question (e.g., 'What are the requirements for adverse possession in urban properties under Indian law?')"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="min-h-[120px] resize-y"
+              aria-label="Research query input"
+            />
+          )}
           <div className="flex items-center justify-between">
             <p className="text-xs text-muted-foreground">
-              Press Enter to run research
+              {clientId ? "Press Enter to run research" : "Select a client to enable research"}
             </p>
             <Button
               asChild
@@ -353,133 +384,67 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Switch
-            id="showAdmin"
-            checked={showAdmin}
-            onCheckedChange={setShowAdmin}
-          />
-          <label htmlFor="showAdmin" className="text-sm text-muted-foreground cursor-pointer">
-            Show admin prompt
-          </label>
-        </div>
-
-        <AnimatePresence>
-          {showAdmin && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="space-y-2"
-            >
-              <Textarea
-                value={adminPrompt}
-                onChange={(e) => setAdminPrompt(e.target.value)}
-                className="min-h-[80px] resize-y"
-                placeholder="Admin prompt..."
-                aria-label="Admin prompt for research customization"
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="flex justify-center mt-8">
-          <div className="text-center">
-            <Button
-              onClick={runResearch}
-              disabled={running}
-              size="icon"
-              className="w-24 h-24 rounded-full shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary/90 border-4 border-primary/30 relative z-10"
-              title={running ? "Running..." : "Run Research"}
-            >
-              {running ? (
-                <Loader2 className="w-10 h-10 animate-spin" />
-              ) : (
-                <Play className="w-10 h-10" />
-              )}
-            </Button>
-            <p className="text-center text-base text-foreground mt-4 font-semibold">
-              {running ? "Running..." : "Run Research"}
-            </p>
+        {clientId && (
+          <div className="flex items-center gap-3">
+            <Switch
+              id="showAdmin"
+              checked={showAdmin}
+              onCheckedChange={setShowAdmin}
+            />
+            <label htmlFor="showAdmin" className="text-sm text-muted-foreground cursor-pointer">
+              Show admin prompt
+            </label>
           </div>
-        </div>
+        )}
+
+        {clientId && (
+          <AnimatePresence>
+            {showAdmin && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="space-y-2"
+              >
+                <Textarea
+                  value={adminPrompt}
+                  onChange={(e) => setAdminPrompt(e.target.value)}
+                  className="min-h-[80px] resize-y"
+                  placeholder="Admin prompt..."
+                  aria-label="Admin prompt for research customization"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
+
+        {clientId && (
+          <div className="flex justify-center mt-8">
+            <div className="text-center">
+              <Button
+                onClick={runResearch}
+                disabled={running || !query.trim()}
+                size="icon"
+                className="w-24 h-24 rounded-full shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary/90 border-4 border-primary/30 relative z-10"
+                title={running ? "Running..." : !query.trim() ? "Enter a query first" : "Run Research"}
+              >
+                {running ? (
+                  <Loader2 className="w-10 h-10 animate-spin" />
+                ) : (
+                  <Play className="w-10 h-10" />
+                )}
+              </Button>
+              <p className="text-center text-base text-foreground mt-4 font-semibold">
+                {running ? "Running..." : "Run Research"}
+              </p>
+            </div>
+          </div>
+        )}
           </CardContent>
         </Card>
       </motion.div>
 
-      {researchResults.length > 0 && (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-600" />
-                  Research Results ({researchResults.length})
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowResults(!showResults)}
-                >
-                  {showResults ? 'Hide' : 'Show'} Results
-                </Button>
-              </CardTitle>
-            </CardHeader>
-            {showResults && (
-              <CardContent className="space-y-4">
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {researchResults.map((result, index) => (
-                    <div
-                      key={result.id}
-                      className={`p-3 rounded-lg border cursor-pointer transition-colors ${
-                        currentResult?.id === result.id 
-                          ? 'bg-primary/10 border-primary' 
-                          : 'bg-muted/50 border-border hover:bg-muted/70'
-                      }`}
-                      onClick={() => setCurrentResult(result)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm">{result.title}</h4>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {result.query}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {formatTime(result.ts)}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {currentResult && (
-                  <div className="mt-6 p-4 bg-muted/30 rounded-lg">
-                    <h3 className="font-semibold mb-3 text-primary">
-                      Research Result: {currentResult.title}
-                    </h3>
-                    <div className="prose prose-sm max-w-none">
-                      <pre className="whitespace-pre-wrap text-sm leading-relaxed">
-                        {currentResult.resultText}
-                      </pre>
-                    </div>
-                    {currentResult.adminPrompt && (
-                      <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                        <p className="text-xs font-medium text-blue-800 mb-1">Admin Prompt:</p>
-                        <p className="text-xs text-blue-700">{currentResult.adminPrompt}</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            )}
-          </Card>
-        </motion.div>
-      )}
+      {/* Research results are now displayed in the shared HistoryPanel on the right */}
 
       {/* Research Results Modal */}
       <ResearchResultsModal
