@@ -64,7 +64,7 @@ const itemVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 300,
       damping: 24,
     },
@@ -85,7 +85,7 @@ export default function DashboardPage() {
             Welcome back to LegalIndia.AI
           </h1>
           <p className="text-muted-foreground">
-            Here's what's happening with your legal practice today
+            Here&apos;s what&apos;s happening with your legal practice today
           </p>
         </motion.div>
 
