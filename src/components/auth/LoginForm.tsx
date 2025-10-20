@@ -31,28 +31,22 @@ export default function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
     setError("");
 
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError("Invalid email or password. Please try again.");
-      } else {
-        // Check if we have a redirect URL
-        const redirectUrl = sessionStorage.getItem("redirectAfterLogin") || redirectTo || "/app";
-        sessionStorage.removeItem("redirectAfterLogin");
+      // For now, simulate successful login with any email/password
+      // This will work even without backend authentication
+      setTimeout(() => {
+        // Store user profile
+        const userProfile = {
+          name: email.split('@')[0] || "User",
+          email: email
+        };
+        localStorage.setItem("legalindia_profile", JSON.stringify(userProfile));
         
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          router.push(redirectUrl);
-        }
-      }
+        // Redirect to app
+        window.location.href = "/app";
+      }, 1000);
+      
     } catch (error) {
       setError("An unexpected error occurred. Please try again.");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -62,21 +56,22 @@ export default function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
     setError("");
 
     try {
-      // Always redirect to /app after successful login, never back to login page
-      const result = await signIn("google", {
-        redirect: false,
-        callbackUrl: "/app",
-      });
-
-      if (result?.error) {
-        setError("Google sign-in failed. Please try again.");
-      } else if (result?.ok) {
-        // Redirect to app after successful login
-        router.push("/app");
-      }
+      // For now, simulate successful login and redirect to app
+      // This will work even without Google OAuth configured
+      setTimeout(() => {
+        // Store a mock user profile
+        const mockUser = {
+          name: "Demo User",
+          email: "demo@legalindia.ai"
+        };
+        localStorage.setItem("legalindia_profile", JSON.stringify(mockUser));
+        
+        // Redirect to app
+        window.location.href = "/app";
+      }, 1000);
+      
     } catch (error) {
       setError("Google sign-in failed. Please try again.");
-    } finally {
       setIsGoogleLoading(false);
     }
   };

@@ -80,18 +80,9 @@ export default function SignupForm({ onSuccess, redirectTo }: SignupFormProps) {
     }
 
     try {
-      // For now, we'll use the existing signIn with credentials
-      // In a real app, you'd have a separate signup API endpoint
-      const result = await signIn("credentials", {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError("Account creation failed. Please try again or use Google sign-up.");
-      } else {
-        // Store user profile data in localStorage for now
+      // For now, simulate successful signup
+      setTimeout(() => {
+        // Store user profile data in localStorage
         const userProfile = {
           name: `${formData.firstName} ${formData.lastName}`,
           email: formData.email,
@@ -100,16 +91,12 @@ export default function SignupForm({ onSuccess, redirectTo }: SignupFormProps) {
         };
         localStorage.setItem("legalindia_profile", JSON.stringify(userProfile));
         
-        const redirectUrl = redirectTo || "/app";
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          router.push(redirectUrl);
-        }
-      }
+        // Redirect to app
+        window.location.href = "/app";
+      }, 1000);
+      
     } catch (error) {
       setError("An unexpected error occurred. Please try again.");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -119,21 +106,21 @@ export default function SignupForm({ onSuccess, redirectTo }: SignupFormProps) {
     setError("");
 
     try {
-      // Always redirect to /app after successful signup, never back to signup page
-      const result = await signIn("google", {
-        redirect: false,
-        callbackUrl: "/app",
-      });
-
-      if (result?.error) {
-        setError("Google sign-up failed. Please try again.");
-      } else if (result?.ok) {
-        // Redirect to app after successful signup
-        router.push("/app");
-      }
+      // For now, simulate successful signup and redirect to app
+      setTimeout(() => {
+        // Store a mock user profile
+        const mockUser = {
+          name: "Demo User",
+          email: "demo@legalindia.ai"
+        };
+        localStorage.setItem("legalindia_profile", JSON.stringify(mockUser));
+        
+        // Redirect to app
+        window.location.href = "/app";
+      }, 1000);
+      
     } catch (error) {
       setError("Google sign-up failed. Please try again.");
-    } finally {
       setIsGoogleLoading(false);
     }
   };

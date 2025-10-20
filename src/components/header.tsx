@@ -76,7 +76,7 @@ export default function Header() {
             </Link>
 
             {/* Right side: User info (only on authenticated pages) or Login button */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-4">
               {shouldShowUserInfo ? (
                 <LogoutButton variant="dropdown" showUserInfo={true} />
               ) : (
@@ -97,11 +97,11 @@ export default function Header() {
                 asChild
                 variant="ghost"
                 size="sm"
-                className="gap-2"
+                className="gap-2 hidden md:flex"
               >
                 <Link href="/about">
                   <Info className="h-4 w-4" />
-                  <span className="hidden sm:inline">About</span>
+                  <span>About</span>
                 </Link>
               </Button>
 
@@ -109,11 +109,11 @@ export default function Header() {
                 asChild
                 variant="ghost"
                 size="sm"
-                className="gap-2"
+                className="gap-2 hidden md:flex"
               >
                 <Link href="/settings">
                   <Settings className="h-4 w-4" />
-                  <span className="hidden sm:inline">Settings</span>
+                  <span>Settings</span>
                 </Link>
               </Button>
             </div>
