@@ -119,13 +119,17 @@ export default function SignupForm({ onSuccess, redirectTo }: SignupFormProps) {
     setError("");
 
     try {
+      // Always redirect to /app after successful signup, never back to signup page
       const result = await signIn("google", {
         redirect: false,
-        callbackUrl: redirectTo || "/app",
+        callbackUrl: "/app",
       });
 
       if (result?.error) {
         setError("Google sign-up failed. Please try again.");
+      } else if (result?.ok) {
+        // Redirect to app after successful signup
+        router.push("/app");
       }
     } catch (error) {
       setError("Google sign-up failed. Please try again.");

@@ -14,6 +14,11 @@ export const authOptions: NextAuthOptions = {
       return true
     },
     async redirect({ url, baseUrl }) {
+      // Prevent redirecting back to login page
+      if (url.includes('/login')) {
+        return `${baseUrl}/app`
+      }
+      
       // Redirect to app after successful login
       if (url.startsWith("/")) return `${baseUrl}${url}`
       else if (new URL(url).origin === baseUrl) return url

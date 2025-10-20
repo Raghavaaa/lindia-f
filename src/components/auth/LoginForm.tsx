@@ -62,13 +62,17 @@ export default function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
     setError("");
 
     try {
+      // Always redirect to /app after successful login, never back to login page
       const result = await signIn("google", {
         redirect: false,
-        callbackUrl: redirectTo || "/app",
+        callbackUrl: "/app",
       });
 
       if (result?.error) {
         setError("Google sign-in failed. Please try again.");
+      } else if (result?.ok) {
+        // Redirect to app after successful login
+        router.push("/app");
       }
     } catch (error) {
       setError("Google sign-in failed. Please try again.");
