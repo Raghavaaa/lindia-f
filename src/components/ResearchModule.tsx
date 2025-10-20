@@ -183,7 +183,8 @@ export default function ResearchModule({ clientId, onResearchComplete, onOpenCli
       {
         onSuccess: (data) => {
           // Extract result from backend response
-          const resultText = data.results?.[0]?.summary || 'Research completed successfully';
+          // Support both backend response formats
+          const resultText = data.data?.result || data.results?.[0]?.summary || 'Research completed successfully';
           
           const queryText = query.trim();
           const newItem: ResearchItem = {
