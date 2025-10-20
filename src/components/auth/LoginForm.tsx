@@ -26,13 +26,16 @@ export default function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Login form submitted with email:", email);
     setIsLoading(true);
     setError("");
 
     try {
       // For now, simulate successful login with any email/password
       // This will work even without backend authentication
+      console.log("Starting login process...");
       setTimeout(() => {
+        console.log("Login successful, storing profile and redirecting...");
         // Store user profile
         const userProfile = {
           name: email.split('@')[0] || "User",
@@ -41,10 +44,12 @@ export default function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
         localStorage.setItem("legalindia_profile", JSON.stringify(userProfile));
         
         // Redirect to app
+        console.log("Redirecting to /app...");
         window.location.href = "/app";
       }, 1000);
       
     } catch (error) {
+      console.error("Login error:", error);
       setError("An unexpected error occurred. Please try again.");
       setIsLoading(false);
     }
