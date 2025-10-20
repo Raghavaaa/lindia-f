@@ -1,29 +1,54 @@
 "use client";
 
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useState, useEffect } from "react";
 
 export function useAuth() {
-  const { data: session, status } = useSession();
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Check localStorage for user profile
+    try {
+      const profile = localStorage.getItem("legalindia_profile");
+      if (profile) {
+        const parsedProfile = JSON.parse(profile);
+        setUser(parsedProfile);
+      }
+    } catch (error) {
+      // Handle error silently
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   const login = async (provider?: string) => {
-    if (provider === 'google') {
-      await signIn('google', { callbackUrl: '/app' });
-    } else {
-      await signIn();
-    }
+    // This is handled by the LoginForm component now
+    console.log("Login called with provider:", provider);
   };
 
   const logout = async () => {
-    await signOut({ callbackUrl: '/' });
+    // Clear localStorage
+    localStorage.removeItem("legalindia_profile");
+    localStorage.removeItem("legalindia_clients");
+    
+    // Clear any client-specific research data
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.startsWith('legalindia::client::') || key.startsWith('legalindia_clients_')) {
+        localStorage.removeItem(key);
+      }
+    });
+    
+    setUser(null);
+    // Redirect to home page
+    window.location.href = "/";
   };
 
-  const isAuthenticated = !!session;
-  const isLoading = status === 'loading';
-  const user = session?.user;
+  const isAuthenticated = !!user;
 
   return {
     user,
-    session,
+    session: user ? { user } : null,
     isAuthenticated,
     isLoading,
     login,
