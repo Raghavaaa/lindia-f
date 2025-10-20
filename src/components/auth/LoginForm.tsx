@@ -26,58 +26,35 @@ export default function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login form submitted with email:", email);
+    alert("Login form submitted!"); // Simple alert to test if function is called
     setIsLoading(true);
     setError("");
 
-    try {
-      // For now, simulate successful login with any email/password
-      // This will work even without backend authentication
-      console.log("Starting login process...");
-      setTimeout(() => {
-        console.log("Login successful, storing profile and redirecting...");
-        // Store user profile
-        const userProfile = {
-          name: email.split('@')[0] || "User",
-          email: email
-        };
-        localStorage.setItem("legalindia_profile", JSON.stringify(userProfile));
-        
-        // Redirect to app
-        console.log("Redirecting to /app...");
-        window.location.href = "/app";
-      }, 1000);
-      
-    } catch (error) {
-      console.error("Login error:", error);
-      setError("An unexpected error occurred. Please try again.");
-      setIsLoading(false);
-    }
+    // Store user profile immediately
+    const userProfile = {
+      name: email.split('@')[0] || "User",
+      email: email
+    };
+    localStorage.setItem("legalindia_profile", JSON.stringify(userProfile));
+    
+    // Redirect immediately
+    window.location.href = "/app";
   };
 
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
     setError("");
+    alert("Google login clicked!"); // Simple alert to test if function is called
 
-    try {
-      // For now, simulate successful login and redirect to app
-      // This will work even without Google OAuth configured
-      setTimeout(() => {
-        // Store a mock user profile
-        const mockUser = {
-          name: "Demo User",
-          email: "demo@legalindia.ai"
-        };
-        localStorage.setItem("legalindia_profile", JSON.stringify(mockUser));
-        
-        // Redirect to app
-        window.location.href = "/app";
-      }, 1000);
-      
-    } catch (error) {
-      setError("Google sign-in failed. Please try again.");
-      setIsGoogleLoading(false);
-    }
+    // Store a mock user profile immediately
+    const mockUser = {
+      name: "Demo User",
+      email: "demo@legalindia.ai"
+    };
+    localStorage.setItem("legalindia_profile", JSON.stringify(mockUser));
+    
+    // Redirect to app immediately
+    window.location.href = "/app";
   };
 
   return (
