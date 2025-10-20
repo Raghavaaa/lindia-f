@@ -40,10 +40,23 @@ export interface ResearchResult {
   citations: string[];
 }
 
+// Simplified research result for mock/demo mode
+export interface SimpleResearchResult {
+  summary: string;
+  metadata?: {
+    query: string;
+    clientId: string;
+    adminPrompt?: string;
+    timestamp: string;
+    sources: string[];
+  };
+}
+
 export interface ResearchResponse {
-  results: ResearchResult[];
-  totalFound: number;
-  searchTime: number;
+  results?: (ResearchResult | SimpleResearchResult)[];
+  result?: string; // Legacy support for old backend format
+  totalFound?: number;
+  searchTime?: number;
 }
 
 // Junior Module Types (Legal Assistant)
