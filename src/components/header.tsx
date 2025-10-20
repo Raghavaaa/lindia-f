@@ -7,6 +7,7 @@ import { Settings, Info, Building2, Search, FileText, Bot, User, LogOut } from "
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
+import LogoutButton from "./auth/LogoutButton";
 
 const modules = [
   { id: "property", label: "Property Opinion", icon: Building2, path: "/app?module=property" },
@@ -38,29 +39,7 @@ export default function Header() {
     }
   }, [isAuthenticated]);
 
-  // Enhanced logout function that clears all client data
-  const handleLogout = async () => {
-    try {
-      // Clear all client-related data
-      localStorage.removeItem("legalindia_clients");
-      localStorage.removeItem("legalindia_profile");
-      
-      // Clear any client-specific research data
-      const keys = Object.keys(localStorage);
-      keys.forEach(key => {
-        if (key.startsWith('legalindia::client::') || key.startsWith('legalindia_clients_')) {
-          localStorage.removeItem(key);
-        }
-      });
-      
-      // Call the original logout function
-      await logout();
-    } catch (error) {
-      console.error("Error during logout:", error);
-      // Still call logout even if cleanup fails
-      await logout();
-    }
-  };
+  // Logout logic is now handled by LogoutButton component
 
   // Get display name (prioritize Google Auth over localStorage)
   const displayName = isAuthenticated 
@@ -68,6 +47,9 @@ export default function Header() {
     : (lawyerProfile?.name || lawyerProfile?.email);
   const isLoggedIn = isAuthenticated || lawyerProfile;
   const currentModule = searchParams.get("module") || "research";
+  
+  // Only show user info on authenticated pages (not on public homepage)
+  const shouldShowUserInfo = isLoggedIn && (pathname === "/app" || pathname.startsWith("/app/"));
 
   return (
     <>
@@ -93,31 +75,10 @@ export default function Header() {
               </span>
             </Link>
 
-            {/* Right side: Lawyer name, About and Settings */}
+            {/* Right side: User info (only on authenticated pages) or Login button */}
             <div className="flex items-center gap-3">
-              {isLoggedIn && displayName ? (
-                <>
-                  {/* Lawyer Name Display */}
-                  <div className="flex items-center gap-2 px-3 py-1 bg-accent rounded-full">
-                    <User className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium text-foreground">
-                      {displayName}
-                    </span>
-                  </div>
-                  
-                  {/* Logout Button (only for Google Auth) */}
-                  {isAuthenticated && (
-                    <Button
-                      onClick={handleLogout}
-                      variant="ghost"
-                      size="sm"
-                      className="gap-2"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      <span className="hidden sm:inline">Sign Out</span>
-                    </Button>
-                  )}
-                </>
+              {shouldShowUserInfo ? (
+                <LogoutButton variant="dropdown" showUserInfo={true} />
               ) : (
                 <Button
                   asChild

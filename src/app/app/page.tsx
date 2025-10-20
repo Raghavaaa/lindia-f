@@ -9,6 +9,7 @@ import ResearchModule from "../../components/ResearchModule";
 import PropertyOpinionModule from "../../components/PropertyOpinionModule";
 import CaseModule from "../../components/CaseModule";
 import JuniorModule from "../../components/JuniorModule";
+import AuthGuard from "../../components/auth/AuthGuard";
 import { v4 as uuidv4 } from "uuid";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -226,8 +227,10 @@ function AppPageContent() {
 
 export default function AppPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
-      <AppPageContent />
-    </Suspense>
+    <AuthGuard requireAuth={true}>
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+        <AppPageContent />
+      </Suspense>
+    </AuthGuard>
   );
 }
