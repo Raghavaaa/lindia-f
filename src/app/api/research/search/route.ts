@@ -103,19 +103,143 @@ function generateResearchResponse(query: string, clientId: string, adminPrompt?:
   
   // Criminal law queries
   else if (lowerQuery.includes('criminal') || lowerQuery.includes('ipc') || lowerQuery.includes('bail') || 
-           lowerQuery.includes('fir') || lowerQuery.includes('charge')) {
+           lowerQuery.includes('fir') || lowerQuery.includes('charge') || lowerQuery.includes('murder') ||
+           lowerQuery.includes('attempt') || lowerQuery.includes('homicide') || lowerQuery.includes('assault') ||
+           lowerQuery.includes('rape') || lowerQuery.includes('theft') || lowerQuery.includes('robbery') ||
+           lowerQuery.includes('kidnapping') || lowerQuery.includes('cheating') || lowerQuery.includes('forgery') ||
+           lowerQuery.includes('defamation') || lowerQuery.includes('dowry') || lowerQuery.includes('riot') ||
+           lowerQuery.includes('accused') || lowerQuery.includes('victim') || lowerQuery.includes('police') ||
+           lowerQuery.includes('investigation') || lowerQuery.includes('arrest') || lowerQuery.includes('detention')) {
     topic = 'criminal law';
+    
+    // Check if query is specifically about murder/attempt to murder
+    const isMurderQuery = lowerQuery.includes('murder') || lowerQuery.includes('homicide') || 
+                          lowerQuery.includes('killing') || lowerQuery.includes('death');
+    
     specificProvisions = [
       'Indian Penal Code, 1860 (IPC)',
       'Code of Criminal Procedure, 1973 (CrPC) - Sections 41, 154 (FIR), 167, 437-439 (Bail)',
       'Indian Evidence Act, 1872'
     ];
-    keyCases = [
+    
+    if (isMurderQuery) {
+      specificProvisions = [
+        'Section 300 IPC - Murder (punishment under Section 302)',
+        'Section 307 IPC - Attempt to Murder',
+        'Section 304 IPC - Culpable Homicide not amounting to Murder',
+        'Section 299 IPC - Culpable Homicide',
+        'Section 34 IPC - Acts done by several persons in furtherance of common intention',
+        'Code of Criminal Procedure, 1973 (CrPC) - Sections 154 (FIR), 437-439 (Bail)',
+        'Indian Evidence Act, 1872 - Sections 27, 32 (Dying Declaration)'
+      ];
+    }
+    
+    keyCases = isMurderQuery ? [
+      'K.M. Nanavati vs. State of Maharashtra (1962) - Murder vs. Culpable Homicide distinction',
+      'State of Maharashtra vs. Mohan Shamaji Gawali (2008) - Attempt to Murder ingredients',
+      'Virsa Singh vs. State of Punjab (1958) - Intention vs. Knowledge in murder',
+      'Reg vs. Govinda (1876) - Reasonable doubt principle',
+      'Sharad Birdhichand Sarda vs. State of Maharashtra (1984) - Circumstantial evidence'
+    ] : [
       'State of Rajasthan vs. Balchand (1977) - Bail principles',
       'Sanjay Chandra vs. CBI (2012) - Bail in economic offenses',
       'Arnesh Kumar vs. State of Bihar (2014) - Arrest procedures'
     ];
-    specificAnalysis = `### Criminal Law Framework
+    if (isMurderQuery) {
+      specificAnalysis = `### Criminal Law Framework - Murder / Attempt to Murder
+
+**Section 307 IPC - Attempt to Murder:**
+- **Essential Ingredients:**
+  1. Act done with intent to cause death or with knowledge that act is likely to cause death
+  2. Under such circumstances that if death was caused, offender would be guilty of murder
+  3. Some hurt must have been caused to the victim
+
+- **Punishment**: Imprisonment up to 10 years + fine; if hurt caused, life imprisonment + fine
+
+**Section 300 IPC - Murder:**
+- **Definition**: Culpable homicide is murder if:
+  1. Act done with **intention** of causing death
+  2. With intention of causing such bodily injury as offender knows is likely to cause death
+  3. With intention of causing bodily injury sufficient in ordinary course to cause death
+  4. Person committing act knows it is so imminently dangerous that in all probability it must cause death
+
+- **Punishment (Section 302)**: Death penalty or life imprisonment + fine
+
+**Section 304 IPC - Culpable Homicide Not Amounting to Murder:**
+- When act causing death done:
+  - With intention to cause death but without premeditation (grave & sudden provocation)
+  - With knowledge that it is likely to cause death but without intention to cause death
+- **Punishment**: 
+  - Part I: Life imprisonment or up to 10 years + fine
+  - Part II: Up to 10 years or fine or both
+
+**Distinction: Murder vs. Culpable Homicide:**
+| Factor | Murder | Culpable Homicide |
+|--------|--------|-------------------|
+| Intention | Clear intention to kill | Intention without premeditation |
+| Knowledge | Knows death will result | Knows death may result |
+| Gravity | Most heinous | Less grave |
+
+**Key Legal Tests:**
+1. **Intention Test**: Did accused intend to cause death? (Section 300 IPC)
+2. **Knowledge Test**: Did accused know the act would likely cause death? (Section 307 IPC)
+3. **Bodily Injury Test**: Was injury sufficient in ordinary course to cause death? (Section 300)
+4. **Provocation Test**: Was there grave and sudden provocation? (Exception to Section 300)
+
+**FIR and Investigation:**
+- FIR mandatory for murder/attempt (cognizable, non-bailable offense)
+- Section 174 CrPC: Police to inquire into all unnatural deaths
+- Post-mortem examination mandatory
+- Scene of crime investigation & forensic evidence collection
+- Witness statements under Section 161 CrPC
+- Charge sheet within 60-90 days
+
+**Bail Provisions:**
+- **Murder (Section 302)**: Bail extremely difficult; Sessions Court/High Court only
+- **Attempt to Murder (Section 307)**: Bail possible but requires strong grounds
+- **Factors for Bail**:
+  - Severity of offense (murder/attempt is grave)
+  - Evidence strength (eyewitness, forensic, dying declaration)
+  - Risk of tampering/influencing witnesses
+  - Previous criminal record
+  - Flight risk
+
+**Trial Process:**
+1. **Sessions Trial** (murder triable by Sessions Court only)
+2. **Charge framing** under Section 228-232 CrPC
+3. **Prosecution Evidence**: Eyewitnesses, forensic reports, dying declaration
+4. **Statement of Accused** (Section 313 CrPC)
+5. **Defense Evidence**: Alibi, self-defense plea
+6. **Arguments** on facts, law, and precedents
+7. **Judgment**: Acquittal or conviction with sentencing
+
+**Defenses Available:**
+1. **Right of Private Defense** (Section 100 IPC): Defense of self/property
+2. **Accident** (Section 80 IPC): Death caused by accident without criminal intent
+3. **Insanity** (Section 84 IPC): Unsoundness of mind at time of offense
+4. **Grave & Sudden Provocation**: Reduces murder to culpable homicide
+5. **Alibi**: Accused was elsewhere when offense occurred
+
+**Evidence Requirements:**
+- **Direct Evidence**: Eyewitness testimony
+- **Circumstantial Evidence**: Chain must be complete (no missing links)
+- **Forensic Evidence**: DNA, fingerprints, ballistics, autopsy report
+- **Dying Declaration** (Section 32): Statement of victim before death (if reliable)
+- **Recovery of Weapon**: Under Section 27, Evidence Act
+- **Motive**: Strengthens case but not essential`;
+
+      recommendations = [
+        'Engage experienced criminal defense counsel immediately',
+        'Gather all alibi evidence, witnesses, and supporting documents',
+        'Do NOT make any statement to police without lawyer present',
+        'Apply for bail with strong grounds (if applicable)',
+        'Challenge weak forensic/circumstantial evidence through expert testimony',
+        'Explore defenses: self-defense, accident, provocation, or lack of intention',
+        'Ensure all procedural safeguards (Section 313, 311 CrPC) are followed',
+        'Consider settlement/compromise (if attempt and victim willing)'
+      ];
+    } else {
+      specificAnalysis = `### Criminal Law Framework
 
 **FIR and Investigation:**
 - FIR mandatory for cognizable offenses (Section 154 CrPC)
@@ -140,14 +264,15 @@ function generateResearchResponse(query: string, clientId: string, adminPrompt?:
 3. Statement of accused (Section 313)
 4. Defense evidence
 5. Arguments and judgment`;
-    
-    recommendations = [
-      'Ensure FIR contains all necessary details and is properly recorded',
-      'Apply for bail at earliest opportunity with proper grounds',
-      'Maintain detailed records of all procedural compliance',
-      'Preserve all alibi evidence and witness statements',
-      'Consider anticipatory bail if apprehension of arrest exists'
-    ];
+      
+      recommendations = [
+        'Ensure FIR contains all necessary details and is properly recorded',
+        'Apply for bail at earliest opportunity with proper grounds',
+        'Maintain detailed records of all procedural compliance',
+        'Preserve all alibi evidence and witness statements',
+        'Consider anticipatory bail if apprehension of arrest exists'
+      ];
+    }
   }
   
   // Family law queries
