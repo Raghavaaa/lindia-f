@@ -6,8 +6,8 @@ export const config = {
   // API endpoints
   endpoints: {
     health: '/health',
-    research: '/api/research',
-    junior: '/api/junior',
+    research: '/api/v1/research/',
+    junior: '/api/v1/junior/',
     storage: '/api/storage',
   },
 } as const;
