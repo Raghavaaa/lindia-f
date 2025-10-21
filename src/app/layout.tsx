@@ -1,27 +1,17 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
-import { Suspense } from "react";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "../components/header";
 import Footer from "../components/footer";
-import StatusIndicator from "../components/StatusIndicator";
 import SessionProvider from "../components/SessionProvider";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const poppins = Poppins({
-  weight: ["400", "600", "700", "800"],
-  subsets: ["latin"],
-  variable: "--font-poppins",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "LegalIndia.ai - AI-Powered Legal Assistant",
+  title: "Legal India - AI for Indian Lawyers",
   description: "AI-powered legal assistance for Indian lawyers and legal professionals",
 };
 
@@ -31,18 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} light`}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
-      <body className="min-h-screen flex flex-col antialiased bg-background text-foreground">
+    <html lang="en" className={inter.className}>
+      <body className="min-h-screen bg-white text-gray-900">
         <SessionProvider>
-          <StatusIndicator />
-          <Suspense fallback={<div className="h-16 bg-background border-b border-border" />}>
-            <Header />
-          </Suspense>
-          <main className="flex-1 flex flex-col">
+          <Header />
+          <main className="pt-16">
             {children}
           </main>
           <Footer />
