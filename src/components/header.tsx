@@ -22,7 +22,7 @@ export default function Header() {
               Contact
             </Link>
             <Link href="/login" className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors">
-              Login
+              Go to App
             </Link>
           </nav>
         </div>
