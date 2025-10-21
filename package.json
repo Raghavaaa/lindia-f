@@ -10,7 +10,13 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "vv:gate": "node vv-gate.js",
+    "vv:rollback": "node vv-rollback.js",
+    "vv:tag": "node vv-tag.js",
+    "vv:install-hooks": "node vv-install-hooks.js",
+    "predeploy": "npm run vv:gate",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
