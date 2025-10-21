@@ -6,14 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { AlertCircle, CheckCircle } from "lucide-react";
-import { validateAndFormatPhone, normalizePhoneInput } from "@/lib/phone-utils";
 
 export default function ClientModal({ 
   open, 
   onClose, 
   onCreate 
-}: {
-  // Force rebuild trigger 
+}: { 
   open: boolean; 
   onClose: () => void; 
   onCreate: (c: { name: string; phone?: string }) => void; 
@@ -32,10 +30,13 @@ export default function ClientModal({
     }
   }, [open]);
 
-  // Phone number validation using libphonenumber
+  // Phone number validation for international standards
   const validatePhone = (phone: string): boolean => {
-    const result = validateAndFormatPhone(phone, 'IN');
-    return result.isValid;
+    // International phone number regex (supports various formats)
+    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+    // Remove spaces, dashes, parentheses for validation
+    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+    return phoneRegex.test(cleanPhone) && cleanPhone.length >= 10 && cleanPhone.length <= 15;
   };
 
   const validateName = (name: string): boolean => {
@@ -43,8 +44,13 @@ export default function ClientModal({
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = normalizePhoneInput(e.target.value);
+    const value = e.target.value;
     setPhone(value);
+<<<<<<< HEAD
+=======
+    
+    // Clear error when user starts typing
+>>>>>>> senior_qa_integration_ready_20251019
     if (errors.phone) {
       setErrors(prev => ({ ...prev, phone: undefined }));
     }
@@ -53,6 +59,11 @@ export default function ClientModal({
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setName(value);
+<<<<<<< HEAD
+=======
+    
+    // Clear error when user starts typing
+>>>>>>> senior_qa_integration_ready_20251019
     if (errors.name) {
       setErrors(prev => ({ ...prev, name: undefined }));
     }
@@ -62,10 +73,18 @@ export default function ClientModal({
     setIsSubmitting(true);
     const newErrors: {name?: string; phone?: string} = {};
 
+<<<<<<< HEAD
+=======
+    // Validate name
+>>>>>>> senior_qa_integration_ready_20251019
     if (!validateName(name)) {
       newErrors.name = "Name must be 2-100 characters long";
     }
 
+<<<<<<< HEAD
+=======
+    // Validate phone
+>>>>>>> senior_qa_integration_ready_20251019
     if (!phone.trim()) {
       newErrors.phone = "Phone number is required";
     } else if (!validatePhone(phone)) {
@@ -82,7 +101,7 @@ export default function ClientModal({
       await onCreate({ name: name.trim(), phone: phone.trim() });
       onClose();
     } catch (error) {
-      // Error creating client - handled by error boundary
+      console.error("Error creating client:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -90,7 +109,7 @@ export default function ClientModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md mx-4 bg-background border border-border shadow-lg">
+      <DialogContent className="sm:max-w-md mx-4">
         <DialogHeader className="space-y-3">
           <DialogTitle className="font-heading text-xl">Create New Client</DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -110,16 +129,13 @@ export default function ClientModal({
             <div className="relative">
               <Input
                 id="client-name"
-                type="text"
                 value={name}
                 onChange={handleNameChange}
                 placeholder="Enter full client name"
                 autoFocus
                 className={`pr-10 ${errors.name ? 'border-destructive focus:border-destructive' : ''}`}
-                aria-label="Client name"
                 aria-describedby={errors.name ? "name-error" : undefined}
                 aria-invalid={!!errors.name}
-                inputMode="text"
               />
               {name && validateName(name) && (
                 <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
@@ -145,10 +161,8 @@ export default function ClientModal({
                 onChange={handlePhoneChange}
                 placeholder="+1 234 567 8900"
                 className={`pr-10 ${errors.phone ? 'border-destructive focus:border-destructive' : ''}`}
-                aria-label="Phone number"
                 aria-describedby={errors.phone ? "phone-error" : undefined}
                 aria-invalid={!!errors.phone}
-                inputMode="tel"
               />
               {phone && validatePhone(phone) && (
                 <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-green-500" />
@@ -167,15 +181,24 @@ export default function ClientModal({
         </motion.div>
 
         <DialogFooter className="flex flex-col sm:flex-row gap-3 sm:gap-2">
+<<<<<<< HEAD
           <Button
             variant="outline"
+=======
+          <Button 
+            variant="outline" 
+>>>>>>> senior_qa_integration_ready_20251019
             onClick={onClose}
             className="w-full sm:w-auto"
             disabled={isSubmitting}
           >
             Cancel
           </Button>
+<<<<<<< HEAD
           <Button
+=======
+          <Button 
+>>>>>>> senior_qa_integration_ready_20251019
             onClick={handleCreate}
             disabled={isSubmitting || !name.trim() || !phone.trim()}
             className="w-full sm:w-auto"
