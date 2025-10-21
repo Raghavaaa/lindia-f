@@ -1,13 +1,13 @@
 import { api } from '@/lib/api-client';
 import { ResearchQuery, ResearchResponse, BaseResponse } from './types';
 
-const RESEARCH_ENDPOINT = '/api/research';
+const RESEARCH_ENDPOINT = '/api/v1/research';
 
 export const researchService = {
   // Perform legal research
   search: async (query: ResearchQuery): Promise<ResearchResponse> => {
     const response = await api.post<BaseResponse<ResearchResponse>>(
-      `${RESEARCH_ENDPOINT}/search`,
+      `${RESEARCH_ENDPOINT}/`,
       query
     );
     return response.data.data;
