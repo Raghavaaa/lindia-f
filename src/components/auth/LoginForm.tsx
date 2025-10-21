@@ -53,13 +53,13 @@ export default function LoginForm() {
   };
 
   return (
-    <Card className="border border-gray-200 shadow-sm">
-      <CardContent className="p-6 space-y-4">
+    <Card className="border border-gray-200 shadow-lg bg-white">
+      <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Google Login Button */}
         <Button
           type="button"
           variant="outline"
-          className="w-full"
+          className="w-full h-10 sm:h-11 text-sm sm:text-base border-2"
           onClick={handleGoogleLogin}
           disabled={isGoogleLoading}
         >
@@ -81,32 +81,34 @@ export default function LoginForm() {
         </div>
 
         {/* Email Login Form */}
-        <form onSubmit={handleEmailLogin} className="space-y-4">
+        <form onSubmit={handleEmailLogin} className="space-y-4 sm:space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-sm sm:text-base">Email</Label>
             <Input
               id="email"
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="h-10 sm:h-11 text-sm sm:text-base"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-sm sm:text-base">Password</Label>
             <Input
               id="password"
               type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="h-10 sm:h-11 text-sm sm:text-base"
               required
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full h-10 sm:h-11 text-sm sm:text-base" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

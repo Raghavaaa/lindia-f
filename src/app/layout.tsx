@@ -8,6 +8,7 @@ import SessionProvider from "../components/SessionProvider";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -21,11 +22,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.className}>
-      <body className="min-h-screen bg-white text-gray-900">
+    <html lang="en" className={`${inter.variable} font-sans`}>
+      <body className="min-h-screen bg-white text-gray-900 font-sans antialiased">
         <SessionProvider>
           <Header />
-          <main className="pt-16">
+          <main className="pt-14 sm:pt-16">
             {children}
           </main>
           <Footer />
