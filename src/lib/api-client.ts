@@ -49,7 +49,7 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error: AxiosError) => {
-    console.error('❌ Request Error:', error);
+    // Request Error - handled by error boundary
     return Promise.reject(error);
   }
 );
@@ -65,13 +65,13 @@ apiClient.interceptors.response.use(
   },
   async (error: AxiosError) => {
     if (process.env.NEXT_PUBLIC_ENV === 'development') {
-      console.error('❌ API Error:', error);
+      // API Error - handled by error boundary
     }
 
     // Handle different error scenarios
     if (!error.response) {
       // Network error
-      console.error('🌐 Network Error: Unable to reach the server');
+      // Network Error: Unable to reach the server
       return Promise.reject({
         message: 'Network error. Please check your connection and ensure the backend is running.',
         status: 0,

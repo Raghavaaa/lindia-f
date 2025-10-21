@@ -1,0 +1,140 @@
+{
+  "timestamp": "2025-10-21_203005",
+  "commit": "ac9d3e4a",
+  "branch": "main",
+  "author": "Raghavan Karthik",
+  "date": "2025-10-21T14:59:14.971Z",
+  "changedFiles": [
+    "eslint.config.mjs",
+    "package-lock.json",
+    "package.json",
+    "src/app/api/research/search/route.ts",
+    "src/app/app/page.tsx",
+    "src/components/ClientModal.tsx",
+    "src/components/ErrorBoundary.tsx",
+    "src/components/ResearchResultsModal.tsx",
+    "src/components/auth/LogoutButton.tsx",
+    "src/lib/api-client.ts"
+  ],
+  "duration": "50.51s",
+  "summary": {
+    "total": 8,
+    "passed": 3,
+    "failed": 3,
+    "warnings": 2,
+    "status": "HOLD FOR REVIEW ✗"
+  },
+  "checks": [
+    {
+      "name": "Syntax & Linting",
+      "description": "ESLint validation with zero warnings tolerance",
+      "status": "FAIL",
+      "duration": "5.42s",
+      "details": [
+        "\n> legalindia-frontend@0.1.0 lint\n> eslint --max-warnings 0\n\n\n/Users/raghavankarthik/lindia-f/qa-automation/baseline-scan.js\n   10:9   warning  'execSync' is assigned a value but never used  @typescript-eslint/no-unused-vars\n  343:30  warning  'results' is defined but never used            @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/qa-automation/integration-test-comprehensive.js\n  283:25  warning  'description' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/app/api/research/search/route.ts\n  629:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/app/app/dashboard/page.tsx\n   16:3   warning  'Users' is defined but never used  @typescript-eslint/no-unused-vars\n  119:44  warning  'index' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/app/app/page.tsx\n  61:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/app/history/page.tsx\n  42:6  warning  React Hook useEffect has a missing dependency: 'fetchResearch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps\n\n/Users/raghavankarthik/lindia-f/src/app/research/page.tsx\n   93:22  warning  'e' is defined but never used      @typescript-eslint/no-unused-vars\n  130:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/CaseModule.tsx\n  16:38  warning  'clientId' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/ClientModal.tsx\n  84:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/HistoryPanel.tsx\n  32:3   warning  'activeModule' is defined but never used  @typescript-eslint/no-unused-vars\n  58:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/PropertyOpinionModule.tsx\n   4:41  warning  'AlertCircle' is defined but never used            @typescript-eslint/no-unused-vars\n   7:10  warning  'Input' is defined but never used                  @typescript-eslint/no-unused-vars\n   8:29  warning  'CardDescription' is defined but never used        @typescript-eslint/no-unused-vars\n  22:10  warning  'showError' is assigned a value but never used     @typescript-eslint/no-unused-vars\n  22:21  warning  'setShowError' is assigned a value but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/PropertyOpinionModuleIntegrated.tsx\n   4:28  warning  'CheckCircle' is defined but never used              @typescript-eslint/no-unused-vars\n   4:41  warning  'AlertCircle' is defined but never used              @typescript-eslint/no-unused-vars\n   8:18  warning  'AnimatePresence' is defined but never used          @typescript-eslint/no-unused-vars\n  21:10  warning  'uploadedDocIds' is assigned a value but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/ResearchModule.tsx\n   39:10  warning  'researchResults' is assigned a value but never used                                                            @typescript-eslint/no-unused-vars\n   40:10  warning  'showResults' is assigned a value but never used                                                                @typescript-eslint/no-unused-vars\n   46:36  warning  'isPending' is assigned a value but never used                                                                  @typescript-eslint/no-unused-vars\n   57:14  warning  'error' is defined but never used                                                                               @typescript-eslint/no-unused-vars\n   76:14  warning  'error' is defined but never used                                                                               @typescript-eslint/no-unused-vars\n   91:6   warning  React Hook useEffect has a missing dependency: 'runResearch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps\n  113:14  warning  'error' is defined but never used                                                                               @typescript-eslint/no-unused-vars\n  123:16  warning  'retryError' is defined but never used                                                                          @typescript-eslint/no-unused-vars\n  149:14  warning  'error' is defined but never used                                                                               @typescript-eslint/no-unused-vars\n  285:14  warning  'saveError' is defined but never used                                                                           @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/ResearchResultsModal.tsx\n  31:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/StatusIndicator.tsx\n  4:25  warning  'AlertCircle' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/auth/LoginForm.tsx\n  18:37  warning  'onSuccess' is defined but never used        @typescript-eslint/no-unused-vars\n  18:48  warning  'redirectTo' is defined but never used       @typescript-eslint/no-unused-vars\n  25:9   warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/auth/LogoutButton.tsx\n   67:14  warning  'error' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars\n  116:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element\n\n/Users/raghavankarthik/lindia-f/src/components/auth/SignupForm.tsx\n   18:38  warning  'onSuccess' is defined but never used        @typescript-eslint/no-unused-vars\n   18:49  warning  'redirectTo' is defined but never used       @typescript-eslint/no-unused-vars\n   33:9   warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars\n   97:14  warning  'error' is defined but never used            @typescript-eslint/no-unused-vars\n  121:14  warning  'error' is defined but never used            @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/dashboard/DashboardStats.tsx\n   5:3   warning  'BarChart3' is defined but never used  @typescript-eslint/no-unused-vars\n  10:3   warning  'Activity' is defined but never used   @typescript-eslint/no-unused-vars\n  80:25  warning  'index' is defined but never used      @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/components/header.tsx\n   6:66  warning  'LogOut' is defined but never used                @typescript-eslint/no-unused-vars\n  23:34  warning  'logout' is assigned a value but never used       @typescript-eslint/no-unused-vars\n  37:14  warning  'error' is defined but never used                 @typescript-eslint/no-unused-vars\n  45:9   warning  'displayName' is assigned a value but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/hooks/useAuth.ts\n  17:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/lib/api-client.ts\n   83:11  warning  'originalRequest' is assigned a value but never used  @typescript-eslint/no-unused-vars\n  180:12  warning  'error' is defined but never used                     @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/lib/config.ts\n  66:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/lib/offline-queue.ts\n  25:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n  34:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n  42:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n  52:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/src/types/next-auth.d.ts\n  1:15  warning  'DefaultSession' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/vv-gate.js\n  130:12  warning  'e' is defined but never used                   @typescript-eslint/no-unused-vars\n  404:14  warning  'e' is defined but never used                   @typescript-eslint/no-unused-vars\n  826:11  warning  'lintPass' is assigned a value but never used   @typescript-eslint/no-unused-vars\n  829:11  warning  'typePass' is assigned a value but never used   @typescript-eslint/no-unused-vars\n  832:11  warning  'testPass' is assigned a value but never used   @typescript-eslint/no-unused-vars\n  835:11  warning  'buildPass' is assigned a value but never used  @typescript-eslint/no-unused-vars\n  838:11  warning  'apiPass' is assigned a value but never used    @typescript-eslint/no-unused-vars\n  841:11  warning  'depPass' is assigned a value but never used    @typescript-eslint/no-unused-vars\n  844:11  warning  'envPass' is assigned a value but never used    @typescript-eslint/no-unused-vars\n  847:11  warning  'uiPass' is assigned a value but never used     @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/vv-install-hooks.js\n  108:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/vv-rollback.js\n  45:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n/Users/raghavankarthik/lindia-f/vv-tag.js\n  25:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars\n\n✖ 74 problems (0 errors, 74 warnings)\n\n"
+      ],
+      "errors": [
+        "ESLint found issues"
+      ],
+      "warnings": []
+    },
+    {
+      "name": "Type Safety",
+      "description": "TypeScript strict type validation",
+      "status": "FAIL",
+      "duration": "6.40s",
+      "details": [
+        "src/__tests__/ClientModal.test.tsx(26,51): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.",
+        "src/__tests__/ClientModal.test.tsx(27,50): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.",
+        "src/__tests__/ClientModal.test.tsx(28,51): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.",
+        "src/__tests__/ClientModal.test.tsx(40,57): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Matchers<void, HTMLElement | null>'.",
+        "src/__tests__/ClientModal.test.tsx(92,98): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.",
+        "src/__tests__/ClientModal.test.tsx(117,70): error TS2339: Property 'toBeInTheDocument' does not exist on type 'JestMatchers<HTMLElement>'.",
+        "src/__tests__/ClientModal.test.tsx(136,24): error TS2339: Property 'toHaveValue' does not exist on type 'JestMatchers<HTMLElement>'.",
+        "src/__tests__/ClientModal.test.tsx(151,23): error TS2339: Property 'toHaveAttribute' does not exist on type 'JestMatchers<HTMLElement>'.",
+        "src/__tests__/ClientModal.test.tsx(152,23): error TS2339: Property 'toHaveAttribute' does not exist on type 'JestMatchers<HTMLElement>'.",
+        "src/__tests__/ClientModal.test.tsx(153,24): error TS2339: Property 'toHaveAttribute' does not exist on type 'JestMatchers<HTMLElement>'.",
+        "... and 9 more errors"
+      ],
+      "errors": [
+        "Found 19 type errors"
+      ],
+      "warnings": []
+    },
+    {
+      "name": "Test Suite",
+      "description": "Unit and integration test execution",
+      "status": "FAIL",
+      "duration": "10.15s",
+      "details": [
+        "\n> legalindia-frontend@0.1.0 test\n> jest\n\n"
+      ],
+      "errors": [
+        "Some tests failed"
+      ],
+      "warnings": []
+    },
+    {
+      "name": "Build Integrity",
+      "description": "Production build compilation and optimization",
+      "status": "PASS",
+      "duration": "27.13s",
+      "details": [
+        "Production build completed successfully",
+        "Total JS bundle size: 1.5M"
+      ],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "API Health",
+      "description": "Backend endpoint connectivity validation",
+      "status": "WARN",
+      "duration": "0.00s",
+      "details": [
+        "Set environment variable for production deployment"
+      ],
+      "errors": [],
+      "warnings": [
+        "NEXT_PUBLIC_BACKEND_URL not configured"
+      ]
+    },
+    {
+      "name": "Dependency Audit",
+      "description": "Security vulnerability scan",
+      "status": "PASS",
+      "duration": "1.27s",
+      "details": [
+        "Critical: 0, High: 0, Moderate: 0, Low: 0"
+      ],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Environment Validation",
+      "description": "Environment variables and secrets audit",
+      "status": "WARN",
+      "duration": "0.09s",
+      "details": [
+        "All critical environment variables should be set before deployment"
+      ],
+      "errors": [],
+      "warnings": [
+        "Missing environment variables: NEXT_PUBLIC_BACKEND_URL"
+      ]
+    },
+    {
+      "name": "UI Consistency",
+      "description": "Component rendering and console error validation",
+      "status": "PASS",
+      "duration": "0.05s",
+      "details": [
+        "Validated 36 component files"
+      ],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "recommendation": "Critical issues detected. Resolve all FAIL status checks before proceeding.",
+  "safeToDeploy": false
+}

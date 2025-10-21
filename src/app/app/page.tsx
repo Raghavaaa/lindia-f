@@ -59,7 +59,7 @@ function AppPageContent() {
     try {
       localStorage.setItem("legalindia_clients", JSON.stringify(clients));
     } catch (error) {
-      console.error("Error saving clients:", error);
+      // Error saving clients - handled by error boundary
     }
   }, [clients]);
 

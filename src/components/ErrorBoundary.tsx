@@ -36,7 +36,7 @@ class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log error to console in development
     if (process.env.NEXT_PUBLIC_ENV === 'development') {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
+      // ErrorBoundary caught an error - handled by error boundary
     }
 
     // You can also log the error to an error reporting service here

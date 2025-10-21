@@ -627,7 +627,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(mockResponse);
   } catch (error) {
-    console.error('Research API error:', error);
+    // Research API error - handled by error response
     return NextResponse.json(
       { success: false, error: 'Failed to process research request' },
       { status: 500 }

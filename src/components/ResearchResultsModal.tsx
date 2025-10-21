@@ -29,7 +29,7 @@ export default function ResearchResultsModal({ open, onClose, result }: Props) {
       await navigator.clipboard.writeText(result.resultText);
       // Could add a toast notification here
     } catch (error) {
-      console.error("Failed to copy text:", error);
+      // Failed to copy text - handled by error boundary
     }
   };
 

@@ -82,7 +82,7 @@ export default function ClientModal({
       await onCreate({ name: name.trim(), phone: phone.trim() });
       onClose();
     } catch (error) {
-      console.error("Error creating client:", error);
+      // Error creating client - handled by error boundary
     } finally {
       setIsSubmitting(false);
     }

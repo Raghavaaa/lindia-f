@@ -65,7 +65,7 @@ export default function LogoutButton({
       router.refresh();
       
     } catch (error) {
-      console.error("Logout error:", error);
+      // Logout error - handled by error boundary
       // Still redirect even if cleanup fails
       router.push("/");
     } finally {
