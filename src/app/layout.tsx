@@ -26,10 +26,12 @@ export default function RootLayout({
       <body className="min-h-screen bg-white text-gray-900 font-sans antialiased">
         <SessionProvider>
           <Header />
-          <main className="pt-14 sm:pt-16">
-            {children}
+          <main className="pt-14 sm:pt-16 min-h-screen flex flex-col">
+            <div className="flex-1">
+              {children}
+            </div>
+            <Footer />
           </main>
-          <Footer />
         </SessionProvider>
       </body>
     </html>
