@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export default function Header() {
   return (
@@ -22,9 +21,9 @@ export default function Header() {
             <Link href="/contact" className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors hidden md:inline">
               Contact
             </Link>
-            <Button asChild size="sm" className="text-sm font-medium px-3 sm:px-4">
-              <Link href="/login">Login</Link>
-            </Button>
+            <Link href="/login" className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors">
+              Login
+            </Link>
           </nav>
         </div>
       </div>
