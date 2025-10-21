@@ -4,7 +4,11 @@
   "framework": "nextjs",
   "installCommand": "npm ci",
   "env": {
-    "NEXT_PUBLIC_BACKEND_URL": "https://legalindia-backend-production.up.railway.app",
-    "NEXT_PUBLIC_ENV": "production"
+    "NEXT_PUBLIC_BACKEND_URL": "https://api.legalindia.ai",
+    "NEXT_PUBLIC_ENV": "production",
+    "GOOGLE_CLIENT_ID": "@google_client_id",
+    "GOOGLE_CLIENT_SECRET": "@google_client_secret", 
+    "NEXTAUTH_SECRET": "@nextauth_secret",
+    "NEXTAUTH_URL": "https://legalindia.ai"
   }
 }

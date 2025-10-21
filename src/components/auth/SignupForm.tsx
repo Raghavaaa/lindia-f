@@ -109,8 +109,8 @@ export default function SignupForm({ onSuccess, redirectTo }: SignupFormProps) {
       setTimeout(() => {
         // Store a mock user profile
         const mockUser = {
-          name: "Demo User",
-          email: "demo@legalindia.ai"
+          name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim() || "User",
+          email: formData.email.trim()
         };
         localStorage.setItem("legalindia_profile", JSON.stringify(mockUser));
         

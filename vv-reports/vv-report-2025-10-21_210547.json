@@ -1,0 +1,122 @@
+{
+  "timestamp": "2025-10-21_210547",
+  "commit": "4379780e",
+  "branch": "main",
+  "author": "Raghavan Karthik",
+  "date": "2025-10-21T15:35:04.054Z",
+  "changedFiles": [
+    "src/components/auth/LoginForm.tsx",
+    "src/components/auth/SignupForm.tsx",
+    "src/hooks/useAuth.ts",
+    "vercel.json"
+  ],
+  "duration": "43.81s",
+  "summary": {
+    "total": 8,
+    "passed": 4,
+    "failed": 2,
+    "warnings": 2,
+    "status": "HOLD FOR REVIEW ✗"
+  },
+  "checks": [
+    {
+      "name": "Syntax & Linting",
+      "description": "ESLint validation with zero warnings tolerance",
+      "status": "PASS",
+      "duration": "5.62s",
+      "details": [
+        "All files passed ESLint validation"
+      ],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Type Safety",
+      "description": "TypeScript strict type validation",
+      "status": "FAIL",
+      "duration": "4.85s",
+      "details": [
+        "src/components/auth/SignupForm.tsx(112,22): error TS2339: Property 'trim' does not exist on type 'void'.",
+        "src/components/auth/SignupForm.tsx(113,18): error TS2552: Cannot find name 'email'. Did you mean 'Mail'?"
+      ],
+      "errors": [
+        "Found 2 type errors"
+      ],
+      "warnings": []
+    },
+    {
+      "name": "Test Suite",
+      "description": "Unit and integration test execution",
+      "status": "PASS",
+      "duration": "5.45s",
+      "details": [
+        "All tests passed"
+      ],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Build Integrity",
+      "description": "Production build compilation and optimization",
+      "status": "FAIL",
+      "duration": "25.79s",
+      "details": [
+        "\n> legalindia-frontend@0.1.0 build\n> next build\n\n   ▲ Next.js 15.5.5\n   - Environments: .env.local, .env.production\n\n   Creating an optimized production build ...\n ✓ Compiled successfully in 15.8s\n   Linting and checking validity of types ...\n\n./src/app/api/research/search/route.ts\n629:12  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/app/app/dashboard/page.tsx\n16:3  Warning: 'Users' is defined but never used.  @typescript-eslint/no-unused-vars\n119:44  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/app/app/page.tsx\n61:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/app/history/page.tsx\n42:6  Warning: React Hook useEffect has a missing dependency: 'fetchResearch'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps\n\n./src/app/research/page.tsx\n93:22  Warning: 'e' is defined but never used.  @typescript-eslint/no-unused-vars\n130:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/CaseModule.tsx\n16:38  Warning: 'clientId' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/ClientModal.tsx\n84:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/HistoryPanel.tsx\n32:3  Warning: 'activeModule' is defined but never used.  @typescript-eslint/no-unused-vars\n58:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/PropertyOpinionModule.tsx\n4:41  Warning: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars\n7:10  Warning: 'Input' is defined but never used.  @typescript-eslint/no-unused-vars\n8:29  Warning: 'CardDescription' is defined but never used.  @typescript-eslint/no-unused-vars\n22:10  Warning: 'showError' is assigned a value but never used.  @typescript-eslint/no-unused-vars\n22:21  Warning: 'setShowError' is assigned a value but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/PropertyOpinionModuleIntegrated.tsx\n4:28  Warning: 'CheckCircle' is defined but never used.  @typescript-eslint/no-unused-vars\n4:41  Warning: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars\n8:18  Warning: 'AnimatePresence' is defined but never used.  @typescript-eslint/no-unused-vars\n21:10  Warning: 'uploadedDocIds' is assigned a value but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/ResearchModule.tsx\n39:10  Warning: 'researchResults' is assigned a value but never used.  @typescript-eslint/no-unused-vars\n40:10  Warning: 'showResults' is assigned a value but never used.  @typescript-eslint/no-unused-vars\n46:36  Warning: 'isPending' is assigned a value but never used.  @typescript-eslint/no-unused-vars\n57:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n76:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n91:6  Warning: React Hook useEffect has a missing dependency: 'runResearch'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps\n113:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n123:16  Warning: 'retryError' is defined but never used.  @typescript-eslint/no-unused-vars\n149:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n285:14  Warning: 'saveError' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/ResearchResultsModal.tsx\n31:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/StatusIndicator.tsx\n4:25  Warning: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/auth/LoginForm.tsx\n19:37  Warning: 'onSuccess' is defined but never used.  @typescript-eslint/no-unused-vars\n19:48  Warning: 'redirectTo' is defined but never used.  @typescript-eslint/no-unused-vars\n62:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/auth/LogoutButton.tsx\n67:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n116:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element\n\n./src/components/auth/SignupForm.tsx\n18:38  Warning: 'onSuccess' is defined but never used.  @typescript-eslint/no-unused-vars\n18:49  Warning: 'redirectTo' is defined but never used.  @typescript-eslint/no-unused-vars\n33:9  Warning: 'router' is assigned a value but never used.  @typescript-eslint/no-unused-vars\n97:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n121:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/dashboard/DashboardStats.tsx\n5:3  Warning: 'BarChart3' is defined but never used.  @typescript-eslint/no-unused-vars\n10:3  Warning: 'Activity' is defined but never used.  @typescript-eslint/no-unused-vars\n80:25  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/components/header.tsx\n6:66  Warning: 'LogOut' is defined but never used.  @typescript-eslint/no-unused-vars\n23:34  Warning: 'logout' is assigned a value but never used.  @typescript-eslint/no-unused-vars\n37:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n45:9  Warning: 'displayName' is assigned a value but never used.  @typescript-eslint/no-unused-vars\n\n./src/hooks/useAuth.ts\n22:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/lib/api-client.ts\n83:11  Warning: 'originalRequest' is assigned a value but never used.  @typescript-eslint/no-unused-vars\n180:12  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/lib/config.ts\n66:12  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/lib/offline-queue.ts\n25:12  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n34:12  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n42:12  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n52:12  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars\n\n./src/types/next-auth.d.ts\n1:15  Warning: 'DefaultSession' is defined but never used.  @typescript-eslint/no-unused-vars\n\ninfo  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules\n"
+      ],
+      "errors": [
+        "Production build failed"
+      ],
+      "warnings": []
+    },
+    {
+      "name": "API Health",
+      "description": "Backend endpoint connectivity validation",
+      "status": "WARN",
+      "duration": "0.00s",
+      "details": [
+        "Set environment variable for production deployment"
+      ],
+      "errors": [],
+      "warnings": [
+        "NEXT_PUBLIC_BACKEND_URL not configured"
+      ]
+    },
+    {
+      "name": "Dependency Audit",
+      "description": "Security vulnerability scan",
+      "status": "PASS",
+      "duration": "1.84s",
+      "details": [
+        "Critical: 0, High: 0, Moderate: 0, Low: 0"
+      ],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Environment Validation",
+      "description": "Environment variables and secrets audit",
+      "status": "WARN",
+      "duration": "0.13s",
+      "details": [
+        "All critical environment variables should be set before deployment"
+      ],
+      "errors": [],
+      "warnings": [
+        "Missing environment variables: NEXT_PUBLIC_BACKEND_URL"
+      ]
+    },
+    {
+      "name": "UI Consistency",
+      "description": "Component rendering and console error validation",
+      "status": "PASS",
+      "duration": "0.12s",
+      "details": [
+        "Validated 36 component files"
+      ],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "recommendation": "Critical issues detected. Resolve all FAIL status checks before proceeding.",
+  "safeToDeploy": false
+}

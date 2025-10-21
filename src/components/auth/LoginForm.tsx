@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,17 +45,25 @@ export default function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
     setError("");
-    alert("Google login clicked!"); // Simple alert to test if function is called
-
-    // Store a mock user profile immediately
-    const mockUser = {
-      name: "Demo User",
-      email: "demo@legalindia.ai"
-    };
-    localStorage.setItem("legalindia_profile", JSON.stringify(mockUser));
     
-    // Redirect to app immediately
-    window.location.href = "/app";
+    try {
+      // Use NextAuth signIn for real Google OAuth
+      const result = await signIn('google', { 
+        callbackUrl: '/app',
+        redirect: false 
+      });
+      
+      if (result?.error) {
+        setError("Google authentication failed. Please try again.");
+      } else if (result?.ok) {
+        // Redirect to app on success
+        router.push('/app');
+      }
+    } catch (error) {
+      setError("An error occurred during Google authentication.");
+    } finally {
+      setIsGoogleLoading(false);
+    }
   };
 
   return (
