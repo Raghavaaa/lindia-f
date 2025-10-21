@@ -43,7 +43,7 @@ export default function HomePage() {
             <Link href="/about">Get Started</Link>
           </Button>
           <Button asChild size="lg" variant="outline" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 h-auto border-2 w-full sm:w-auto min-w-[140px] sm:min-w-[160px]">
-            <Link href="/login">Login</Link>
+            <Link href="/login">Go to App</Link>
           </Button>
         </div>
 
