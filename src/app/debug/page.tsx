@@ -58,7 +58,7 @@ export default function DebugPage() {
 
         <div style={{ marginTop: '2rem', fontSize: '0.875rem', color: '#6b7280' }}>
           <p>This page helps debug the frontend-backend connection.</p>
-          <p>If NEXT_PUBLIC_BACKEND_URL shows "NOT SET", the environment variable isn't configured properly.</p>
+          <p>If NEXT_PUBLIC_BACKEND_URL shows &quot;NOT SET&quot;, the environment variable isn&apos;t configured properly.</p>
         </div>
       </div>
     </div>
