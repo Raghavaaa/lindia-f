@@ -56,12 +56,12 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Two Buttons - Increased Size */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-          <Button asChild size="lg" className="text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 h-auto">
+        {/* Two Buttons - Centered and Responsive */}
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
+          <Button asChild size="lg" className="text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 h-auto w-full sm:w-auto">
             <Link href="/about">Get Started</Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 h-auto border-2">
+          <Button asChild size="lg" variant="outline" className="text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 h-auto border-2 w-full sm:w-auto">
             <Link href="/login">Login</Link>
           </Button>
         </div>

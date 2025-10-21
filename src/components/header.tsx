@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Logo from "./Logo";
 
 export default function Header() {
   return (
@@ -7,22 +8,20 @@ export default function Header() {
       <div className="container mx-auto max-w-7xl">
         <div className="flex items-center justify-between h-14 sm:h-16 px-4">
           {/* Logo */}
-          <Link href="/" className="text-base sm:text-lg font-bold text-gray-900 hover:text-gray-700 transition-colors">
-            Legal India
-          </Link>
+          <Logo />
 
           {/* Navigation */}
           <nav className="flex items-center gap-2 sm:gap-4">
-            <Link href="/" className="text-sm sm:text-base text-gray-600 hover:text-gray-900 transition-colors hidden sm:inline">
+            <Link href="/" className="text-sm sm:text-base text-gray-600 hover:text-gray-900 transition-colors hidden sm:inline font-sans">
               Home
             </Link>
-            <Link href="/about" className="text-sm sm:text-base text-gray-600 hover:text-gray-900 transition-colors">
+            <Link href="/about" className="text-sm sm:text-base text-gray-600 hover:text-gray-900 transition-colors font-sans">
               About
             </Link>
-            <Link href="/contact" className="text-sm sm:text-base text-gray-600 hover:text-gray-900 transition-colors hidden md:inline">
+            <Link href="/contact" className="text-sm sm:text-base text-gray-600 hover:text-gray-900 transition-colors hidden md:inline font-sans">
               Contact
             </Link>
-            <Button asChild size="sm" className="text-sm px-3 sm:px-4">
+            <Button asChild size="sm" className="text-sm px-3 sm:px-4 font-sans">
               <Link href="/login">Login</Link>
             </Button>
           </nav>
