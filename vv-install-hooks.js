@@ -60,17 +60,17 @@ const prePushHook = `#!/bin/sh
 #
 # Pre-push hook: Final V&V gate before push
 # This is the last line of defense before code reaches the repository
+# Auto-pushes to lindia-f if all checks pass
 #
 
 echo ""
 echo "╔═══════════════════════════════════════════════════════════════════════════╗"
 echo "║                      PRE-PUSH V&V GATE ACTIVATED                          ║"
+echo "║                    WITH AUTO-PUSH TO LINDIA-F                             ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════╝"
 echo ""
 
-cd frontend
-
-# Run comprehensive V&V gate
+# Run comprehensive V&V gate (includes auto-push to lindia-f)
 node vv-gate.js
 
 if [ $? -ne 0 ]; then
@@ -88,6 +88,7 @@ fi
 
 echo ""
 echo "✓ V&V gate passed - safe to push"
+echo "✓ Auto-pushed to lindia-f repository"
 echo ""
 echo "Creating verified release tag..."
 node vv-tag.js

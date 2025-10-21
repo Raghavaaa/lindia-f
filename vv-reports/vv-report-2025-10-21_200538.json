@@ -1,0 +1,124 @@
+{
+  "timestamp": "2025-10-21_200538",
+  "commit": "591df91d",
+  "branch": "main",
+  "author": "Raghavan Karthik",
+  "date": "2025-10-21T14:35:34.657Z",
+  "changedFiles": [
+    "VV_GATE_SYSTEM.md",
+    "vv-gate.js",
+    "vv-install-hooks.js"
+  ],
+  "duration": "4.02s",
+  "summary": {
+    "total": 8,
+    "passed": 1,
+    "failed": 5,
+    "warnings": 2,
+    "status": "HOLD FOR REVIEW ✗"
+  },
+  "checks": [
+    {
+      "name": "Syntax & Linting",
+      "description": "ESLint validation with zero warnings tolerance",
+      "status": "FAIL",
+      "duration": "0.20s",
+      "details": [
+        "\n> legalindia-frontend@0.1.0 lint\n> eslint --max-warnings 0\n\n"
+      ],
+      "errors": [
+        "ESLint found issues"
+      ],
+      "warnings": []
+    },
+    {
+      "name": "Type Safety",
+      "description": "TypeScript strict type validation",
+      "status": "FAIL",
+      "duration": "1.96s",
+      "details": [],
+      "errors": [
+        "Found 0 type errors"
+      ],
+      "warnings": []
+    },
+    {
+      "name": "Test Suite",
+      "description": "Unit and integration test execution",
+      "status": "FAIL",
+      "duration": "0.22s",
+      "details": [
+        "\n> legalindia-frontend@0.1.0 test\n> jest\n\n"
+      ],
+      "errors": [
+        "Some tests failed"
+      ],
+      "warnings": []
+    },
+    {
+      "name": "Build Integrity",
+      "description": "Production build compilation and optimization",
+      "status": "FAIL",
+      "duration": "0.20s",
+      "details": [
+        "\n> legalindia-frontend@0.1.0 build\n> next build\n\n"
+      ],
+      "errors": [
+        "Production build failed"
+      ],
+      "warnings": []
+    },
+    {
+      "name": "API Health",
+      "description": "Backend endpoint connectivity validation",
+      "status": "WARN",
+      "duration": "0.00s",
+      "details": [
+        "Set environment variable for production deployment"
+      ],
+      "errors": [],
+      "warnings": [
+        "NEXT_PUBLIC_BACKEND_URL not configured"
+      ]
+    },
+    {
+      "name": "Dependency Audit",
+      "description": "Security vulnerability scan",
+      "status": "PASS",
+      "duration": "1.29s",
+      "details": [
+        "Critical: 0, High: 0, Moderate: 0, Low: 0"
+      ],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Environment Validation",
+      "description": "Environment variables and secrets audit",
+      "status": "WARN",
+      "duration": "0.09s",
+      "details": [
+        "All critical environment variables should be set before deployment"
+      ],
+      "errors": [],
+      "warnings": [
+        "Missing environment variables: NEXT_PUBLIC_BACKEND_URL"
+      ]
+    },
+    {
+      "name": "UI Consistency",
+      "description": "Component rendering and console error validation",
+      "status": "FAIL",
+      "duration": "0.04s",
+      "details": [
+        "Validated 36 component files"
+      ],
+      "errors": [
+        "Found 3 console.error statements"
+      ],
+      "warnings": []
+    }
+  ],
+  "recommendation": "Critical issues detected. Resolve all FAIL status checks before proceeding.",
+  "safeToDeploy": false
+}

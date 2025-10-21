@@ -86,8 +86,9 @@ Automatically runs on every `git push`:
 ```
 1. Runs comprehensive V&V gate
 2. If any CRITICAL check fails → push is BLOCKED
-3. If all pass → automatically tags as verified release
-4. Bypass: git push --no-verify (NOT RECOMMENDED)
+3. If all pass → automatically pushes to lindia-f repository
+4. Creates verified release tag
+5. Bypass: git push --no-verify (NOT RECOMMENDED)
 ```
 
 ---
@@ -202,6 +203,58 @@ SUMMARY
   Warnings: 2
 
                         ✓ SAFE TO PUSH
+```
+
+---
+
+## 🚀 Auto-Push to lindia-f
+
+The V&V system now includes **automatic pushing to the lindia-f repository** when all quality checks pass:
+
+### How It Works
+
+1. **V&V Gate Runs** - All 8 quality checks execute
+2. **If All Pass** - System automatically:
+   - Commits any changes with V&V timestamp
+   - Pushes to lindia-f repository
+   - Creates verified release tag
+   - Shows success confirmation
+
+3. **If Any Fail** - Push is blocked, no auto-push occurs
+
+### Auto-Push Behavior
+
+```bash
+# When you run V&V gate manually
+npm run vv:gate
+
+# If all checks pass:
+# ✅ Auto-pushes to lindia-f
+# ✅ Creates commit with timestamp
+# ✅ Shows "AUTO-PUSHED TO LINDIA-F" confirmation
+
+# If any checks fail:
+# ❌ No auto-push
+# ❌ Shows detailed error report
+```
+
+### Git Hook Integration
+
+When you install Git hooks (`npm run vv:install-hooks`):
+
+- **Pre-commit**: Runs V&V checks, blocks bad commits
+- **Pre-push**: Runs V&V checks + auto-push to lindia-f
+
+### Manual Control
+
+You can still control the auto-push behavior:
+
+```bash
+# Run V&V without auto-push (if you want to review first)
+npm run vv:gate
+
+# Then manually push if satisfied
+git push origin main
 ```
 
 ---

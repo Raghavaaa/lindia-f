@@ -762,6 +762,52 @@ class VVGateSystem {
   }
 
   // ─────────────────────────────────────────────────────────────────────────
+  // Auto-Push to lindia-f
+  // ─────────────────────────────────────────────────────────────────────────
+  async autoPushToLindiaF() {
+    printSection('Auto-Push to lindia-f', 9, 9);
+    
+    printInfo('Checking if changes need to be pushed...');
+    
+    try {
+      // Check if there are any changes to commit
+      const statusResult = execCommand('git status --porcelain');
+      
+      if (!statusResult || statusResult.trim() === '') {
+        printInfo('No changes to commit - repository is clean');
+        return true;
+      }
+      
+      printInfo('Changes detected - committing and pushing to lindia-f...');
+      
+      // Add all changes
+      execCommand('git add .');
+      
+      // Create commit with V&V report info
+      const timestamp = new Date().toISOString();
+      const commitMessage = `V&V Auto-Update: ${timestamp}
+
+- V&V gate system update
+- Quality checks passed
+- Auto-pushed from V&V system
+- Timestamp: ${timestamp}`;
+      
+      execCommand(`git commit -m "${commitMessage}"`);
+      
+      // Push to origin main
+      printInfo('Pushing to lindia-f repository...');
+      execCommand('git push origin main');
+      
+      printSuccess('Successfully pushed to lindia-f repository');
+      return true;
+      
+    } catch (error) {
+      printError(`Auto-push failed: ${error.message}`);
+      return false;
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
   // Main Execution
   // ─────────────────────────────────────────────────────────────────────────
   async run() {
@@ -802,6 +848,16 @@ class VVGateSystem {
     
     const report = this.generateReport();
     this.displayReport(report);
+    
+    // Auto-push to lindia-f if all checks pass
+    if (report.safeToDeploy) {
+      const pushSuccess = await this.autoPushToLindiaF();
+      if (pushSuccess) {
+        console.log(`\n${colors.bgGreen}${colors.bright}${colors.white}                                                                               ${colors.reset}`);
+        console.log(`${colors.bgGreen}${colors.bright}${colors.white}                    ✅ AUTO-PUSHED TO LINDIA-F                                    ${colors.reset}`);
+        console.log(`${colors.bgGreen}${colors.bright}${colors.white}                                                                               ${colors.reset}`);
+      }
+    }
     
     return report.safeToDeploy ? 0 : 1;
   }
