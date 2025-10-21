@@ -38,6 +38,7 @@ export const apiFetch = async (
       ...options.headers,
     },
     credentials: 'include',
+    signal: options.signal || AbortSignal.timeout(120000), // 120 second timeout for AI processing
   };
 
   try {
@@ -46,6 +47,9 @@ export const apiFetch = async (
   } catch (error) {
     if (error instanceof TypeError && error.message.includes('fetch')) {
       throw new Error('NETWORK_ERROR: Unable to reach backend. Please check your connection.');
+    }
+    if (error instanceof Error && error.name === 'TimeoutError') {
+      throw new Error('REQUEST_TIMEOUT: AI processing is taking longer than expected. Please try again.');
     }
     throw error;
   }

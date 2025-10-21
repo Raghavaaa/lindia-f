@@ -68,7 +68,7 @@ class HealthChecker:
             response = requests.post(
                 f"{self.backend_url}/api/v1/research/",
                 json=test_payload,
-                timeout=30,
+                timeout=120,
                 headers={"Content-Type": "application/json"}
             )
             
@@ -91,7 +91,7 @@ class HealthChecker:
         except requests.exceptions.Timeout:
             return {
                 "status": "TIMEOUT",
-                "error": "Backend request timed out after 30 seconds"
+                "error": "Backend request timed out after 120 seconds"
             }
         except Exception as e:
             return {
@@ -111,7 +111,7 @@ class HealthChecker:
             response = requests.post(
                 f"{self.ai_engine_url}/api/v1/research/",
                 json=test_payload,
-                timeout=30,
+                timeout=120,
                 headers={"Content-Type": "application/json"}
             )
             
@@ -134,7 +134,7 @@ class HealthChecker:
         except requests.exceptions.Timeout:
             return {
                 "status": "TIMEOUT",
-                "error": "AI Engine request timed out after 30 seconds"
+                "error": "AI Engine request timed out after 120 seconds"
             }
         except Exception as e:
             return {
