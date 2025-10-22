@@ -36,6 +36,22 @@ export function useAuth() {
   };
 
   const logout = async () => {
+    // Clear user-specific data from localStorage
+    const currentUser = session?.user || localUser;
+    if (currentUser?.email) {
+      const userEmail = currentUser.email;
+      // Clear user-specific clients
+      localStorage.removeItem(`legalindia_clients_${userEmail}`);
+      
+      // Clear any client-specific research data for this user
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('legalindia::client::') && key.includes(userEmail)) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
+    
     if (session) {
       // Use NextAuth signOut for Google Auth
       await signOut({ callbackUrl: '/' });
@@ -44,7 +60,7 @@ export function useAuth() {
       localStorage.removeItem("legalindia_profile");
       localStorage.removeItem("legalindia_clients");
       
-      // Clear any client-specific research data
+      // Clear any remaining client-specific research data
       const keys = Object.keys(localStorage);
       keys.forEach(key => {
         if (key.startsWith('legalindia::client::') || key.startsWith('legalindia_clients_')) {

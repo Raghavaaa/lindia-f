@@ -10,6 +10,7 @@ import PropertyOpinionModule from "../../components/PropertyOpinionModule";
 import CaseModule from "../../components/CaseModule";
 import JuniorModule from "../../components/JuniorModule";
 import AuthGuard from "../../components/auth/AuthGuard";
+import { useAuth } from "@/hooks/useAuth";
 import { v4 as uuidv4 } from "uuid";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -33,6 +34,7 @@ type HistoryItem = {
 function AppPageContent() {
   const searchParams = useSearchParams();
   const moduleParam = searchParams?.get("module") || "research";
+  const { user } = useAuth();
   
   const [clients, setClients] = useState<Client[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
@@ -41,27 +43,43 @@ function AppPageContent() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
-  // Load clients from localStorage
+  // Get user-specific storage key
+  const getUserStorageKey = () => {
+    const userEmail = user?.email || 'anonymous';
+    return `legalindia_clients_${userEmail}`;
+  };
+
+  // Load clients from localStorage (user-specific)
   useEffect(() => {
+    if (!user) return;
+    
     try {
-      const raw = localStorage.getItem("legalindia_clients");
+      const storageKey = getUserStorageKey();
+      const raw = localStorage.getItem(storageKey);
       if (raw) {
         const clientsData = JSON.parse(raw);
         setClients(clientsData);
+      } else {
+        // No clients for this user yet
+        setClients([]);
       }
     } catch {
       // Handle error silently
+      setClients([]);
     }
-  }, []);
+  }, [user]);
 
-  // Save clients to localStorage
+  // Save clients to localStorage (user-specific)
   useEffect(() => {
+    if (!user) return;
+    
     try {
-      localStorage.setItem("legalindia_clients", JSON.stringify(clients));
+      const storageKey = getUserStorageKey();
+      localStorage.setItem(storageKey, JSON.stringify(clients));
     } catch (error) {
       // Error saving clients - handled by error boundary
     }
-  }, [clients]);
+  }, [clients, user]);
 
   function handleCreateClient(c: { name: string; phone?: string }) {
     const newClient: Client = {
