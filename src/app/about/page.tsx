@@ -60,7 +60,7 @@ export default function AboutPage() {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12">
             <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gray-800 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
@@ -72,7 +72,7 @@ export default function AboutPage() {
             </div>
             
             <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gray-800 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
@@ -84,7 +84,7 @@ export default function AboutPage() {
             </div>
             
             <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gray-800 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
@@ -96,7 +96,7 @@ export default function AboutPage() {
             </div>
             
             <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gray-800 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-2xl font-bold text-white">4</span>
               </div>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
@@ -156,14 +156,14 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Action Buttons - Enhanced */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-8 md:gap-10">
-          <Button asChild size="lg" className="text-base sm:text-lg md:text-xl px-8 sm:px-10 md:px-12 py-3 sm:py-4 md:py-5 h-auto w-full sm:w-auto min-w-[160px] sm:min-w-[180px] bg-black hover:bg-gray-800 text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
+        {/* Action Buttons - Premium Design */}
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <Button asChild size="lg" className="relative h-14 px-6 w-full sm:w-auto min-w-[200px] rounded-xl bg-gradient-to-b from-black to-gray-900 text-white font-semibold text-lg tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-150 ease-out focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-45 disabled:pointer-events-none">
             <Link href="/">Home</Link>
-          </Button>
-          <Button asChild size="lg" className="text-base sm:text-lg md:text-xl px-8 sm:px-10 md:px-12 py-3 sm:py-4 md:py-5 h-auto w-full sm:w-auto min-w-[160px] sm:min-w-[180px] bg-black hover:bg-gray-800 text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
+              </Button>
+          <Button asChild size="lg" className="relative h-14 px-6 w-full sm:w-auto min-w-[200px] rounded-xl bg-gradient-to-b from-black to-gray-900 text-white font-semibold text-lg tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-150 ease-out focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-45 disabled:pointer-events-none">
             <Link href="/login">Go to App</Link>
-          </Button>
+              </Button>
         </div>
       </main>
     </div>
