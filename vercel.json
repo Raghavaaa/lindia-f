@@ -4,7 +4,8 @@
   "framework": "nextjs",
   "installCommand": "npm ci",
   "env": {
-    "NEXT_PUBLIC_BACKEND_URL": "https://api.legalindia.ai",
+    "NEXT_PUBLIC_BACKEND_URL": "https://lindia-b-production.up.railway.app",
+    "NEXT_PUBLIC_AI_URL": "https://lindia-ai-production.up.railway.app",
     "NEXT_PUBLIC_ENV": "production"
   }
 }
