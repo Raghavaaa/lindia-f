@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { User, Bell, Shield, CreditCard, Key, ChevronRight, LogOut, Trash2 } from "lucide-react";
+import { User, Bell, Shield, Key, ChevronRight, LogOut, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
@@ -62,7 +61,7 @@ function SettingsContent() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="space-y-4">
                   <div className="space-y-2">
                     <label htmlFor="name" className="text-sm font-medium">
                       Full Name
@@ -86,33 +85,6 @@ function SettingsContent() {
                       disabled
                       className="bg-muted"
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="bar-id" className="text-sm font-medium">
-                      Bar Council ID
-                    </label>
-                    <Input
-                      id="bar-id"
-                      type="text"
-                      placeholder="BAR/1234/2023"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="practice-area" className="text-sm font-medium">
-                      Practice Area
-                    </label>
-                    <Select defaultValue="property">
-                      <SelectTrigger id="practice-area">
-                        <SelectValue placeholder="Select practice area" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="property">Property Law</SelectItem>
-                        <SelectItem value="corporate">Corporate Law</SelectItem>
-                        <SelectItem value="criminal">Criminal Law</SelectItem>
-                        <SelectItem value="family">Family Law</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
                   </div>
                 </div>
                 <div className="flex justify-end pt-4">
@@ -228,43 +200,11 @@ function SettingsContent() {
             </Card>
           </motion.div>
 
-          {/* Billing Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <CreditCard className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle>Billing</CardTitle>
-                    <CardDescription>Manage your subscription and billing</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-lg bg-secondary border p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">Current Plan: Free Trial</p>
-                      <p className="text-sm text-muted-foreground">14 days remaining</p>
-                    </div>
-                    <Button>Upgrade</Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
           {/* Account Management Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.4 }}
           >
             <Card className="border-destructive/50">
               <CardHeader>
