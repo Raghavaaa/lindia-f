@@ -128,10 +128,10 @@ export default function AboutPage() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
-          <Button asChild size="lg" variant="outline" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 h-auto w-full sm:w-auto min-w-[140px] sm:min-w-[160px] border-2 border-[#0B1820]/20 hover:border-[#0B1820]/40 hover:bg-white/50 backdrop-blur-sm transition-all duration-300">
+          <Button asChild size="lg" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 h-auto w-full sm:w-auto min-w-[140px] sm:min-w-[160px] bg-black hover:bg-gray-800 text-white transition-all duration-300">
             <Link href="/">Home</Link>
               </Button>
-          <Button asChild size="lg" variant="outline" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 h-auto border-2 border-[#0B1820]/20 hover:border-[#0B1820]/40 hover:bg-white/50 backdrop-blur-sm transition-all duration-300 w-full sm:w-auto min-w-[140px] sm:min-w-[160px]">
+          <Button asChild size="lg" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 h-auto w-full sm:w-auto min-w-[140px] sm:min-w-[160px] bg-black hover:bg-gray-800 text-white transition-all duration-300">
             <Link href="/login">Go to App</Link>
               </Button>
         </div>
