@@ -19,6 +19,8 @@ export const config = {
     property: '/api/v1/property-opinion/',
     case: '/api/v1/cases/',
     storage: '/api/storage',
+    clients: '/api/v1/clients',
+    clientsCreate: '/api/v1/clients',
   },
 } as const;
 

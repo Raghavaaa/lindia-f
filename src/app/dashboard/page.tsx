@@ -118,7 +118,6 @@ function AppPageContent() {
         return <ResearchModule 
           clientId={clientId} 
           onResearchComplete={() => setRefreshTrigger(prev => prev + 1)}
-          onOpenClientSelector={() => setShowMobileSidebar(true)}
         />;
     }
   };

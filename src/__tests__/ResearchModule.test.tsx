@@ -50,7 +50,6 @@ describe('ResearchModule', () => {
       <ResearchModule
         clientId=""
         onResearchComplete={mockOnResearchComplete}
-        onOpenClientSelector={mockOnOpenClientSelector}
       />
     )
 
@@ -64,7 +63,6 @@ describe('ResearchModule', () => {
       <ResearchModule
         clientId="test-client-id"
         onResearchComplete={mockOnResearchComplete}
-        onOpenClientSelector={mockOnOpenClientSelector}
       />
     )
 
@@ -78,7 +76,6 @@ describe('ResearchModule', () => {
       <ResearchModule
         clientId=""
         onResearchComplete={mockOnResearchComplete}
-        onOpenClientSelector={mockOnOpenClientSelector}
       />
     )
 
@@ -91,7 +88,6 @@ describe('ResearchModule', () => {
       <ResearchModule
         clientId="test-client-id"
         onResearchComplete={mockOnResearchComplete}
-        onOpenClientSelector={mockOnOpenClientSelector}
       />
     )
 
@@ -104,7 +100,6 @@ describe('ResearchModule', () => {
       <ResearchModule
         clientId="test-client-id"
         onResearchComplete={mockOnResearchComplete}
-        onOpenClientSelector={mockOnOpenClientSelector}
       />
     )
 
@@ -120,7 +115,6 @@ describe('ResearchModule', () => {
       <ResearchModule
         clientId="test-client-id"
         onResearchComplete={mockOnResearchComplete}
-        onOpenClientSelector={mockOnOpenClientSelector}
       />
     )
     const results = await axe(container)
