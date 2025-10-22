@@ -12,8 +12,6 @@ import JuniorModule from "../../components/JuniorModule";
 import AuthGuard from "../../components/auth/AuthGuard";
 import { useAuth } from "@/hooks/useAuth";
 import { v4 as uuidv4 } from "uuid";
-import BackendHealthBanner from "../../components/BackendHealthBanner";
-import { getClients, Client as ClientType } from "../../lib/client-service";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -51,22 +49,24 @@ function AppPageContent() {
     return `legalindia_clients_${userEmail}`;
   };
 
-  // Load clients from backend API
+  // Load clients from localStorage (user-specific)
   useEffect(() => {
     if (!user) return;
     
-    const loadClients = async () => {
-      try {
-        const clientsData = await getClients();
+    try {
+      const storageKey = getUserStorageKey();
+      const raw = localStorage.getItem(storageKey);
+      if (raw) {
+        const clientsData = JSON.parse(raw);
         setClients(clientsData);
-      } catch (error) {
-        console.error('Error loading clients:', error);
-        // Fallback to empty array if backend is unavailable
+      } else {
+        // No clients for this user yet
         setClients([]);
       }
-    };
-
-    loadClients();
+    } catch {
+      // Handle error silently
+      setClients([]);
+    }
   }, [user]);
 
   // Save clients to localStorage (user-specific)
@@ -81,16 +81,14 @@ function AppPageContent() {
     }
   }, [clients, user]);
 
-  async function handleCreateClient(clientData: ClientType) {
-    // Client is already created by the modal via backend API
-    // Just refresh the client list and select the new client
-    try {
-      const updatedClients = await getClients();
-      setClients(updatedClients);
-      setSelectedClientId(clientData.id);
-    } catch (error) {
-      console.error('Error refreshing clients after creation:', error);
-    }
+  function handleCreateClient(c: { name: string; phone?: string }) {
+    const newClient: Client = {
+      id: uuidv4(),
+      name: c.name,
+      phone: c.phone
+    };
+    setClients((prev) => [newClient, ...prev]);
+    setSelectedClientId(newClient.id);
   }
 
   function handleSelectClient(clientId: string) {
@@ -127,7 +125,6 @@ function AppPageContent() {
 
   return (
     <div className="fixed inset-0 flex pt-[104px] sm:pt-[112px] bg-background">
-      <BackendHealthBanner />
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 

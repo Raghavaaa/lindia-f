@@ -112,7 +112,7 @@ export default function ClientModal({
       toast({
         title: "Failed to create client",
         description: error instanceof Error ? error.message : "Please try again.",
-        variant: "destructive",
+        variant: "error",
       });
     } finally {
       setIsSubmitting(false);
