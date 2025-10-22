@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { User, Bell, Shield, CreditCard, Key, ChevronRight } from "lucide-react";
+import { User, Bell, Shield, CreditCard, Key, ChevronRight, LogOut, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,13 +9,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import AuthGuard from "@/components/auth/AuthGuard";
 
-export default function SettingsPage() {
+function SettingsContent() {
+  const { user, logout } = useAuth();
+  const router = useRouter();
   const [notifications, setNotifications] = useState({
     email: true,
     research: true,
     updates: false,
   });
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/login');
+  };
 
   return (
     <div className="min-h-screen px-4 py-12 bg-background">
@@ -61,6 +71,7 @@ export default function SettingsPage() {
                       id="name"
                       type="text"
                       placeholder="John Doe"
+                      defaultValue={user?.name || ''}
                     />
                   </div>
                   <div className="space-y-2">
@@ -71,6 +82,9 @@ export default function SettingsPage() {
                       id="email"
                       type="email"
                       placeholder="john@example.com"
+                      defaultValue={user?.email || ''}
+                      disabled
+                      className="bg-muted"
                     />
                   </div>
                   <div className="space-y-2">
@@ -245,8 +259,51 @@ export default function SettingsPage() {
               </CardContent>
             </Card>
           </motion.div>
+
+          {/* Account Management Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <Card className="border-destructive/50">
+              <CardHeader>
+                <CardTitle className="text-destructive">Account Management</CardTitle>
+                <CardDescription>Manage your account and session</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-3"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </Button>
+                <Separator />
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <Trash2 className="h-5 w-5" />
+                  <span>Delete Account</span>
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  Warning: Account deletion is permanent and cannot be undone
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <AuthGuard>
+      <SettingsContent />
+    </AuthGuard>
   );
 }
