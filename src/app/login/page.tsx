@@ -33,13 +33,13 @@ export default function LoginPage() {
         />
       </div>
 
-      <div className="min-h-screen flex items-center justify-center px-4 py-8 relative">
+      <div className="min-h-screen flex items-center justify-center px-4 py-6 relative">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8 sm:mb-10">
+          <div className="text-center mb-6 sm:mb-8">
             <div className="relative">
-              {/* Enhanced scrim behind headline for better mobile visibility */}
-              <div className="absolute inset-0 -mx-6 sm:-mx-8 -my-3 bg-white/50 backdrop-blur-[4px] rounded-3xl -z-10 shadow-lg" />
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B1820] mb-6 sm:mb-8 leading-tight">
+              {/* Subtle scrim behind headline */}
+              <div className="absolute inset-0 -mx-4 sm:-mx-6 -my-2 bg-white/40 backdrop-blur-[2px] rounded-2xl -z-10 shadow-md" />
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6 leading-tight">
                 Legal India
               </h1>
             </div>
