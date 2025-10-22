@@ -106,7 +106,7 @@ function AppPageContent() {
   };
 
   return (
-    <div className="h-screen flex relative pt-16 md:pt-[120px] bg-background overflow-hidden">
+    <div className="h-screen flex relative pt-[104px] sm:pt-[112px] bg-background overflow-hidden">
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 
@@ -119,7 +119,7 @@ function AppPageContent() {
       <motion.aside
         initial={{ x: -220 }}
         animate={{ x: 0 }}
-        className="w-[220px] border-r border-border bg-background shrink-0 hidden md:block fixed left-0 top-16 md:top-[120px] bottom-14 overflow-y-auto z-10"
+        className="w-[220px] border-r border-border bg-background shrink-0 hidden md:block fixed left-0 top-[104px] sm:top-[112px] bottom-14 overflow-y-auto z-10"
       >
         <ClientList 
           clients={clients} 
@@ -133,7 +133,7 @@ function AppPageContent() {
       <motion.aside
         initial={{ x: -220 }}
         animate={{ x: showMobileSidebar ? 0 : -220 }}
-        className="w-[220px] border-r border-border bg-background shrink-0 md:hidden fixed left-0 top-16 bottom-14 overflow-y-auto z-50"
+        className="w-[220px] border-r border-border bg-background shrink-0 md:hidden fixed left-0 top-[104px] sm:top-[112px] bottom-14 overflow-y-auto z-50"
       >
         <div className="p-4 border-b border-border">
           <div className="flex items-center justify-between">
@@ -204,7 +204,7 @@ function AppPageContent() {
       <motion.aside
         initial={{ x: 320 }}
         animate={{ x: 0 }}
-        className="hidden lg:block fixed right-0 top-16 md:top-[120px] bottom-14 w-[320px] bg-background border-l border-border z-10"
+        className="hidden lg:block fixed right-0 top-[104px] sm:top-[112px] bottom-14 w-[320px] bg-background border-l border-border z-10"
       >
         <HistoryPanel 
           clientId={selectedClientId}
