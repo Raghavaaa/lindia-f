@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Scale, Upload, CheckCircle, AlertCircle, FileText } from "lucide-react";
+import { Scale, Upload, CheckCircle, AlertCircle, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
+import { apiFetchWithRetry, config, checkBackendHealth } from "@/lib/config";
 
 type Props = {
   clientId: string;
@@ -19,27 +20,94 @@ export default function CaseModule({ clientId, onComplete }: Props) {
   const [running, setRunning] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [progressMessage, setProgressMessage] = useState<string | null>(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!caseTitle.trim()) {
+      setErrorMessage("Please enter a case title");
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+      return;
+    }
+
+    if (!caseDetails.trim()) {
+      setErrorMessage("Please enter case details");
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
       return;
     }
     
     setRunning(true);
-    setTimeout(() => {
-      setRunning(false);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
-      if (onComplete) onComplete();
-    }, 2000);
+    setProgressMessage("Connecting to backend...");
+
+    try {
+      const isOnline = await checkBackendHealth();
+      
+      if (!isOnline) {
+        throw new Error("Backend is offline. Please try again later.");
+      }
+
+      setProgressMessage("Preparing case documents...");
+
+      const response = await apiFetchWithRetry(config.endpoints.case, {
+        method: 'POST',
+        body: JSON.stringify({
+          client_id: clientId || 'demo',
+          case_title: caseTitle.trim(),
+          case_details: caseDetails.trim(),
+        })
+      }, config.timeouts.standard, 1);
+
+      setProgressMessage(null);
+
+      if (response.status === 501) {
+        // Backend returns 501 Not Implemented
+        setErrorMessage("Case Management feature is coming soon! Backend implementation is in progress.");
+        setShowError(true);
+        setTimeout(() => setShowError(false), 5000);
+      } else if (response.ok) {
+        const data = await response.json();
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+        if (onComplete) onComplete();
+      } else {
+        throw new Error(`Backend returned ${response.status}`);
+      }
+    } catch (error) {
+      setProgressMessage(null);
+      const errMsg = error instanceof Error ? error.message : 'Unknown error occurred';
+      
+      if (errMsg.includes('REQUEST_TIMEOUT')) {
+        setErrorMessage("Request timed out. Please try again.");
+      } else if (errMsg.includes('NETWORK_ERROR') || errMsg.includes('offline')) {
+        setErrorMessage("Backend is offline. Please try again later.");
+      } else {
+        setErrorMessage("An error occurred. Please try again.");
+      }
+      
+      setShowError(true);
+      setTimeout(() => setShowError(false), 5000);
+    }
+
+    setRunning(false);
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Success Popup */}
       <AnimatePresence>
+        {progressMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 max-w-md"
+          >
+            <Loader2 className="w-4 h-4 flex-shrink-0 animate-spin" />
+            <span className="text-sm font-medium">{progressMessage}</span>
+          </motion.div>
+        )}
+
         {showSuccess && (
           <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -54,22 +122,16 @@ export default function CaseModule({ clientId, onComplete }: Props) {
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
 
-      {/* Error Popup */}
-      <AnimatePresence>
         {showError && (
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            className="fixed bottom-6 right-6 z-50 bg-red-500 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm"
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-orange-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 max-w-md"
           >
-            <AlertCircle className="w-6 h-6 flex-shrink-0" />
-            <div>
-              <p className="font-semibold">Missing Information</p>
-              <p className="text-sm opacity-90">Please enter a case title</p>
-            </div>
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm font-medium">{errorMessage}</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -79,8 +141,11 @@ export default function CaseModule({ clientId, onComplete }: Props) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Scale className="w-5 h-5 text-primary" />
-              Case
+              Case Management
             </CardTitle>
+            <CardDescription>
+              Prepare case documents, petitions, and legal drafts
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
@@ -89,7 +154,7 @@ export default function CaseModule({ clientId, onComplete }: Props) {
               </label>
               <Input
                 id="case-title"
-                placeholder=""
+                placeholder="e.g., Property Dispute - XYZ vs ABC"
                 value={caseTitle}
                 onChange={(e) => setCaseTitle(e.target.value)}
               />
@@ -101,7 +166,7 @@ export default function CaseModule({ clientId, onComplete }: Props) {
               </label>
               <Textarea
                 id="case-details"
-                placeholder=""
+                placeholder="Describe the case facts, parties involved, relief sought..."
                 value={caseDetails}
                 onChange={(e) => setCaseDetails(e.target.value)}
                 rows={8}

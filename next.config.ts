@@ -15,13 +15,8 @@ const nextConfig: NextConfig = {
   env: {
     // Explicitly expose environment variables to client-side
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
-  },
-  publicRuntimeConfig: {
-    // Additional runtime config for client-side access
-    backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
-  },
-  turbopack: {
-    root: '/Users/raghavankarthik/ai-law-junior/frontend',
+    NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV,
+    NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
   },
 };
 

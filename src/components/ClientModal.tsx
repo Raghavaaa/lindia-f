@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { AlertCircle, CheckCircle } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 export default function ClientModal({ 
   open, 
@@ -21,7 +20,6 @@ export default function ClientModal({
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState<{name?: string; phone?: string}>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
 
   useEffect(() => {
     if (open) {
@@ -88,25 +86,10 @@ export default function ClientModal({
     }
 
     try {
-      // Call the parent callback to create client
       await onCreate({ name: name.trim(), phone: phone.trim() });
-      
-      // Show success toast
-      toast({
-        title: "Client created successfully",
-        description: `${name.trim()} has been added to your workspace.`,
-      });
-      
       onClose();
     } catch (error) {
       console.error("Error creating client:", error);
-      
-      // Show error toast
-      toast({
-        title: "Failed to create client",
-        description: error instanceof Error ? error.message : "Please try again.",
-        variant: "error",
-      });
     } finally {
       setIsSubmitting(false);
     }

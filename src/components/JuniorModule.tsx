@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
-import { apiFetch, config, checkBackendHealth } from "@/lib/config";
+import { apiFetch, apiFetchWithRetry, config, checkBackendHealth } from "@/lib/config";
 import { addToQueue } from "@/lib/offline-queue";
 
 type Props = {
@@ -26,6 +26,7 @@ export default function JuniorModule({ clientId, onComplete }: Props) {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [progressMessage, setProgressMessage] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -52,6 +53,7 @@ export default function JuniorModule({ clientId, onComplete }: Props) {
     setInput("");
     setIsTyping(true);
     setError(null);
+    setProgressMessage("AI is processing...");
 
     try {
       const isOnline = await checkBackendHealth();
@@ -60,14 +62,22 @@ export default function JuniorModule({ clientId, onComplete }: Props) {
         throw new Error("Backend is offline. Working in offline mode.");
       }
 
-      const response = await apiFetch(config.endpoints.junior, {
+      // Show extended processing message after 15 seconds
+      const longProcessTimer = setTimeout(() => {
+        setProgressMessage("AI is still processing, please wait...");
+      }, 15000);
+
+      const response = await apiFetchWithRetry(config.endpoints.junior, {
         method: 'POST',
         body: JSON.stringify({
           query: queryText,
           context: 'AI Legal Junior Assistant - comprehensive legal analysis',
-          tenant_id: clientId || 'demo'
+          client_id: clientId || 'demo'
         })
-      });
+      }, config.timeouts.standard, 1);
+
+      clearTimeout(longProcessTimer);
+      setProgressMessage(null);
 
       if (response.ok) {
         const data = await response.json();
@@ -84,9 +94,21 @@ export default function JuniorModule({ clientId, onComplete }: Props) {
         throw new Error(`Backend returned ${response.status}`);
       }
     } catch (error) {
+      setProgressMessage(null);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       
-      if (errorMessage.includes('NETWORK_ERROR') || errorMessage.includes('offline')) {
+      if (errorMessage.includes('REQUEST_TIMEOUT')) {
+        setError("Request timed out. The AI is taking longer than expected. Please try again.");
+        setTimeout(() => setError(null), 5000);
+        
+        const errorMsg: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: `I'm sorry, but the request timed out. The AI is taking longer than expected to process your query. Please try asking again.`,
+          timestamp: Date.now(),
+        };
+        setMessages((prev) => [...prev, errorMsg]);
+      } else if (errorMessage.includes('NETWORK_ERROR') || errorMessage.includes('offline')) {
         const fallbackMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
@@ -127,7 +149,7 @@ Your query will be processed when backend connection is restored.
         addToQueue(config.endpoints.junior, 'POST', {
           query: queryText,
           context: 'AI Legal Junior Assistant - comprehensive legal analysis',
-          tenant_id: clientId || 'demo'
+          client_id: clientId || 'demo'
         });
         
         setError("Working offline. Queries will sync when connection is restored.");
@@ -157,8 +179,20 @@ Your query will be processed when backend connection is restored.
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col">
+    <div className="max-w-4xl mx-auto h-[calc(100vh-16rem)]">
       <AnimatePresence>
+        {progressMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 max-w-md"
+          >
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <span className="text-sm font-medium">{progressMessage}</span>
+          </motion.div>
+        )}
+
         {error && (
           <motion.div
             initial={{ opacity: 0, y: -50 }}
@@ -173,18 +207,22 @@ Your query will be processed when backend connection is restored.
       </AnimatePresence>
 
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="h-full flex flex-col">
-        <Card className="flex-1 flex flex-col min-h-0">
-          <CardHeader className="flex-shrink-0">
+        <Card className="flex-1 flex flex-col">
+          <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bot className="w-5 h-5 text-primary" />
-              Junior
+              AI Legal Junior
             </CardTitle>
+            <CardDescription>
+              Your AI assistant for legal research, drafting, and analysis
+            </CardDescription>
           </CardHeader>
-          <CardContent className="flex-1 flex flex-col space-y-4 min-h-0">
-            <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-muted/20 rounded-lg min-h-0">
+          <CardContent className="flex-1 flex flex-col space-y-4">
+            <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-muted/20 rounded-lg">
               {messages.length === 0 && (
                 <div className="text-center text-muted-foreground py-12">
                   <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>Ask me anything about Indian law, case research, or legal drafting...</p>
                 </div>
               )}
               <AnimatePresence>
@@ -222,14 +260,14 @@ Your query will be processed when backend connection is restored.
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="space-y-2 flex-shrink-0">
+            <div className="space-y-2">
               <div className="flex gap-2">
                 <Textarea
                   ref={textareaRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyPress}
-                  placeholder=""
+                  placeholder="Ask about case law, statutes, or legal procedures..."
                   rows={3}
                   className="flex-1"
                   disabled={isTyping}
@@ -241,7 +279,7 @@ Your query will be processed when backend connection is restored.
                     size="icon"
                     title="Upload documents"
                     disabled
-                    aria-label="Upload documents"
+                    aria-label="Upload documents (coming soon)"
                   >
                     <Upload className="w-4 h-4" />
                   </Button>
@@ -255,6 +293,7 @@ Your query will be processed when backend connection is restored.
                   </Button>
                 </div>
               </div>
+              <p className="text-xs text-muted-foreground">Press Enter to send, Shift+Enter for new line</p>
             </div>
           </CardContent>
         </Card>

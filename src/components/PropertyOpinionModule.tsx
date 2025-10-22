@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { FileText, Upload, CheckCircle, AlertCircle, Search, X } from "lucide-react";
+import { FileText, Upload, CheckCircle, AlertCircle, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
-import { useUploadDocument, useRequestPropertyOpinion } from "@/hooks/api";
-import { useApiToast } from "@/hooks/use-api-toast";
+import { apiFetchWithRetry, config, checkBackendHealth } from "@/lib/config";
 
 type Props = {
   clientId: string;
@@ -20,86 +19,86 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
   const [running, setRunning] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
-  
-  // Backend integration hooks
-  const uploadDocument = useUploadDocument();
-  const requestOpinion = useRequestPropertyOpinion();
-  const apiToast = useApiToast();
-
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    setSelectedFiles(files);
-  };
-
-  const handleDragOver = (event: React.DragEvent) => {
-    event.preventDefault();
-  };
-
-  const handleDrop = (event: React.DragEvent) => {
-    event.preventDefault();
-    const files = Array.from(event.dataTransfer.files);
-    setSelectedFiles(files);
-  };
-
-  const removeFile = (index: number) => {
-    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
-  };
+  const [errorMessage, setErrorMessage] = useState("");
+  const [progressMessage, setProgressMessage] = useState<string | null>(null);
 
   const handleAnalyze = async () => {
-    if (selectedFiles.length === 0) {
-      apiToast.warning('No Files', 'Please upload at least one document');
+    if (!specificConcerns.trim()) {
+      setErrorMessage("Please enter property concerns or questions");
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
       return;
     }
 
     setRunning(true);
-    setUploadProgress(0);
+    setProgressMessage("Connecting to backend...");
 
     try {
-      // Upload all files to backend
-      const uploadPromises = selectedFiles.map(async (file, index) => {
-        const doc = await uploadDocument.mutateAsync({
-          file,
-          caseId: clientId,
-          metadata: { type: 'property_document', clientId }
-        });
-        setUploadProgress(((index + 1) / selectedFiles.length) * 50); // 50% for uploads
-        return doc.id;
-      });
+      const isOnline = await checkBackendHealth();
+      
+      if (!isOnline) {
+        throw new Error("Backend is offline. Please try again later.");
+      }
 
-      const docIds = await Promise.all(uploadPromises);
-      
-      // Request property opinion from backend
-      await requestOpinion.mutateAsync({
-        propertyId: clientId,
-        address: specificConcerns,
-        documents: docIds,
-        checkType: 'full'
-      });
+      setProgressMessage("Analyzing property documents...");
 
-      setUploadProgress(100);
-      setRunning(false);
-      setShowSuccess(true);
-      apiToast.success('Analysis Complete', 'Property opinion generated successfully');
-      
-      setTimeout(() => setShowSuccess(false), 3000);
-      if (onComplete) onComplete();
-      
-      // Reset
-      setSelectedFiles([]);
-      setSpecificConcerns("");
+      const response = await apiFetchWithRetry(config.endpoints.property, {
+        method: 'POST',
+        body: JSON.stringify({
+          client_id: clientId || 'demo',
+          concerns: specificConcerns.trim(),
+        })
+      }, config.timeouts.standard, 1);
+
+      setProgressMessage(null);
+
+      if (response.status === 501) {
+        // Backend returns 501 Not Implemented
+        setErrorMessage("Property Opinion feature is coming soon! Backend implementation is in progress.");
+        setShowError(true);
+        setTimeout(() => setShowError(false), 5000);
+      } else if (response.ok) {
+        const data = await response.json();
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+        if (onComplete) onComplete();
+      } else {
+        throw new Error(`Backend returned ${response.status}`);
+      }
     } catch (error) {
-      setRunning(false);
-      apiToast.error(error, 'Failed to analyze documents');
-      setUploadProgress(0);
+      setProgressMessage(null);
+      const errMsg = error instanceof Error ? error.message : 'Unknown error occurred';
+      
+      if (errMsg.includes('REQUEST_TIMEOUT')) {
+        setErrorMessage("Request timed out. Please try again.");
+      } else if (errMsg.includes('NETWORK_ERROR') || errMsg.includes('offline')) {
+        setErrorMessage("Backend is offline. Please try again later.");
+      } else {
+        setErrorMessage("An error occurred. Please try again.");
+      }
+      
+      setShowError(true);
+      setTimeout(() => setShowError(false), 5000);
     }
+
+    setRunning(false);
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Success Popup */}
       <AnimatePresence>
+        {progressMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 max-w-md"
+          >
+            <Loader2 className="w-4 h-4 flex-shrink-0 animate-spin" />
+            <span className="text-sm font-medium">{progressMessage}</span>
+          </motion.div>
+        )}
+
         {showSuccess && (
           <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -112,6 +111,18 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
               <p className="font-semibold">Analysis Complete!</p>
               <p className="text-sm opacity-90">Property opinion generated successfully</p>
             </div>
+          </motion.div>
+        )}
+
+        {showError && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-orange-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 max-w-md"
+          >
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm font-medium">{errorMessage}</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -127,20 +138,7 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <label className="text-sm font-semibold text-foreground">Upload Property Documents</label>
-              <div 
-                className="border-2 border-dashed border-primary/30 bg-primary/5 rounded-lg p-8 text-center hover:border-primary hover:bg-primary/10 transition-all duration-200 cursor-pointer group relative"
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                onClick={() => document.getElementById('file-input')?.click()}
-              >
-                <input
-                  id="file-input"
-                  type="file"
-                  multiple
-                  accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
-                  onChange={handleFileSelect}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
+              <div className="border-2 border-dashed border-primary/30 bg-primary/5 rounded-lg p-8 text-center hover:border-primary hover:bg-primary/10 transition-all duration-200 cursor-pointer group">
                 <Upload className="w-8 h-8 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
                 <p className="text-sm font-medium text-primary">
                   Click to upload documents
@@ -148,56 +146,7 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
                 <p className="text-xs text-muted-foreground mt-1">
                   Drag and drop files here
                 </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Accepted: PDF, DOC, DOCX, TXT, JPG, PNG
-                </p>
               </div>
-              
-              {/* Selected Files Display */}
-              {selectedFiles.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-foreground">Selected Files:</p>
-                  <div className="space-y-2">
-                    {selectedFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <FileText className="w-4 h-4 text-primary" />
-                          <div>
-                            <p className="text-sm font-medium">{file.name}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {(file.size / 1024 / 1024).toFixed(2)} MB
-                            </p>
-                          </div>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeFile(index)}
-                          className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {/* Upload Progress */}
-              {running && (
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Uploading...</span>
-                    <span>{uploadProgress}%</span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div 
-                      className="bg-primary h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${uploadProgress}%` }}
-                    />
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className="space-y-2">
@@ -206,7 +155,7 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
               </label>
               <Textarea
                 id="concerns"
-                placeholder=""
+                placeholder="Any specific legal concerns or questions..."
                 value={specificConcerns}
                 onChange={(e) => setSpecificConcerns(e.target.value)}
                 rows={3}

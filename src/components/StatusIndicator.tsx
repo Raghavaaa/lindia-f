@@ -11,9 +11,8 @@ export default function StatusIndicator() {
 
   useEffect(() => {
     const checkStatus = async () => {
-      // Only show status if backend is configured and returns actual health errors
       if (!isBackendConfigured()) {
-        setStatus("offline"); // Hide unconfigured state from users
+        setStatus("unconfigured");
         setChecking(false);
         return;
       }
@@ -24,7 +23,7 @@ export default function StatusIndicator() {
     };
 
     checkStatus();
-    const interval = setInterval(checkStatus, 30000); // Check every 30 seconds
+    const interval = setInterval(checkStatus, 60000); // Check every 60 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -41,18 +40,23 @@ export default function StatusIndicator() {
         className="fixed top-4 right-4 z-50"
       >
         {status === "online" && (
-          <div className="flex items-center gap-2 bg-green-500 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-lg">
-            <Wifi className="w-3 h-3" />
-            <span>ONLINE</span>
+          <div className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-full text-xs font-medium shadow-lg animate-pulse-slow">
+            <Wifi className="w-4 h-4" />
+            <span>Backend Connected</span>
           </div>
         )}
         {status === "offline" && (
-          <div className="flex items-center gap-2 bg-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-lg">
-            <WifiOff className="w-3 h-3" />
-            <span>OFFLINE MODE</span>
+          <div className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-full text-xs font-medium shadow-lg">
+            <WifiOff className="w-4 h-4" />
+            <span>Offline Mode</span>
           </div>
         )}
-        {/* Hide unconfigured state from users - only show actual health status */}
+        {status === "unconfigured" && (
+          <div className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-full text-xs font-medium shadow-lg">
+            <AlertCircle className="w-4 h-4" />
+            <span>Backend Not Configured</span>
+          </div>
+        )}
       </motion.div>
     </AnimatePresence>
   );
