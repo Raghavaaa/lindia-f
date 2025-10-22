@@ -206,7 +206,7 @@ export default function PropertyOpinionModule({ clientId, onComplete }: Props) {
               </label>
               <Textarea
                 id="concerns"
-                placeholder="Any specific legal concerns or questions..."
+                placeholder=""
                 value={specificConcerns}
                 onChange={(e) => setSpecificConcerns(e.target.value)}
                 rows={3}

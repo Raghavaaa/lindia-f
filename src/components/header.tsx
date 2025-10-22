@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { Settings } from "lucide-react";
+import { Suspense } from "react";
 
-export default function Header() {
+function HeaderContent() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentModule = searchParams?.get("module") || "research";
   const { user, isAuthenticated } = useAuth();
   const isAppPage = pathname?.startsWith('/app');
 
@@ -60,11 +63,11 @@ export default function Header() {
           {/* Second Row - Module Tabs (only show when logged in and on app page) */}
           {isAuthenticated && isAppPage && (
             <div className="border-t border-gray-200">
-              <nav className="flex items-center gap-1 px-4 overflow-x-auto">
+              <nav className="flex items-center justify-end gap-1 px-4 overflow-x-auto">
                 <Link
                   href="/app?module=research"
                   className={`px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
-                    pathname === '/app' && (!pathname.includes('module=') || pathname.includes('module=research'))
+                    currentModule === 'research'
                       ? 'border-blue-600 text-blue-600'
                       : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
                   }`}
@@ -74,7 +77,7 @@ export default function Header() {
                 <Link
                   href="/app?module=property"
                   className={`px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
-                    pathname.includes('module=property')
+                    currentModule === 'property'
                       ? 'border-blue-600 text-blue-600'
                       : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
                   }`}
@@ -84,7 +87,7 @@ export default function Header() {
                 <Link
                   href="/app?module=case"
                   className={`px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
-                    pathname.includes('module=case')
+                    currentModule === 'case'
                       ? 'border-blue-600 text-blue-600'
                       : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
                   }`}
@@ -94,7 +97,7 @@ export default function Header() {
                 <Link
                   href="/app?module=junior"
                   className={`px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
-                    pathname.includes('module=junior')
+                    currentModule === 'junior'
                       ? 'border-blue-600 text-blue-600'
                       : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
                   }`}
@@ -107,5 +110,21 @@ export default function Header() {
         </div>
       </div>
     </header>
+  );
+}
+
+export default function Header() {
+  return (
+    <Suspense fallback={
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+        <div className="container mx-auto max-w-7xl">
+          <div className="flex items-center justify-between h-14 sm:h-16 px-4">
+            <div className="text-base sm:text-lg font-semibold text-gray-900">Legal India.ai</div>
+          </div>
+        </div>
+      </header>
+    }>
+      <HeaderContent />
+    </Suspense>
   );
 }

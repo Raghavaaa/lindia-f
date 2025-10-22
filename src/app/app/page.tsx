@@ -106,7 +106,7 @@ function AppPageContent() {
   };
 
   return (
-    <div className="h-screen flex relative pt-[104px] sm:pt-[112px] bg-background overflow-hidden">
+    <div className="fixed inset-0 flex pt-[104px] sm:pt-[112px] bg-background">
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 
@@ -163,7 +163,7 @@ function AppPageContent() {
       </motion.aside>
 
       {/* Center: Module Workspace */}
-      <main className="flex-1 bg-background min-w-0 md:ml-[220px] md:mr-[320px] p-4 md:p-6 overflow-y-auto h-full">
+      <main className="flex-1 bg-background min-w-0 md:ml-[220px] md:mr-[320px] p-4 md:p-6 overflow-y-auto">
         {/* Mobile Menu Button */}
         <div className="md:hidden mb-4">
           <Button

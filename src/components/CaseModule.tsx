@@ -79,11 +79,8 @@ export default function CaseModule({ clientId, onComplete }: Props) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Scale className="w-5 h-5 text-primary" />
-              Case Management
+              Case
             </CardTitle>
-            <CardDescription>
-              Prepare case documents, petitions, and legal drafts
-            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
@@ -92,7 +89,7 @@ export default function CaseModule({ clientId, onComplete }: Props) {
               </label>
               <Input
                 id="case-title"
-                placeholder="e.g., Property Dispute - XYZ vs ABC"
+                placeholder=""
                 value={caseTitle}
                 onChange={(e) => setCaseTitle(e.target.value)}
               />
@@ -104,7 +101,7 @@ export default function CaseModule({ clientId, onComplete }: Props) {
               </label>
               <Textarea
                 id="case-details"
-                placeholder="Describe the case facts, parties involved, relief sought..."
+                placeholder=""
                 value={caseDetails}
                 onChange={(e) => setCaseDetails(e.target.value)}
                 rows={8}

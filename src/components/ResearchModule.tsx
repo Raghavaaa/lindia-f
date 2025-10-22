@@ -360,29 +360,13 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
           ) : (
             <Textarea
               ref={textareaRef}
-              placeholder="Enter your legal research question (e.g., 'What are the requirements for adverse possession in urban properties under Indian law?')"
+              placeholder=""
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="min-h-[120px] resize-y"
               aria-label="Research query input"
             />
           )}
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-muted-foreground">
-              {clientId ? "Press Enter to run research" : "Select a client to enable research"}
-            </p>
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="h-8 px-3 text-xs"
-            >
-              <a href="/app?module=property">
-                <Building2 className="w-3 h-3 mr-1" />
-                Property Opinion
-              </a>
-            </Button>
-          </div>
         </div>
 
         {clientId && (
@@ -411,7 +395,7 @@ ${adminPrompt && showAdmin ? `\n\n(Enhanced with admin context: ${adminPrompt})`
                   value={adminPrompt}
                   onChange={(e) => setAdminPrompt(e.target.value)}
                   className="min-h-[80px] resize-y"
-                  placeholder="Admin prompt..."
+                  placeholder=""
                   aria-label="Admin prompt for research customization"
                 />
               </motion.div>

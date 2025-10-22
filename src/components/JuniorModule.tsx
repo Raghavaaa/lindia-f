@@ -177,18 +177,14 @@ Your query will be processed when backend connection is restored.
           <CardHeader className="flex-shrink-0">
             <CardTitle className="flex items-center gap-2">
               <Bot className="w-5 h-5 text-primary" />
-              AI Legal Junior
+              Junior
             </CardTitle>
-            <CardDescription>
-              Your AI assistant for legal research, drafting, and analysis
-            </CardDescription>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col space-y-4 min-h-0">
             <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-muted/20 rounded-lg min-h-0">
               {messages.length === 0 && (
                 <div className="text-center text-muted-foreground py-12">
                   <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>Ask me anything about Indian law, case research, or legal drafting...</p>
                 </div>
               )}
               <AnimatePresence>
@@ -233,7 +229,7 @@ Your query will be processed when backend connection is restored.
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyPress}
-                  placeholder="Ask about case law, statutes, or legal procedures..."
+                  placeholder=""
                   rows={3}
                   className="flex-1"
                   disabled={isTyping}
@@ -245,7 +241,7 @@ Your query will be processed when backend connection is restored.
                     size="icon"
                     title="Upload documents"
                     disabled
-                    aria-label="Upload documents (coming soon)"
+                    aria-label="Upload documents"
                   >
                     <Upload className="w-4 h-4" />
                   </Button>
@@ -259,7 +255,6 @@ Your query will be processed when backend connection is restored.
                   </Button>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground">Press Enter to send, Shift+Enter for new line</p>
             </div>
           </CardContent>
         </Card>
