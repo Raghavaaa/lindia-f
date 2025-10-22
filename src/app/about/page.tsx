@@ -35,105 +35,135 @@ export default function AboutPage() {
       </div>
 
       <main className="container mx-auto px-4 py-8 sm:py-12 md:py-16 relative">
-        {/* Hero Section with text scrim for contrast */}
-        <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16">
+        {/* Hero Section with enhanced centering and aesthetics */}
+        <div className="max-w-5xl mx-auto text-center mb-16 sm:mb-20 md:mb-24">
           <div className="relative">
-            {/* Subtle scrim behind headline for WCAG compliance */}
-            <div className="absolute inset-0 -mx-4 sm:-mx-8 -my-2 bg-white/40 backdrop-blur-[2px] rounded-3xl -z-10" />
+            {/* Enhanced scrim with better aesthetics */}
+            <div className="absolute inset-0 -mx-6 sm:-mx-12 -my-4 bg-white/50 backdrop-blur-[4px] rounded-3xl -z-10 shadow-lg" />
             
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#0B1820] mb-6 sm:mb-8 leading-tight tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#0B1820] mb-8 sm:mb-10 leading-tight tracking-tight">
               Redefining Indian Lawyers Work.
             </h1>
           </div>
-          <p className="text-lg sm:text-xl md:text-2xl text-[#111827] font-medium leading-relaxed mb-4 sm:mb-6">
-            Fast. Sharp. Reliable, secure
+          <p className="text-xl sm:text-2xl md:text-3xl text-[#6B7280] font-medium leading-relaxed mb-6 sm:mb-8">
+            Fast. Sharp. Reliable. Secure.
           </p>
-          <p className="text-base sm:text-lg md:text-xl text-[#1F2937] leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl md:text-2xl text-[#374151] leading-relaxed max-w-4xl mx-auto">
             A single platform that handles property opinions, legal research, case tracking, and your own AI junior — all in one clean, intelligent workspace.
           </p>
         </div>
 
-        {/* Features List */}
-        <div className="max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="space-y-6 sm:space-y-8">
-            <div className="text-left p-6 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/50 shadow-sm hover:shadow-md transition-shadow duration-300">
-              <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#0B1820] mb-2 sm:mb-3">
-                1. Property Opinion
+        {/* Features List - Enhanced 2-column layout */}
+        <div className="max-w-6xl mx-auto mb-16 sm:mb-20 md:mb-24">
+          {/* Subtle divider line */}
+          <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-gray-300 to-transparent mx-auto mb-12 sm:mb-16"></div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12">
+            <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold text-white">1</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
+                Property Opinion
               </h3>
-              <p className="text-base sm:text-lg text-[#374151] leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-[#374151] leading-relaxed">
                 Upload, review, and get ready-to-use property opinions without delay.
               </p>
             </div>
             
-            <div className="text-left p-6 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/50 shadow-sm hover:shadow-md transition-shadow duration-300">
-              <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#0B1820] mb-2 sm:mb-3">
-                2. Legal Research
+            <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold text-white">2</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
+                Legal Research
               </h3>
-              <p className="text-base sm:text-lg text-[#374151] leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-[#374151] leading-relaxed">
                 Type your query and get direct, case-backed answers — no clutter, no confusion.
               </p>
             </div>
             
-            <div className="text-left p-6 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/50 shadow-sm hover:shadow-md transition-shadow duration-300">
-              <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#0B1820] mb-2 sm:mb-3">
-                3. Case Management
+            <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold text-white">3</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
+                Case Management
               </h3>
-              <p className="text-base sm:text-lg text-[#374151] leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-[#374151] leading-relaxed">
                 Control every case, document, and client from one secure dashboard.
               </p>
             </div>
             
-            <div className="text-left p-6 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/50 shadow-sm hover:shadow-md transition-shadow duration-300">
-              <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#0B1820] mb-2 sm:mb-3">
-                4. Junior AI
+            <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold text-white">4</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
+                Junior AI
               </h3>
-              <p className="text-base sm:text-lg text-[#374151] leading-relaxed">
-                A silent assistant
+              <p className="text-base sm:text-lg md:text-xl text-[#374151] leading-relaxed">
+                Your intelligent assistant for legal research, drafting, and analysis.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Mission Statement */}
-        <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16">
-          <p className="text-lg sm:text-xl md:text-2xl font-medium text-[#111827] leading-relaxed mb-6 sm:mb-8">
-            Step into the next era of Indian law.
-          </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0B1820] mb-6 sm:mb-8">
-            Built for Lawyers Who Want to Move Fast.
-          </h2>
-        </div>
-
-        {/* Value Propositions */}
-        <div className="max-w-4xl mx-auto mb-12 sm:mb-16">
-          <div className="space-y-6 sm:space-y-8 text-center">
-            <p className="text-base sm:text-lg md:text-xl text-[#1F2937] leading-relaxed">
-              It reads, thinks, and responds in the language of Indian law.
+        {/* Mission Statement - Enhanced */}
+        <div className="max-w-5xl mx-auto text-center mb-16 sm:mb-20 md:mb-24">
+          <div className="relative">
+            <div className="absolute inset-0 -mx-6 sm:-mx-12 -my-4 bg-white/30 backdrop-blur-[2px] rounded-3xl -z-10"></div>
+            <p className="text-xl sm:text-2xl md:text-3xl font-medium text-[#6B7280] leading-relaxed mb-8 sm:mb-10">
+              Step into the next era of Indian law.
             </p>
-            <p className="text-base sm:text-lg md:text-xl text-[#1F2937] leading-relaxed">
-              Gives lawyer an intelligent system that saves time, removes clutter, and sharpens decision-making.
-            </p>
-            <p className="text-base sm:text-lg md:text-xl text-[#1F2937] leading-relaxed">
-              Every feature exists to make lawyer&apos;s work smoother, sharper, and smarter.
-            </p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#0B1820] mb-8 sm:mb-10 leading-tight">
+              Built for Lawyers Who Want to Move Fast.
+            </h2>
           </div>
         </div>
 
-        {/* Brand */}
-        <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16">
-          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0B1820]">
-            Legalindia.ai
-          </h3>
+        {/* Value Propositions - Enhanced with better spacing */}
+        <div className="max-w-5xl mx-auto mb-16 sm:mb-20 md:mb-24">
+          <div className="space-y-8 sm:space-y-10 md:space-y-12 text-center">
+            <div className="relative">
+              <div className="absolute inset-0 -mx-4 sm:-mx-8 -my-2 bg-white/20 backdrop-blur-[1px] rounded-2xl -z-10"></div>
+              <p className="text-lg sm:text-xl md:text-2xl text-[#374151] leading-relaxed font-medium">
+                It reads, thinks, and responds in the language of Indian law.
+              </p>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 -mx-4 sm:-mx-8 -my-2 bg-white/20 backdrop-blur-[1px] rounded-2xl -z-10"></div>
+              <p className="text-lg sm:text-xl md:text-2xl text-[#374151] leading-relaxed font-medium">
+                Gives lawyers an intelligent system that saves time, removes clutter, and sharpens decision-making.
+              </p>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 -mx-4 sm:-mx-8 -my-2 bg-white/20 backdrop-blur-[1px] rounded-2xl -z-10"></div>
+              <p className="text-lg sm:text-xl md:text-2xl text-[#374151] leading-relaxed font-medium">
+                Every feature exists to make lawyers&apos; work smoother, sharper, and smarter.
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
-          <Button asChild size="lg" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 h-auto w-full sm:w-auto min-w-[140px] sm:min-w-[160px] bg-black hover:bg-gray-800 text-white transition-all duration-300">
+        {/* Brand - Enhanced */}
+        <div className="max-w-5xl mx-auto text-center mb-16 sm:mb-20 md:mb-24">
+          <div className="relative">
+            <div className="absolute inset-0 -mx-6 sm:-mx-12 -my-4 bg-white/40 backdrop-blur-[3px] rounded-3xl -z-10 shadow-lg"></div>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#0B1820] tracking-tight">
+              Legalindia.ai
+            </h3>
+          </div>
+        </div>
+
+        {/* Action Buttons - Enhanced */}
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-8 md:gap-10">
+          <Button asChild size="lg" className="text-base sm:text-lg md:text-xl px-8 sm:px-10 md:px-12 py-3 sm:py-4 md:py-5 h-auto w-full sm:w-auto min-w-[160px] sm:min-w-[180px] bg-black hover:bg-gray-800 text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
             <Link href="/">Home</Link>
-              </Button>
-          <Button asChild size="lg" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-12 py-2.5 sm:py-3 md:py-4 h-auto w-full sm:w-auto min-w-[140px] sm:min-w-[160px] bg-black hover:bg-gray-800 text-white transition-all duration-300">
+          </Button>
+          <Button asChild size="lg" className="text-base sm:text-lg md:text-xl px-8 sm:px-10 md:px-12 py-3 sm:py-4 md:py-5 h-auto w-full sm:w-auto min-w-[160px] sm:min-w-[180px] bg-black hover:bg-gray-800 text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
             <Link href="/login">Go to App</Link>
-              </Button>
+          </Button>
         </div>
       </main>
     </div>
