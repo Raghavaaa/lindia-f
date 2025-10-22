@@ -1,6 +1,6 @@
 // Global configuration for frontend
 export const config = {
-  apiBase: process.env.NEXT_PUBLIC_BACKEND_URL || 'https://lindia-b-production.up.railway.app',
+  apiBase: process.env.NEXT_PUBLIC_BACKEND_URL || '',
   environment: process.env.NEXT_PUBLIC_ENV || 'production',
   apiKey: process.env.NEXT_PUBLIC_API_KEY || 'demo_api_key_12345',
   
