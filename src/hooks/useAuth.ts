@@ -53,8 +53,8 @@ export function useAuth() {
     }
     
     if (session) {
-      // Use NextAuth signOut for Google Auth
-      await signOut({ callbackUrl: '/' });
+      // Use NextAuth signOut for Google Auth - redirect to /login
+      await signOut({ callbackUrl: '/login' });
     } else {
       // Clear localStorage for demo mode
       localStorage.removeItem("legalindia_profile");
@@ -69,8 +69,8 @@ export function useAuth() {
       });
       
       setLocalUser(null);
-      // Redirect to home page
-      window.location.href = "/";
+      // Redirect to login page
+      window.location.href = "/login";
     }
   };
 

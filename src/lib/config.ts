@@ -9,6 +9,10 @@ export const config = {
     research: '/api/v1/research/',
     junior: '/api/v1/junior/',
     storage: '/api/storage',
+    clients: '/api/clients',
+    clientsCreate: '/api/clients/create',
+    property: '/api/property',
+    cases: '/api/cases',
   },
 } as const;
 

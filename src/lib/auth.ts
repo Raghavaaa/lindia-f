@@ -16,13 +16,13 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       // Prevent redirecting back to login page
       if (url.includes('/login')) {
-        return `${baseUrl}/app`
+        return `${baseUrl}/dashboard`
       }
       
-      // Redirect to app after successful login
+      // Redirect to dashboard after successful login
       if (url.startsWith("/")) return `${baseUrl}${url}`
       else if (new URL(url).origin === baseUrl) return url
-      return `${baseUrl}/app`
+      return `${baseUrl}/dashboard`
     },
     async session({ session, token }) {
       // Add user data to session

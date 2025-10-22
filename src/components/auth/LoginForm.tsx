@@ -28,7 +28,7 @@ export default function LoginForm() {
     localStorage.setItem("legalindia_profile", JSON.stringify(userProfile));
     
     // Redirect immediately
-    window.location.href = "/app";
+    window.location.href = "/dashboard";
   };
 
   const handleGoogleLogin = async () => {
@@ -36,15 +36,9 @@ export default function LoginForm() {
     
     try {
       // Use NextAuth signIn for real Google OAuth
-      const result = await signIn('google', { 
-        callbackUrl: '/app',
-        redirect: false 
+      await signIn('google', { 
+        callbackUrl: '/dashboard'
       });
-      
-      if (result?.ok) {
-        // Redirect to app on success
-        router.push('/app');
-      }
     } catch (error) {
       // Handle error silently
     } finally {
