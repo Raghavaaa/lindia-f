@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { AlertCircle, CheckCircle } from "lucide-react";
-import { createClient } from "@/lib/client-service";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ClientModal({ 
@@ -89,19 +88,13 @@ export default function ClientModal({
     }
 
     try {
-      // Create client via backend API
-      const newClient = await createClient({ 
-        name: name.trim(), 
-        phone: phone.trim() 
-      });
-      
-      // Call the parent callback with the created client
-      await onCreate(newClient);
+      // Call the parent callback to create client
+      await onCreate({ name: name.trim(), phone: phone.trim() });
       
       // Show success toast
       toast({
         title: "Client created successfully",
-        description: `${newClient.name} has been added to your workspace.`,
+        description: `${name.trim()} has been added to your workspace.`,
       });
       
       onClose();
