@@ -13,9 +13,6 @@ function HeaderContent() {
   const { user, isAuthenticated, logout } = useAuth();
   const isDashboardPage = pathname?.startsWith('/dashboard');
 
-  // Debug logging
-  console.log('Header Debug:', { isAuthenticated, user, pathname });
-
   const handleLogout = async () => {
     await logout();
   };

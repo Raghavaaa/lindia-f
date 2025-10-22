@@ -72,27 +72,27 @@ export default function HomePage() {
         </div>
 
         {/* Two Buttons - Premium Design */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8 sm:mb-12 md:mb-16">
-          <Button asChild size="lg" className="relative h-14 px-6 w-full sm:w-auto min-w-[200px] rounded-xl bg-gradient-to-b from-black to-gray-900 text-white font-semibold text-lg tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-150 ease-out focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-45 disabled:pointer-events-none">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 mb-8 sm:mb-12 md:mb-16">
+          <Button asChild size="lg" className="relative h-10 sm:h-12 md:h-14 px-4 sm:px-6 w-full sm:w-auto min-w-[140px] sm:min-w-[180px] md:min-w-[200px] rounded-lg sm:rounded-xl bg-gradient-to-b from-black to-gray-900 text-white font-semibold text-sm sm:text-base md:text-lg tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-150 ease-out focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-45 disabled:pointer-events-none">
             <Link href="/about">Get Started</Link>
           </Button>
-          <Button asChild size="lg" className="relative h-14 px-6 w-full sm:w-auto min-w-[200px] rounded-xl bg-gradient-to-b from-black to-gray-900 text-white font-semibold text-lg tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-150 ease-out focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-45 disabled:pointer-events-none">
+          <Button asChild size="lg" className="relative h-10 sm:h-12 md:h-14 px-4 sm:px-6 w-full sm:w-auto min-w-[140px] sm:min-w-[180px] md:min-w-[200px] rounded-lg sm:rounded-xl bg-gradient-to-b from-black to-gray-900 text-white font-semibold text-sm sm:text-base md:text-lg tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-150 ease-out focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-45 disabled:pointer-events-none">
             <Link href="/login">Go to App</Link>
           </Button>
         </div>
 
         {/* Four Boxes - Enhanced with backdrop blur */}
-        <div className="max-w-2xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <div className="max-w-xl sm:max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
             {features.map((feature) => {
               const Icon = feature.icon;
               return (
                 <Card key={feature.id} className="shadow-lg hover:shadow-xl transition-all duration-300 border border-white/60 bg-white/40 backdrop-blur-sm hover:scale-[1.02]">
-                  <CardContent className="p-4 sm:p-6 text-center">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 flex items-center justify-center bg-gray-800 rounded-lg shadow-md">
-                      <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  <CardContent className="p-3 sm:p-4 md:p-6 text-center">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 mx-auto mb-2 sm:mb-3 md:mb-4 flex items-center justify-center bg-gray-800 rounded-lg shadow-md">
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                     </div>
-                    <h3 className="font-semibold text-[#0B1820] text-sm sm:text-base">{feature.label}</h3>
+                    <h3 className="font-semibold text-[#0B1820] text-xs sm:text-sm md:text-base">{feature.label}</h3>
                   </CardContent>
                 </Card>
               );

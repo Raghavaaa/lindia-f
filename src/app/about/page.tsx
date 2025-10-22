@@ -54,55 +54,55 @@ export default function AboutPage() {
         </div>
 
         {/* Features List - Enhanced 2-column layout */}
-        <div className="max-w-6xl mx-auto mb-16 sm:mb-20 md:mb-24">
+        <div className="max-w-4xl sm:max-w-5xl lg:max-w-6xl mx-auto mb-16 sm:mb-20 md:mb-24">
           {/* Subtle divider line */}
-          <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-gray-300 to-transparent mx-auto mb-12 sm:mb-16"></div>
+          <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-gray-300 to-transparent mx-auto mb-8 sm:mb-12 md:mb-16"></div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12">
-            <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gray-800 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-bold text-white">1</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12">
+            <div className="text-center p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl sm:rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-4 sm:mb-5 md:mb-6 bg-gray-800 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-lg sm:text-xl md:text-2xl font-bold text-white">1</span>
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
+              <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#0B1820] mb-3 sm:mb-4 md:mb-6">
                 Property Opinion
               </h3>
-              <p className="text-base sm:text-lg md:text-xl text-[#374151] leading-relaxed">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#374151] leading-relaxed">
                 Upload, review, and get ready-to-use property opinions without delay.
               </p>
             </div>
             
-            <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gray-800 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-bold text-white">2</span>
+            <div className="text-center p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl sm:rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-4 sm:mb-5 md:mb-6 bg-gray-800 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-lg sm:text-xl md:text-2xl font-bold text-white">2</span>
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
+              <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#0B1820] mb-3 sm:mb-4 md:mb-6">
                 Legal Research
               </h3>
-              <p className="text-base sm:text-lg md:text-xl text-[#374151] leading-relaxed">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#374151] leading-relaxed">
                 Type your query and get direct, case-backed answers — no clutter, no confusion.
               </p>
             </div>
             
-            <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gray-800 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-bold text-white">3</span>
+            <div className="text-center p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl sm:rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-4 sm:mb-5 md:mb-6 bg-gray-800 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-lg sm:text-xl md:text-2xl font-bold text-white">3</span>
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
+              <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#0B1820] mb-3 sm:mb-4 md:mb-6">
                 Case Management
               </h3>
-              <p className="text-base sm:text-lg md:text-xl text-[#374151] leading-relaxed">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#374151] leading-relaxed">
                 Control every case, document, and client from one secure dashboard.
               </p>
             </div>
             
-            <div className="text-center p-8 sm:p-10 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-              <div className="w-16 h-16 mx-auto mb-6 bg-gray-800 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-bold text-white">4</span>
+            <div className="text-center p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl sm:rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-4 sm:mb-5 md:mb-6 bg-gray-800 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-lg sm:text-xl md:text-2xl font-bold text-white">4</span>
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B1820] mb-4 sm:mb-6">
+              <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#0B1820] mb-3 sm:mb-4 md:mb-6">
                 Junior AI
               </h3>
-              <p className="text-base sm:text-lg md:text-xl text-[#374151] leading-relaxed">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#374151] leading-relaxed">
                 Your intelligent assistant for legal research, drafting, and analysis.
               </p>
             </div>
@@ -157,11 +157,11 @@ export default function AboutPage() {
         </div>
 
         {/* Action Buttons - Premium Design */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <Button asChild size="lg" className="relative h-14 px-6 w-full sm:w-auto min-w-[200px] rounded-xl bg-gradient-to-b from-black to-gray-900 text-white font-semibold text-lg tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-150 ease-out focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-45 disabled:pointer-events-none">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4">
+          <Button asChild size="lg" className="relative h-10 sm:h-12 md:h-14 px-4 sm:px-6 w-full sm:w-auto min-w-[140px] sm:min-w-[180px] md:min-w-[200px] rounded-lg sm:rounded-xl bg-gradient-to-b from-black to-gray-900 text-white font-semibold text-sm sm:text-base md:text-lg tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-150 ease-out focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-45 disabled:pointer-events-none">
             <Link href="/">Home</Link>
               </Button>
-          <Button asChild size="lg" className="relative h-14 px-6 w-full sm:w-auto min-w-[200px] rounded-xl bg-gradient-to-b from-black to-gray-900 text-white font-semibold text-lg tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-150 ease-out focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-45 disabled:pointer-events-none">
+          <Button asChild size="lg" className="relative h-10 sm:h-12 md:h-14 px-4 sm:px-6 w-full sm:w-auto min-w-[140px] sm:min-w-[180px] md:min-w-[200px] rounded-lg sm:rounded-xl bg-gradient-to-b from-black to-gray-900 text-white font-semibold text-sm sm:text-base md:text-lg tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-150 ease-out focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-45 disabled:pointer-events-none">
             <Link href="/login">Go to App</Link>
               </Button>
         </div>
