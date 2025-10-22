@@ -1,7 +1,13 @@
 'use client';
 
 import { useToast } from './use-toast';
-import { ApiError } from '@/lib/api-client';
+
+// Simple API error type
+export interface ApiError {
+  message: string;
+  status?: number;
+  details?: unknown;
+}
 
 /**
  * Hook for displaying API-related toast notifications
