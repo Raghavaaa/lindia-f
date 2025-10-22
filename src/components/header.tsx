@@ -12,6 +12,8 @@ function HeaderContent() {
   const currentModule = searchParams?.get("module") || "research";
   const { user, isAuthenticated, logout } = useAuth();
   const isDashboardPage = pathname?.startsWith('/dashboard');
+  const isAppPage = pathname?.startsWith('/app') || pathname?.startsWith('/dashboard') || pathname?.startsWith('/settings') || pathname?.startsWith('/history') || pathname?.startsWith('/research');
+  const isPublicPage = pathname === '/' || pathname === '/about' || pathname === '/login';
 
   const handleLogout = async () => {
     await logout();
@@ -28,36 +30,64 @@ function HeaderContent() {
               Legal India.ai
             </Link>
 
-            {/* Navigation - Show different items based on auth state */}
+            {/* Navigation - Show different items based on auth state and page type */}
             <nav className="flex items-center gap-3 sm:gap-6">
               {isAuthenticated ? (
                 <>
                   {/* Logged in navigation */}
-                  <Link 
-                    href="/dashboard" 
-                    className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                  <Link 
-                    href="/about" 
-                    className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    About
-                  </Link>
-                  <Link 
-                    href="/settings" 
-                    className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    Settings
-                  </Link>
-                  <Button
-                    onClick={handleLogout}
-                    variant="ghost"
-                    className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors h-auto p-0"
-                  >
-                    Logout
-                  </Button>
+                  {isAppPage ? (
+                    <>
+                      {/* SaaS App Navigation */}
+                      <Link 
+                        href="/dashboard" 
+                        className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                      >
+                        Dashboard
+                      </Link>
+                      <Link 
+                        href="/about" 
+                        className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                      >
+                        About
+                      </Link>
+                      <Link 
+                        href="/settings" 
+                        className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                      >
+                        Settings
+                      </Link>
+                      <Button
+                        onClick={handleLogout}
+                        variant="ghost"
+                        className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors h-auto p-0"
+                      >
+                        Logout
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      {/* Public Page Navigation (when logged in) */}
+                      <Link 
+                        href="/dashboard" 
+                        className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                      >
+                        Dashboard
+                      </Link>
+                      <Link 
+                        href="/about" 
+                        className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                      >
+                        About
+                      </Link>
+                      <Button
+                        onClick={handleLogout}
+                        variant="ghost"
+                        className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 transition-colors h-auto p-0"
+                      >
+                        Logout
+                      </Button>
+                    </>
+                  )}
                 </>
               ) : (
                 <>
