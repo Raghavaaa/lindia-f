@@ -10,16 +10,16 @@ export default function AboutPage() {
         style={{
           background: `
             radial-gradient(ellipse 80% 60% at 50% 40%, 
-              rgba(255, 220, 192, 0.85) 0%,
-              rgba(255, 201, 209, 0.7) 35%,
-              rgba(230, 223, 247, 0.5) 70%,
+              rgba(248, 250, 252, 0.85) 0%,
+              rgba(241, 245, 249, 0.7) 35%,
+              rgba(226, 232, 240, 0.5) 70%,
               rgba(251, 250, 252, 1) 100%
             ),
             linear-gradient(180deg, 
-              rgba(230, 223, 247, 0.15) 0%, 
+              rgba(226, 232, 240, 0.15) 0%, 
               transparent 30%, 
               transparent 70%, 
-              rgba(230, 223, 247, 0.2) 100%
+              rgba(226, 232, 240, 0.2) 100%
             ),
             #FBFAFC
           `,
