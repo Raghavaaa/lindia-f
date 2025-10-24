@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch, apiFetchWithRetry, config, checkBackendHealth } from "@/lib/config";
 import { addToQueue } from "@/lib/offline-queue";
+import { useAuth } from "@/hooks/useAuth";
 
 type ResearchItem = {
   id: string;
@@ -26,6 +27,7 @@ type Props = {
 };
 
 export default function ResearchModule({ clientId, onResearchComplete }: Props) {
+  const { user } = useAuth();
   const [query, setQuery] = useState("");
   const [adminPrompt, setAdminPrompt] = useState("Use Indian case law & statutes where relevant. Summarize in 5 bullet points.");
   const [showAdmin, setShowAdmin] = useState(false);
@@ -38,9 +40,15 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
   const [progressMessage, setProgressMessage] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Get user-specific storage key for research results
+  const getUserResearchKey = () => {
+    const userEmail = user?.email || 'anonymous';
+    return `legalindia_research_${userEmail}_${clientId}`;
+  };
+
   useEffect(() => {
     try {
-      const key = `legalindia::client::${clientId}::research`;
+      const key = getUserResearchKey();
       const data = localStorage.getItem(key);
       if (data) {
         const items = JSON.parse(data);
@@ -49,12 +57,15 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
     } catch (error) {
       // Ignore localStorage errors
     }
-  }, [clientId]);
+  }, [clientId, user]);
 
   useEffect(() => {
     try {
       const keys = Object.keys(localStorage);
-      const researchKeys = keys.filter(key => key.startsWith('legalindia::client::') && key.endsWith('::research'));
+      const userEmail = user?.email || 'anonymous';
+      const researchKeys = keys.filter(key => 
+        key.startsWith(`legalindia_research_${userEmail}_`) && key.includes(clientId)
+      );
       
       researchKeys.forEach(key => {
         const data = localStorage.getItem(key);
@@ -68,7 +79,7 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
     } catch (error) {
       // Ignore cleanup errors
     }
-  }, []);
+  }, [clientId, user]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -84,7 +95,7 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
 
   const saveToLocal = (item: ResearchItem) => {
     try {
-      const key = `legalindia::client::${clientId}::research`;
+      const key = getUserResearchKey();
       const existing = localStorage.getItem(key);
       const items: ResearchItem[] = existing ? JSON.parse(existing) : [];
       
@@ -104,7 +115,7 @@ export default function ResearchModule({ clientId, onResearchComplete }: Props) 
     } catch (error) {
       // Try to recover from localStorage quota error
       try {
-        const key = `legalindia::client::${clientId}::research`;
+        const key = getUserResearchKey();
         localStorage.removeItem(key);
         localStorage.setItem(key, JSON.stringify([item]));
         setResearchResults([item]);

@@ -46,7 +46,7 @@ export function useAuth() {
       // Clear any client-specific research data for this user
       const keys = Object.keys(localStorage);
       keys.forEach(key => {
-        if (key.startsWith('legalindia::client::') && key.includes(userEmail)) {
+        if (key.startsWith(`legalindia_research_${userEmail}_`)) {
           localStorage.removeItem(key);
         }
       });
@@ -63,7 +63,7 @@ export function useAuth() {
       // Clear any remaining client-specific research data
       const keys = Object.keys(localStorage);
       keys.forEach(key => {
-        if (key.startsWith('legalindia::client::') || key.startsWith('legalindia_clients_')) {
+        if (key.startsWith('legalindia_research_') || key.startsWith('legalindia_clients_')) {
           localStorage.removeItem(key);
         }
       });
